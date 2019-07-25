@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.InputEnterpriseMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.InputEnterprise">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="category_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column=" name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="specification" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="production_time" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="shelf_life" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="manufacturer" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="enterprise_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, category_id, " name", quantity, specification, price, production_time, shelf_life, 
+    manufacturer, remark, create_time, enterprise_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from input_enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from input_enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputEnterprise" useGeneratedKeys="true" keyProperty="id" >
+    insert into input_enterprise (id, category_id, " name", 
+      quantity, specification, price, 
+      production_time, shelf_life, manufacturer, 
+      remark, create_time, enterprise_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{productionTime,jdbcType=DATE}, #{shelfLife,jdbcType=INTEGER}, #{manufacturer,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{enterpriseId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.InputEnterprise">
+    insert into input_enterprise
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="name != null">
+        " name",
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="productionTime != null">
+        production_time,
+      </if>
+      <if test="shelfLife != null">
+        shelf_life,
+      </if>
+      <if test="manufacturer != null">
+        manufacturer,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="productionTime != null">
+        #{productionTime,jdbcType=DATE},
+      </if>
+      <if test="shelfLife != null">
+        #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="manufacturer != null">
+        #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseId != null">
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.InputEnterprise">
+    update input_enterprise
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        " name" = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="specification != null">
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="productionTime != null">
+        production_time = #{productionTime,jdbcType=DATE},
+      </if>
+      <if test="shelfLife != null">
+        shelf_life = #{shelfLife,jdbcType=INTEGER},
+      </if>
+      <if test="manufacturer != null">
+        manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputEnterprise">
+    update input_enterprise
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      " name" = #{name,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      specification = #{specification,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      production_time = #{productionTime,jdbcType=DATE},
+      shelf_life = #{shelfLife,jdbcType=INTEGER},
+      manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

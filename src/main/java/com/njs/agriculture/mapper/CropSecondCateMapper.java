@@ -1,0 +1,17 @@
+package com.njs.agriculture.mapper;
+
+import com.njs.agriculture.pojo.CropSecondCate;
+
+public interface CropSecondCateMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(CropSecondCate record);
+
+    int insertSelective(CropSecondCate record);
+
+    CropSecondCate selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(CropSecondCate record);
+
+    int updateByPrimaryKey(CropSecondCate record);
+}

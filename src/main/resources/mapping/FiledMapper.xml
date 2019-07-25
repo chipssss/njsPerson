@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.FiledMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.Filed">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="area" javaType="java.lang.Float" jdbcType="REAL" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="manager_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="coordinate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="qrcode_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="TINYINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, area, name, manager_id, status, coordinate, qrcode_id, remark, source_id, source
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from filed
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from filed
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.Filed">
+    insert into filed (id, area, name, 
+      manager_id, status, coordinate, 
+      qrcode_id, remark, source_id, 
+      source)
+    values (#{id,jdbcType=INTEGER}, #{area,jdbcType=REAL}, #{name,jdbcType=VARCHAR}, 
+      #{managerId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{coordinate,jdbcType=VARCHAR}, 
+      #{qrcodeId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, 
+      #{source,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.Filed">
+    insert into filed
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="managerId != null">
+        manager_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="coordinate != null">
+        coordinate,
+      </if>
+      <if test="qrcodeId != null">
+        qrcode_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=REAL},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="managerId != null">
+        #{managerId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="coordinate != null">
+        #{coordinate,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeId != null">
+        #{qrcodeId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.Filed">
+    update filed
+    <set>
+      <if test="area != null">
+        area = #{area,jdbcType=REAL},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="managerId != null">
+        manager_id = #{managerId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="coordinate != null">
+        coordinate = #{coordinate,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeId != null">
+        qrcode_id = #{qrcodeId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.Filed">
+    update filed
+    set area = #{area,jdbcType=REAL},
+      name = #{name,jdbcType=VARCHAR},
+      manager_id = #{managerId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      coordinate = #{coordinate,jdbcType=VARCHAR},
+      qrcode_id = #{qrcodeId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      source = #{source,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

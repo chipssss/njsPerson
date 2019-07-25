@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.ProcessRecordMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.ProcessRecord">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="filed_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="crop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column=" operation" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="input_record" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column=" create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="weather" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, filed_id, location, crop_id, " operation", input_record, " create_time", remark, 
+    weather
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from process_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from process_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessRecord">
+    insert into process_record (id, filed_id, location, 
+      crop_id, " operation", input_record, 
+      " create_time", remark, weather
+      )
+    values (#{id,jdbcType=INTEGER}, #{filedId,jdbcType=INTEGER}, #{location,jdbcType=VARCHAR}, 
+      #{cropId,jdbcType=INTEGER}, #{operation,jdbcType=VARCHAR}, #{inputRecord,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{weather,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProcessRecord">
+    insert into process_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="filedId != null">
+        filed_id,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="cropId != null">
+        crop_id,
+      </if>
+      <if test="operation != null">
+        " operation",
+      </if>
+      <if test="inputRecord != null">
+        input_record,
+      </if>
+      <if test="createTime != null">
+        " create_time",
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="weather != null">
+        weather,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="filedId != null">
+        #{filedId,jdbcType=INTEGER},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="cropId != null">
+        #{cropId,jdbcType=INTEGER},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="inputRecord != null">
+        #{inputRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="weather != null">
+        #{weather,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.ProcessRecord">
+    update process_record
+    <set>
+      <if test="filedId != null">
+        filed_id = #{filedId,jdbcType=INTEGER},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="cropId != null">
+        crop_id = #{cropId,jdbcType=INTEGER},
+      </if>
+      <if test="operation != null">
+        " operation" = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="inputRecord != null">
+        input_record = #{inputRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        " create_time" = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="weather != null">
+        weather = #{weather,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.ProcessRecord">
+    update process_record
+    set filed_id = #{filedId,jdbcType=INTEGER},
+      location = #{location,jdbcType=VARCHAR},
+      crop_id = #{cropId,jdbcType=INTEGER},
+      " operation" = #{operation,jdbcType=VARCHAR},
+      input_record = #{inputRecord,jdbcType=VARCHAR},
+      " create_time" = #{createTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      weather = #{weather,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
