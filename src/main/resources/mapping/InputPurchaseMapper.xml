@@ -6,7 +6,7 @@
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="input_source" javaType="java.lang.Integer" jdbcType="TINYINT" />
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="quantity" javaType="java.lang.Float" jdbcType="REAL" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
     </constructor>
@@ -29,7 +29,7 @@
       quantity, create_time, price
       )
     values (#{id,jdbcType=INTEGER}, #{inputSource,jdbcType=TINYINT}, #{sourceId,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}
+      #{quantity,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.InputPurchase">
@@ -65,7 +65,7 @@
         #{sourceId,jdbcType=INTEGER},
       </if>
       <if test="quantity != null">
-        #{quantity,jdbcType=INTEGER},
+        #{quantity,jdbcType=REAL},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -85,7 +85,7 @@
         source_id = #{sourceId,jdbcType=INTEGER},
       </if>
       <if test="quantity != null">
-        quantity = #{quantity,jdbcType=INTEGER},
+        quantity = #{quantity,jdbcType=REAL},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -100,7 +100,7 @@
     update input_purchase
     set input_source = #{inputSource,jdbcType=TINYINT},
       source_id = #{sourceId,jdbcType=INTEGER},
-      quantity = #{quantity,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=REAL},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       price = #{price,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}

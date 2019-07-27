@@ -10,13 +10,13 @@ public class InputPurchase {
 
     private Integer sourceId;
 
-    private Integer quantity;
+    private Float quantity;
 
     private Date createTime;
 
     private BigDecimal price;
 
-    public InputPurchase(Integer id, Integer inputSource, Integer sourceId, Integer quantity, Date createTime, BigDecimal price) {
+    public InputPurchase(Integer id, Integer inputSource, Integer sourceId, Float quantity, Date createTime, BigDecimal price) {
         this.id = id;
         this.inputSource = inputSource;
         this.sourceId = sourceId;
@@ -53,11 +53,11 @@ public class InputPurchase {
         this.sourceId = sourceId;
     }
 
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 

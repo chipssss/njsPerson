@@ -10,7 +10,7 @@ public class InputEnterprise {
 
     private String name;
 
-    private Integer quantity;
+    private Float quantity;
 
     private String specification;
 
@@ -28,7 +28,7 @@ public class InputEnterprise {
 
     private Integer enterpriseId;
 
-    public InputEnterprise(Integer id, Integer categoryId, String name, Integer quantity, String specification, BigDecimal price, Date productionTime, Integer shelfLife, String manufacturer, String remark, Date createTime, Integer enterpriseId) {
+    public InputEnterprise(Integer id, Integer categoryId, String name, Float quantity, String specification, BigDecimal price, Date productionTime, Integer shelfLife, String manufacturer, String remark, Date createTime, Integer enterpriseId) {
         this.id = id;
         this.categoryId = categoryId;
         this.name = name;
@@ -71,11 +71,11 @@ public class InputEnterprise {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 

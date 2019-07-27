@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+
+
+#showSql
+logging:
+  level:
+    com.njs.apmsystem.controller: DEBUG

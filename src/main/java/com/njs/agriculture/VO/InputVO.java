@@ -17,7 +17,7 @@ public class InputVO {
 
     private String name;
 
-    private Integer quantity;
+    private Float quantity;
 
     private String specification;
 

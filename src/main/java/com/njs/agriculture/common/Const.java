@@ -1,5 +1,9 @@
 package com.njs.agriculture.common;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 /**
  * @Auther: SaikeiLEe
  * @Date: 2019/7/12
@@ -20,5 +24,12 @@ public class Const {
         int ROLE_SCIENCE = 4; //科研机构
         int ROLE_INDUSTRY = 5; //行业协会
         int ROLE_OTHER = 6; //其他产业链
+    }
+
+    public interface InputListOrderBy{
+        Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
+        Set<String> TIME_ASC_DESC = Sets.newHashSet("create_time_desc","create_time_asc");
+        Set<String> QUANTITY_ASC_DESC = Sets.newHashSet("quantity_desc","quantity_asc");
+
     }
 }

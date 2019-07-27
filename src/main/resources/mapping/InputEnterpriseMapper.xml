@@ -5,8 +5,8 @@
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="category_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column=" name" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="quantity" javaType="java.lang.Float" jdbcType="REAL" />
       <arg column="specification" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
       <arg column="production_time" javaType="java.util.Date" jdbcType="DATE" />
@@ -18,7 +18,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, category_id, " name", quantity, specification, price, production_time, shelf_life, 
+    id, category_id, name, quantity, specification, price, production_time, shelf_life, 
     manufacturer, remark, create_time, enterprise_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -32,13 +32,13 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.njs.agriculture.pojo.InputEnterprise" useGeneratedKeys="true" keyProperty="id" >
-    insert into input_enterprise (id, category_id, " name", 
+    insert into input_enterprise (id, category_id, name, 
       quantity, specification, price, 
       production_time, shelf_life, manufacturer, 
       remark, create_time, enterprise_id
       )
     values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
-      #{quantity,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{quantity,jdbcType=REAL}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{productionTime,jdbcType=DATE}, #{shelfLife,jdbcType=INTEGER}, #{manufacturer,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{enterpriseId,jdbcType=INTEGER}
       )
@@ -53,7 +53,7 @@
         category_id,
       </if>
       <if test="name != null">
-        " name",
+        name,
       </if>
       <if test="quantity != null">
         quantity,
@@ -94,7 +94,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="quantity != null">
-        #{quantity,jdbcType=INTEGER},
+        #{quantity,jdbcType=REAL},
       </if>
       <if test="specification != null">
         #{specification,jdbcType=VARCHAR},
@@ -129,10 +129,10 @@
         category_id = #{categoryId,jdbcType=INTEGER},
       </if>
       <if test="name != null">
-        " name" = #{name,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="quantity != null">
-        quantity = #{quantity,jdbcType=INTEGER},
+        quantity = #{quantity,jdbcType=REAL},
       </if>
       <if test="specification != null">
         specification = #{specification,jdbcType=VARCHAR},
@@ -164,8 +164,8 @@
   <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputEnterprise">
     update input_enterprise
     set category_id = #{categoryId,jdbcType=INTEGER},
-      " name" = #{name,jdbcType=VARCHAR},
-      quantity = #{quantity,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=REAL},
       specification = #{specification,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
       production_time = #{productionTime,jdbcType=DATE},
@@ -176,4 +176,34 @@
       enterprise_id = #{enterpriseId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectAll" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_enterprise
+    where enterprise_id = #{enterpriseId}
+  </select>
+  <select id="selectByCategoryIdList" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_enterprise
+    where enterprise_id = #{enterpriseId}
+    and category_id in
+    <foreach collection="categoryList" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <select id="selectByCategoryId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_enterprise
+    where enterprise_id = #{enterpriseId}
+    and category_id = #{categoryId}
+  </select>
+  <select id="getStockByQuantity" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_enterprise
+    where enterprise_id = #{enterpriseId}
+    and quantity &lt; #{quantity}
+  </select>
 </mapper>

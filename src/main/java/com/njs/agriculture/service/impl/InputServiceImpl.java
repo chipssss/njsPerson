@@ -1,16 +1,22 @@
 package com.njs.agriculture.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.InputCategoryVO;
 import com.njs.agriculture.VO.InputVO;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
+import com.njs.agriculture.utils.DateUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,13 +55,13 @@ public class InputServiceImpl implements IInputService {
         //2.写入购入表 0和1
         // 或者领用表 10
         int resultRount = 0;
-        if(source == 0){
+        if (source == 0) {
             InputUser inputUser = new InputUser();
             BeanUtils.copyProperties(inputVO, inputUser);
             inputUser.setSource(0);
             inputUser.setSourceId(null);
             resultRount = inputUserMapper.insert(inputUser);
-            if(resultRount == 0){
+            if (resultRount == 0) {
                 return ServerResponse.createByErrorMessage("农资信息表录入失败！");
             }
             int id = inputUser.getId();
@@ -65,12 +71,12 @@ public class InputServiceImpl implements IInputService {
             inputPurchase.setInputSource(0);
             inputPurchase.setSourceId(id);
             resultRount = inputPurchaseMapper.insert(inputPurchase);
-        }else if(source == 1){
+        } else if (source == 1) {
             InputEnterprise inputEnterprise = new InputEnterprise();
             BeanUtils.copyProperties(inputVO, inputEnterprise);
             inputEnterprise.setEnterpriseId(inputVO.getSourceId());
             resultRount = inputEnterpriseMapper.insert(inputEnterprise);
-            if(resultRount == 0){
+            if (resultRount == 0) {
                 return ServerResponse.createByErrorMessage("农资信息表录入失败！");
             }
             int id = inputEnterprise.getId();
@@ -80,13 +86,13 @@ public class InputServiceImpl implements IInputService {
             inputPurchase.setInputSource(1);
             inputPurchase.setSourceId(id);
             resultRount = inputPurchaseMapper.insert(inputPurchase);
-        }else if(source == 10){
+        } else if (source == 10) {
             InputUser inputUser = new InputUser();
             BeanUtils.copyProperties(inputVO, inputUser);
             inputUser.setSource(1);
             inputUser.setSourceId(null);
             resultRount = inputUserMapper.insert(inputUser);
-            if(resultRount == 0){
+            if (resultRount == 0) {
                 return ServerResponse.createByErrorMessage("农资信息表录入失败！");
             }
             int id = inputUser.getId();
@@ -96,7 +102,7 @@ public class InputServiceImpl implements IInputService {
             inputConsume.setQuantity(inputVO.getQuantity());
             resultRount = inputConsumeMapper.insert(inputConsume);
         }
-        if(resultRount == 0){
+        if (resultRount == 0) {
             return ServerResponse.createByErrorMessage("农资购入表或者领用录入失败！");
         }
         return ServerResponse.createBySuccess();
@@ -120,12 +126,139 @@ public class InputServiceImpl implements IInputService {
     }
 
     @Override
-    public ServerResponse infoGet(int firstCateId, int secondCateId, String order, String flag, int sourceId, int source) {
-        return null;
+    public ServerResponse infoGet(int firstCateId, int secondCateId, String orderBy, int sourceId, int source, int pageNum, int pageSize) {
+
+        //1.先检查2级目录id，没有就检查一级目录id，然后一次检查order，flag
+        //2.检查source源，查不同的表 0为用户，1为企业
+        //排序处理
+        String[] orderByArray = null;
+        String orderString = "create_time desc";
+        if (StringUtils.isNotBlank(orderBy)) {
+            if (Const.InputListOrderBy.PRICE_ASC_DESC.contains(orderBy) || Const.InputListOrderBy.QUANTITY_ASC_DESC.contains(orderBy)) {
+                orderByArray = orderBy.split("_");
+                orderString = orderByArray[0] + " " + orderByArray[1];
+            } else if (Const.InputListOrderBy.TIME_ASC_DESC.contains(orderBy)) {
+                orderByArray = orderBy.split("_");
+                orderByArray = new String[]{orderByArray[0] + "_" + orderByArray[1], orderByArray[2]};
+                orderString = orderByArray[0] + " " + orderByArray[1];
+            }
+        }
+
+        if (source == 0) {
+            //查用户的
+            List<InputUser> inputUsers;
+            if (secondCateId == 0) {
+                if (firstCateId == 0) {
+                    //默认所有
+                    PageHelper.startPage(pageNum, pageSize);
+                    PageHelper.orderBy(orderString);
+                    inputUsers = inputUserMapper.selectAll(sourceId);
+                } else {
+                    //查firstCateId
+                    List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(firstCateId);
+                    List<Integer> categoryList = Lists.newArrayList();
+                    for (InputSecondCate inputSecondCate : inputSecondCateList) {
+                        categoryList.add(inputSecondCate.getId());
+                    }
+
+                    PageHelper.startPage(pageNum, pageSize);
+                    PageHelper.orderBy(orderString);
+
+                    inputUsers = inputUserMapper.selectByCategoryIdList(sourceId, categoryList);
+
+                }
+            } else {
+                //查二级id
+                PageHelper.startPage(pageNum, pageSize);
+
+                PageHelper.orderBy(orderString);
+
+                inputUsers = inputUserMapper.selectByCategoryId(sourceId, secondCateId);
+            }
+            return ServerResponse.createBySuccess(inputUsers);
+        } else {
+            List<InputEnterprise> inputEnterprises;
+            //查企业的
+            if (secondCateId == 0) {
+                if (firstCateId == 0) {
+                    //默认所有
+                    PageHelper.startPage(pageNum, pageSize);
+                    PageHelper.orderBy(orderString);
+
+                    inputEnterprises = inputEnterpriseMapper.selectAll(sourceId);
+                } else {
+                    //查firstCateId
+                    List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(firstCateId);
+                    List<Integer> categoryList = Lists.newArrayList();
+                    for (InputSecondCate inputSecondCate : inputSecondCateList) {
+                        categoryList.add(inputSecondCate.getId());
+                    }
+
+                    PageHelper.startPage(pageNum, pageSize);
+                    PageHelper.orderBy(orderString);
+
+                    inputEnterprises = inputEnterpriseMapper.selectByCategoryIdList(sourceId, categoryList);
+
+                }
+            } else {
+                //查二级id
+                PageHelper.startPage(pageNum, pageSize);
+                PageHelper.orderBy(orderString);
+
+                inputEnterprises = inputEnterpriseMapper.selectByCategoryId(sourceId, secondCateId);
+            }
+            return ServerResponse.createBySuccess(inputEnterprises);
+        }
     }
 
     @Override
-    public ServerResponse StockRemind(int sourceId, int source, int type, int threshold) {
-        return null;
+    public ServerResponse<List> stockRemind(int sourceId, int source, int type, int threshold) {
+        //1.判断来源 0为用户，1为企业
+        //2.判断数量与保质期
+
+        if (source == 0) {
+            List<InputUser> inputUsers = Lists.newArrayList();
+            if (type == 0) {
+                //判断数量
+                inputUsers = inputUserMapper.getStockByQuantity(sourceId, threshold);
+            } else {
+                //判断保质期
+                Date today = new Date();
+                List<InputUser> inputUserList = inputUserMapper.selectAll(sourceId);
+                for (InputUser inputUser : inputUserList) {
+                    if (DateUtil.getDateUtil().
+                            getDistanceTime(inputUser.getProductionTime(), today)
+                            > inputUser.getShelfLife()) {
+                        inputUsers.add(inputUser);
+                    }
+                }
+            }
+            return ServerResponse.createBySuccess(inputUsers);
+        } else {
+            List<InputEnterprise> enterprises = Lists.newArrayList();
+            if (type == 0) {
+                //判断数量
+                enterprises = inputEnterpriseMapper.getStockByQuantity(sourceId, threshold);
+            } else {
+                //判断保质期
+                Date today = new Date();
+                List<InputEnterprise> inputEnterpriseList = inputEnterpriseMapper.selectAll(sourceId);
+                for (InputEnterprise inputEnterprise : inputEnterpriseList) {
+                    if (DateUtil.getDateUtil().
+                            getDistanceTime(inputEnterprise.getProductionTime(), today)
+                            > inputEnterprise.getShelfLife()) {
+                        enterprises.add(inputEnterprise);
+                    }
+                }
+            }
+            return ServerResponse.createBySuccess(enterprises);
+        }
+    }
+
+    public static void main(String[] args) {
+        String orderBy = "c_time_desc";
+        String[] orderByArray = orderBy.split("_");
+        orderByArray = new String[]{orderByArray[0] + "_" + orderByArray[1], orderByArray[2]};
+        System.out.println();
     }
 }

@@ -9,11 +9,11 @@ public class InputConsume {
 
     private Integer enterpriseinputId;
 
-    private Integer quantity;
+    private Float quantity;
 
     private Date createTime;
 
-    public InputConsume(Integer id, Integer userinputId, Integer enterpriseinputId, Integer quantity, Date createTime) {
+    public InputConsume(Integer id, Integer userinputId, Integer enterpriseinputId, Float quantity, Date createTime) {
         this.id = id;
         this.userinputId = userinputId;
         this.enterpriseinputId = enterpriseinputId;
@@ -49,11 +49,11 @@ public class InputConsume {
         this.enterpriseinputId = enterpriseinputId;
     }
 
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 

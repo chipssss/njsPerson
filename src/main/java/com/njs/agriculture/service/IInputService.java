@@ -30,13 +30,12 @@ public interface IInputService {
      * 农资获取
      * @param firstCateId 默认“所有”，即为0或不需要填写
      * @param secondCateId 默认“所有“，即为0或不需要填写，如果有二级类别id则不读取一级id
-     * @param order 默认“降序”，默认不需要填写,desc或者asc升序
-     * @param flag 价格price，时间time，数量quantity 默认为时间
+     * @param orderBy
      * @param sourceId
      * @param source 来源，0为用户，1为企业
      * @return
      */
-    ServerResponse infoGet(int firstCateId, int secondCateId, String order, String flag, int sourceId, int source);
+    ServerResponse infoGet(int firstCateId, int secondCateId, String orderBy, int sourceId, int source, int pageNum, int pageSize);
 
     /**
      * 库存提醒
@@ -46,5 +45,5 @@ public interface IInputService {
      * @param threshold 阈值
      * @return
      */
-    ServerResponse StockRemind(int sourceId, int source, int type, int threshold);
+    ServerResponse stockRemind(int sourceId, int source, int type, int threshold);
 }

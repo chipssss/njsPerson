@@ -8,11 +8,10 @@ import com.njs.agriculture.mapper.UserMapper;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.MD5Util;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -65,6 +64,7 @@ public class UserServiceImpl implements IUserService {
 
         user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
         String token = UUID.randomUUID().toString();
+        // TODO 加检测，重复登录则删除上一个
         TokenCache.setKey(TokenCache.TOKEN_PREFIX + user.getUserId(), token);
         Map map = Maps.newHashMap();
         map.put("user", user);
