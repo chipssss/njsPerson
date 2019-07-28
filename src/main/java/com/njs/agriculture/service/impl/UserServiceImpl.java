@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ServerResponse<Map> login(String phonenum, String password) {
+    public ServerResponse<User> login(String phonenum, String password) {
         if(!isMobile(phonenum)){
             return ServerResponse.createByErrorMessage("电话号码格式错误！");
         }
@@ -63,13 +63,12 @@ public class UserServiceImpl implements IUserService {
         }
 
         user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
-        String token = UUID.randomUUID().toString();
-        // TODO 加检测，重复登录则删除上一个
+        /*String token = UUID.randomUUID().toString();
         TokenCache.setKey(TokenCache.TOKEN_PREFIX + user.getUserId(), token);
         Map map = Maps.newHashMap();
         map.put("user", user);
-        map.put("token", token);
-        return ServerResponse.createBySuccess("登录成功",map);
+        map.put("token", token);*/
+        return ServerResponse.createBySuccess("登录成功",user);
 
     }
 

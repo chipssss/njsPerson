@@ -5,7 +5,7 @@ import java.util.Date;
 public class ProcessRecord {
     private Integer id;
 
-    private Integer filedId;
+    private Integer batchId;
 
     private String location;
 
@@ -21,9 +21,13 @@ public class ProcessRecord {
 
     private String weather;
 
-    public ProcessRecord(Integer id, Integer filedId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather) {
+    private Integer source;
+
+    private Integer sourceId;
+
+    public ProcessRecord(Integer id, Integer batchId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId) {
         this.id = id;
-        this.filedId = filedId;
+        this.batchId = batchId;
         this.location = location;
         this.cropId = cropId;
         this.operation = operation;
@@ -31,6 +35,8 @@ public class ProcessRecord {
         this.createTime = createTime;
         this.remark = remark;
         this.weather = weather;
+        this.source = source;
+        this.sourceId = sourceId;
     }
 
     public ProcessRecord() {
@@ -45,12 +51,12 @@ public class ProcessRecord {
         this.id = id;
     }
 
-    public Integer getFiledId() {
-        return filedId;
+    public Integer getBatchId() {
+        return batchId;
     }
 
-    public void setFiledId(Integer filedId) {
-        this.filedId = filedId;
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 
     public String getLocation() {
@@ -107,5 +113,21 @@ public class ProcessRecord {
 
     public void setWeather(String weather) {
         this.weather = weather == null ? null : weather.trim();
+    }
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
+
+    public Integer getSourceid() {
+        return sourceId;
+    }
+
+    public void setSourceid(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 }

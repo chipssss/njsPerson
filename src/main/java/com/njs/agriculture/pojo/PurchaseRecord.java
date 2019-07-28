@@ -13,9 +13,9 @@ public class PurchaseRecord {
 
     private Integer enterpriseId;
 
-    private Integer source;
+    private Byte source;
 
-    public PurchaseRecord(Integer id, Integer personnalId, Integer poolId, Integer quantity, Integer buyerId, Integer enterpriseId, Integer source) {
+    public PurchaseRecord(Integer id, Integer personnalId, Integer poolId, Integer quantity, Integer buyerId, Integer enterpriseId, Byte source) {
         this.id = id;
         this.personnalId = personnalId;
         this.poolId = poolId;
@@ -77,11 +77,11 @@ public class PurchaseRecord {
         this.enterpriseId = enterpriseId;
     }
 
-    public Integer getSource() {
+    public Byte getSource() {
         return source;
     }
 
-    public void setSource(Integer source) {
+    public void setSource(Byte source) {
         this.source = source;
     }
 }

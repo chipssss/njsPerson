@@ -2,13 +2,17 @@ package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.VO.InputVO;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @Auther: SaikeiLEe
@@ -23,7 +27,12 @@ public class InputController {
     IInputService iInputService;
 
     @PostMapping("purchase.do")
-    public ServerResponse purchase(@RequestBody InputVO inputVO){
+    public ServerResponse purchase(@RequestBody InputVO inputVO, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorMessage("请登录！");
+        }
+        inputVO.setUserId(user.getUserId());
         return iInputService.purchase(inputVO);
     }
 

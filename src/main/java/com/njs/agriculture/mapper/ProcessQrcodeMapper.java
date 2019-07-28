@@ -2,6 +2,8 @@ package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.ProcessQrcode;
 
+import java.util.List;
+
 public interface ProcessQrcodeMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface ProcessQrcodeMapper {
     int updateByPrimaryKeySelective(ProcessQrcode record);
 
     int updateByPrimaryKey(ProcessQrcode record);
+
+    List<Integer> selectByQrcodeId(int qrcodeId);
 }

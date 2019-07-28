@@ -2,29 +2,29 @@ package com.njs.agriculture.pojo;
 
 import java.util.Date;
 
-public class productionBatch {
+public class ProductionBatch {
     private Integer id;
 
     private String name;
 
     private Integer cropInfoId;
 
-    private Integer filedId;
+    private Integer fieldId;
 
     private Date plantTime;
 
     private Date collectTime;
 
-    public productionBatch(Integer id, String name, Integer cropInfoId, Integer filedId, Date plantTime, Date collectTime) {
+    public ProductionBatch(Integer id, String name, Integer cropInfoId, Integer fieldId, Date plantTime, Date collectTime) {
         this.id = id;
         this.name = name;
         this.cropInfoId = cropInfoId;
-        this.filedId = filedId;
+        this.fieldId = fieldId;
         this.plantTime = plantTime;
         this.collectTime = collectTime;
     }
 
-    public productionBatch() {
+    public ProductionBatch() {
         super();
     }
 
@@ -52,12 +52,12 @@ public class productionBatch {
         this.cropInfoId = cropInfoId;
     }
 
-    public Integer getFiledId() {
-        return filedId;
+    public Integer getFieldId() {
+        return fieldId;
     }
 
-    public void setFiledId(Integer filedId) {
-        this.filedId = filedId;
+    public void setFieldId(Integer fieldId) {
+        this.fieldId = fieldId;
     }
 
     public Date getPlantTime() {

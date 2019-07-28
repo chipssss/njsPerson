@@ -14,4 +14,6 @@ public interface UserRelationshipMapper {
     int updateByPrimaryKeySelective(UserRelationship record);
 
     int updateByPrimaryKey(UserRelationship record);
+
+    UserRelationship selectAdminByUserId(int userId);
 }

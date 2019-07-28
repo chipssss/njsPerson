@@ -70,4 +70,10 @@
       image = #{image,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByRecordId" parameterType="int" resultType="string">
+    select
+    image
+    from process_image
+    where record_id = #{recordId}
+  </select>
 </mapper>

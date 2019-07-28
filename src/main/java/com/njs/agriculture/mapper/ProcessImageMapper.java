@@ -2,6 +2,8 @@ package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.ProcessImage;
 
+import java.util.List;
+
 public interface ProcessImageMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface ProcessImageMapper {
     int updateByPrimaryKeySelective(ProcessImage record);
 
     int updateByPrimaryKey(ProcessImage record);
+
+    List<String> selectByRecordId(int recordId);
 }

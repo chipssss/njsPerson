@@ -81,4 +81,11 @@
       position = #{position,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectAdminByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_relationship
+    where user_id = #{userId}
+    and position = 2
+  </select>
 </mapper>

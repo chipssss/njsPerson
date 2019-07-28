@@ -1,24 +1,21 @@
 package com.njs.agriculture.pojo;
 
-import java.util.Date;
-
 public class ProcessQrcode {
     private Integer id;
 
-    private Integer cropId;
+    private Integer qrcodeId;
 
-    private Integer filerId;
+    private Integer recordId;
 
-    private Integer userId;
-
-    private Date createTime;
-
-    public ProcessQrcode(Integer id, Integer cropId, Integer filerId, Integer userId, Date createTime) {
+    public ProcessQrcode(Integer id, Integer qrcodeId, Integer recordId) {
         this.id = id;
-        this.cropId = cropId;
-        this.filerId = filerId;
-        this.userId = userId;
-        this.createTime = createTime;
+        this.qrcodeId = qrcodeId;
+        this.recordId = recordId;
+    }
+
+    public ProcessQrcode(Integer qrcodeId, Integer recordId) {
+        this.qrcodeId = qrcodeId;
+        this.recordId = recordId;
     }
 
     public ProcessQrcode() {
@@ -33,35 +30,19 @@ public class ProcessQrcode {
         this.id = id;
     }
 
-    public Integer getCropId() {
-        return cropId;
+    public Integer getQrcodeId() {
+        return qrcodeId;
     }
 
-    public void setCropId(Integer cropId) {
-        this.cropId = cropId;
+    public void setQrcodeId(Integer qrcodeId) {
+        this.qrcodeId = qrcodeId;
     }
 
-    public Integer getFilerId() {
-        return filerId;
+    public Integer getRecordId() {
+        return recordId;
     }
 
-    public void setFilerId(Integer filerId) {
-        this.filerId = filerId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
 }
