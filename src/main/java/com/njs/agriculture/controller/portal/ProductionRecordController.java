@@ -56,6 +56,13 @@ public class ProductionRecordController {
         int userId = jsonObject.getIntValue("userId");
         String startTime = jsonObject.getString("startTime");
         String endTime = jsonObject.getString("endTime");
+        if(startTime == null){
+            startTime = "2000-01-01";
+        }
+        if(endTime == null ){
+            // TODO 有可能随年份改变而失效
+            endTime = "2050-01-01";
+        }
         int batchId = jsonObject.getIntValue("batchId");
         int cropId = jsonObject.getIntValue("cropId");
         int pageNum = (int)jsonObject.getOrDefault("pageNum",1);

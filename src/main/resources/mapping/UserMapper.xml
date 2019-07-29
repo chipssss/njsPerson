@@ -109,6 +109,10 @@
     select count(1) from user
     where phonenum = #{phonenum}
   </select>
+  <select id="checkUserName" parameterType="string" resultType="int">
+    select count(1) from user
+    where username = #{userName}
+  </select>
   <select id="selectLogin" parameterType="map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>

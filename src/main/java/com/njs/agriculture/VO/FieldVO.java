@@ -1,5 +1,6 @@
 package com.njs.agriculture.VO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -20,9 +21,11 @@ public class FieldVO {
 
     private String remark;
 
+    @JsonProperty("isFree")
     private boolean isFree;
 
     private int userId;
 
+    @JsonProperty("isPerson")
     private boolean isPerson;
 }

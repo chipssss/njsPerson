@@ -20,7 +20,7 @@
     delete from qrcode
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.Qrcode">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.Qrcode" useGeneratedKeys="true" keyProperty="id">
     insert into qrcode (id, create_time)
     values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>

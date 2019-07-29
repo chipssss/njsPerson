@@ -18,5 +18,7 @@ public interface UserMapper {
 
     int checkPhonenum(String phonenum);
 
+    int checkUserName(String userName);
+
     User selectLogin(@Param("phonenum") String phonenum,@Param("password") String password);
 }

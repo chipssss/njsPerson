@@ -2,6 +2,7 @@ package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordVO;
 import com.njs.agriculture.common.ServerResponse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -51,14 +53,14 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         BeanUtils.copyProperties(fieldVO, field);
         if(fieldVO.isPerson()){
             field.setSource(0);
-            field.setId(fieldVO.getUserId());
+            field.setSourceId(fieldVO.getUserId());
         }else {
             ServerResponse<UserRelationship> serverResponse = isAdmin(fieldVO.getUserId());
             if(!serverResponse.isSuccess()){
                 return serverResponse;
             }
             field.setSource(1);
-            field.setId(serverResponse.getData().getEnterpriseId());
+            field.setSourceId(serverResponse.getData().getEnterpriseId());
         }
         if(fieldVO.isFree()){
             field.setStatus(0);
@@ -153,9 +155,12 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         }
         int qrcodeId = qrcode.getId();
         for (Integer recordId : recordIds) {
-            processQrcodeMapper.insert(new ProcessQrcode(qrcodeId, recordId));
+            ProcessQrcode processQrcode = new ProcessQrcode(qrcodeId, recordId);
+            processQrcodeMapper.insert(processQrcode);
         }
-        return ServerResponse.createBySuccess();
+        Map map = Maps.newHashMap();
+        map.put("qrcodeId",qrcodeId);
+        return ServerResponse.createBySuccess(map);
     }
 
 

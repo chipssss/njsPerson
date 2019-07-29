@@ -3,6 +3,7 @@ package com.njs.agriculture.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.InputCategoryVO;
+import com.njs.agriculture.VO.InputInfoVO;
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -10,6 +11,7 @@ import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
 import com.njs.agriculture.utils.DateUtil;
+import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +28,9 @@ import java.util.List;
  */
 @Service("iInputservice")
 public class InputServiceImpl implements IInputService {
+
+    @Autowired
+    EnterpriseMapper enterpriseMapper;
 
     @Autowired
     InputFirstCateMapper inputFirstCateMapper;
@@ -125,6 +130,18 @@ public class InputServiceImpl implements IInputService {
         return ServerResponse.createBySuccess(inputCategoryVOS);
     }
 
+    /**
+     * TODO 重复代码太多，看如何分离
+     *
+     * @param firstCateId  默认“所有”，即为0或不需要填写
+     * @param secondCateId 默认“所有“，即为0或不需要填写，如果有二级类别id则不读取一级id
+     * @param orderBy
+     * @param sourceId
+     * @param source       来源，0为用户，1为企业
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @Override
     public ServerResponse infoGet(int firstCateId, int secondCateId, String orderBy, int sourceId, int source, int pageNum, int pageSize) {
 
@@ -143,73 +160,74 @@ public class InputServiceImpl implements IInputService {
                 orderString = orderByArray[0] + " " + orderByArray[1];
             }
         }
+        return infoGet(secondCateId, firstCateId, pageNum, pageSize, orderString, source, sourceId);
 
-        if (source == 0) {
-            //查用户的
-            List<InputUser> inputUsers;
-            if (secondCateId == 0) {
-                if (firstCateId == 0) {
-                    //默认所有
-                    PageHelper.startPage(pageNum, pageSize);
-                    PageHelper.orderBy(orderString);
+    }
+
+
+    private ServerResponse infoGet(int secondCateId, int firstCateId, int pageNum, int pageSize, String orderString, int source, int sourceId) {
+
+        List<InputUser> inputUsers = Lists.newArrayList();
+        List<InputEnterprise> inputEnterprises = Lists.newArrayList();
+        if (secondCateId == 0) {
+            if (firstCateId == 0) {
+                //默认所有
+                PageHelper.startPage(pageNum, pageSize);
+                PageHelper.orderBy(orderString);
+                if (source == Const.InputRole.USER) {
                     inputUsers = inputUserMapper.selectAll(sourceId);
                 } else {
-                    //查firstCateId
-                    List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(firstCateId);
-                    List<Integer> categoryList = Lists.newArrayList();
-                    for (InputSecondCate inputSecondCate : inputSecondCateList) {
-                        categoryList.add(inputSecondCate.getId());
-                    }
-
-                    PageHelper.startPage(pageNum, pageSize);
-                    PageHelper.orderBy(orderString);
-
-                    inputUsers = inputUserMapper.selectByCategoryIdList(sourceId, categoryList);
-
-                }
-            } else {
-                //查二级id
-                PageHelper.startPage(pageNum, pageSize);
-
-                PageHelper.orderBy(orderString);
-
-                inputUsers = inputUserMapper.selectByCategoryId(sourceId, secondCateId);
-            }
-            return ServerResponse.createBySuccess(inputUsers);
-        } else {
-            List<InputEnterprise> inputEnterprises;
-            //查企业的
-            if (secondCateId == 0) {
-                if (firstCateId == 0) {
-                    //默认所有
-                    PageHelper.startPage(pageNum, pageSize);
-                    PageHelper.orderBy(orderString);
-
                     inputEnterprises = inputEnterpriseMapper.selectAll(sourceId);
-                } else {
-                    //查firstCateId
-                    List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(firstCateId);
-                    List<Integer> categoryList = Lists.newArrayList();
-                    for (InputSecondCate inputSecondCate : inputSecondCateList) {
-                        categoryList.add(inputSecondCate.getId());
-                    }
-
-                    PageHelper.startPage(pageNum, pageSize);
-                    PageHelper.orderBy(orderString);
-
-                    inputEnterprises = inputEnterpriseMapper.selectByCategoryIdList(sourceId, categoryList);
-
                 }
             } else {
-                //查二级id
+                //查firstCateId
+                List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(firstCateId);
+                List<Integer> categoryList = Lists.newArrayList();
+                for (InputSecondCate inputSecondCate : inputSecondCateList) {
+                    categoryList.add(inputSecondCate.getId());
+                }
+
                 PageHelper.startPage(pageNum, pageSize);
                 PageHelper.orderBy(orderString);
 
+                if (source == Const.InputRole.USER) {
+                    inputUsers = inputUserMapper.selectByCategoryIdList(sourceId, categoryList);
+                } else {
+                    inputEnterprises = inputEnterpriseMapper.selectByCategoryIdList(sourceId, categoryList);
+                }
+            }
+        } else {
+            //查二级id
+            PageHelper.startPage(pageNum, pageSize);
+
+            PageHelper.orderBy(orderString);
+
+            if (source == Const.InputRole.USER) {
+                inputUsers = inputUserMapper.selectByCategoryId(sourceId, secondCateId);
+            } else {
                 inputEnterprises = inputEnterpriseMapper.selectByCategoryId(sourceId, secondCateId);
             }
-            return ServerResponse.createBySuccess(inputEnterprises);
         }
+        List<InputInfoVO> inputInfoVOS = Lists.newArrayList();
+        if (source == Const.InputRole.USER) {
+            for (InputUser inputUser : inputUsers) {
+                InputInfoVO inputInfoVO = new InputInfoVO();
+                BeanUtils.copyProperties(inputUser, inputInfoVO);
+                inputInfoVO.setPersonOrEnterpriseName("个人");
+                inputInfoVOS.add(inputInfoVO);
+            }
+        } else {
+            for (InputEnterprise inputEnterpris : inputEnterprises) {
+                InputInfoVO inputInfoVO = new InputInfoVO();
+                BeanUtils.copyProperties(inputEnterpris, inputInfoVO);
+                Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(inputEnterpris.getEnterpriseId());
+                inputInfoVO.setPersonOrEnterpriseName(enterprise.getName());
+                inputInfoVOS.add(inputInfoVO);
+            }
+        }
+        return ServerResponse.createBySuccess(inputInfoVOS);
     }
+
 
     @Override
     public ServerResponse<List> stockRemind(int sourceId, int source, int type, int threshold) {
@@ -256,9 +274,10 @@ public class InputServiceImpl implements IInputService {
     }
 
     public static void main(String[] args) {
-        String orderBy = "c_time_desc";
+        /*String orderBy = "c_time_desc";
         String[] orderByArray = orderBy.split("_");
         orderByArray = new String[]{orderByArray[0] + "_" + orderByArray[1], orderByArray[2]};
-        System.out.println();
+        System.out.println();*/
+
     }
 }

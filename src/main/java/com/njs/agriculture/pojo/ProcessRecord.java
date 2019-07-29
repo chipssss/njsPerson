@@ -1,5 +1,7 @@
 package com.njs.agriculture.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ProcessRecord {
@@ -15,6 +17,7 @@ public class ProcessRecord {
 
     private String inputRecord;
 
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm",timezone = "GMT+8")
     private Date createTime;
 
     private String remark;

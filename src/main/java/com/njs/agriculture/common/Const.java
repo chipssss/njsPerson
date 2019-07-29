@@ -14,7 +14,19 @@ public class Const {
 
     public static final String CURRENT_USER = "currentUser";
 
-    public static final String PHONENUM = "phonenum";
+    public static final String USERIMGPREFIX = "img/user/";
+
+    public interface InputRole{
+        int USER = 0;
+        int ENTERPRISE = 1;
+    }
+
+    public interface UserInfo{
+        String USERNAME = "username";
+        String TYPE = "type";
+        String IMAGE = "image";
+        String PHONENUM = "phonenum";
+    }
 
     public interface Role{
         int ROLE_MANAGE = 0; //管理部门

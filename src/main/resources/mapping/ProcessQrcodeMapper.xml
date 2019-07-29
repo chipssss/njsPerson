@@ -21,7 +21,7 @@
     delete from process_qrcode
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessQrcode" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessQrcode">
     insert into process_qrcode (id, qrcode_id, record_id
       )
     values (#{id,jdbcType=INTEGER}, #{qrcodeId,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}
