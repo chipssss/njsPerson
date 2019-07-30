@@ -14,10 +14,10 @@ public class ProductionBatch {
 
     private Integer fieldId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date plantTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date collectTime;
 
     public ProductionBatch(Integer id, String name, Integer cropInfoId, Integer fieldId, Date plantTime, Date collectTime) {

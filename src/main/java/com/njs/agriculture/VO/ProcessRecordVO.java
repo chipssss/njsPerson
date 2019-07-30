@@ -15,7 +15,9 @@ import java.util.List;
 public class ProcessRecordVO {
     private Integer id;
 
-    private Integer batchId;
+    private String batchName;
+
+    private String fieldName;
 
     private String location;
 

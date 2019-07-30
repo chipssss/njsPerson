@@ -16,6 +16,8 @@ public class Const {
 
     public static final String USERIMGPREFIX = "img/user/";
 
+    public static final String PROCESSIMGPREFIX ="img/process/";
+
     public interface InputRole{
         int USER = 0;
         int ENTERPRISE = 1;

@@ -17,6 +17,11 @@ public class ProcessImage {
         super();
     }
 
+    public ProcessImage(Integer recordId, String image) {
+        this.recordId = recordId;
+        this.image = image;
+    }
+
     public Integer getId() {
         return id;
     }

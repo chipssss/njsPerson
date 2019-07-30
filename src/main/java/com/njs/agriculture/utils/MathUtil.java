@@ -120,4 +120,9 @@ public class MathUtil {
         BigDecimal one = new BigDecimal("1");
         return b.divide(one, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+
+    public static double float2double(float v){
+        BigDecimal b = new BigDecimal(String.valueOf(v));
+        return b.doubleValue();
+    }
 }

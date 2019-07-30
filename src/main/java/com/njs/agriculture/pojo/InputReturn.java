@@ -21,6 +21,12 @@ public class InputReturn {
         this.createTime = createTime;
     }
 
+    public InputReturn(Integer userinputId, Integer enterpriseinputId, Float quantity) {
+        this.userinputId = userinputId;
+        this.enterpriseinputId = enterpriseinputId;
+        this.quantity = quantity;
+    }
+
     public InputReturn() {
         super();
     }

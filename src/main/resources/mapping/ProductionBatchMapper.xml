@@ -111,4 +111,12 @@
     from production_batch
     where field_id = #{fieldId}
   </select>
+  <select id="onlyBatch" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from production_batch
+    where field_id = #{fieldId}
+    and DATE_FORMAT(plant_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{today}, '%Y-%m-%d')
+    and DATE_FORMAT(collect_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{today}, '%Y-%m-%d')
+  </select>
 </mapper>

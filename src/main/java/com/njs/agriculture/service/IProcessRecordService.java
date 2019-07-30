@@ -1,8 +1,12 @@
 package com.njs.agriculture.service;
 
 import com.njs.agriculture.VO.FieldVO;
+import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Field;
+import com.njs.agriculture.pojo.ProcessRecord;
+import net.sf.jsqlparser.schema.Server;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
@@ -60,4 +64,10 @@ public interface IProcessRecordService {
      * @return
      */
     ServerResponse generateTrace(List<Integer> recordIds);
+
+    ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO);
+
+    ServerResponse processImgUpload(List<MultipartFile> files);
+
+    ServerResponse returnInput(int id, float quantity);
 }
