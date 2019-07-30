@@ -46,4 +46,12 @@ public interface IInputService {
      * @return
      */
     ServerResponse stockRemind(int sourceId, int source, int type, int threshold);
+
+    /**
+     * 退回投入品
+     * @param id
+     * @param quantity
+     * @return
+     */
+    ServerResponse returnInput(int id, float quantity);
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.VO.ProcessRecordVO;
@@ -13,6 +14,7 @@ import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IFileService;
 import com.njs.agriculture.service.IProcessRecordService;
+import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import com.njs.agriculture.utils.MathUtil;
 import com.njs.agriculture.utils.PropertiesUtil;
@@ -27,14 +29,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.njs.agriculture.utils.MathUtil.sub;
+
 
 /**
  * @Auther: SaikeiLEe
  * @Date: 2019/7/28
  * @Description:
  */
-@Service("iIFieldService")
+@Service("iProcessRecordService")
 @Slf4j
 public class ProcessRecordServiceImpl implements IProcessRecordService {
 
@@ -47,14 +49,12 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private InputEnterpriseMapper inputEnterpriseMapper;
 
-    @Autowired
-    private InputReturnMapper inputReturnMapper;
 
     @Autowired
     private IFileService iFileService;
 
     @Autowired
-    private UserRelationshipMapper userRelationshipMapper;
+    private IUserService iUserService;
 
     @Autowired
     private FieldMapper fieldMapper;
@@ -74,76 +74,17 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private ProcessQrcodeMapper processQrcodeMapper;
 
-    @Override
-    public ServerResponse addField(FieldVO fieldVO) {
-        Field field = new Field();
-        BeanUtils.copyProperties(fieldVO, field);
-        if(fieldVO.isPerson()){
-            field.setSource(0);
-            field.setSourceId(fieldVO.getUserId());
-        }else {
-            ServerResponse<UserRelationship> serverResponse = isAdmin(fieldVO.getUserId());
-            if(!serverResponse.isSuccess()){
-                return serverResponse;
-            }
-            field.setSource(1);
-            field.setSourceId(serverResponse.getData().getEnterpriseId());
-        }
-        if(fieldVO.isFree()){
-            field.setStatus(0);
-        }else {
-            field.setStatus(1);
-        }
-        int resultCount = fieldMapper.insert(field);
-        if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("插入田块信息失败！");
-        }
-        return ServerResponse.createBySuccess();
-    }
 
-    @Override
-    public ServerResponse delField(int fieldId) {
-        int resultCount = fieldMapper.deleteByPrimaryKey(fieldId);
-        if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("删除田块失败！");
-        }
-        return ServerResponse.createBySuccess();
-    }
 
-    @Override
-    public ServerResponse modifyField(Field field) {
-        int resultCount = fieldMapper.updateByPrimaryKeySelective(field);
-        if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("更新田块失败！");
-        }
-        return ServerResponse.createBySuccess();
-    }
 
-    @Override
-    public ServerResponse fieldInfo(int userId) {
-        //1.先判断是否负责人
-        ServerResponse<UserRelationship> serverResponse = isAdmin(userId);
-        List<Field> fields = Lists.newArrayList();
-        if(!serverResponse.isSuccess()){
-            //用户id查询
-            fields = fieldMapper.selectBySourceId(userId);
-        }else{
-            fields = fieldMapper.selectBySourceId(serverResponse.getData().getEnterpriseId());
-        }
-        return ServerResponse.createBySuccess(fields);
-    }
 
-    @Override
-    public ServerResponse batchInfo(int fieldId) {
-        List<ProductionBatch> productionBatches = productionBatchMapper.batchInfo(fieldId);
-        return ServerResponse.createBySuccess(productionBatches);
-    }
+
 
     @Override
     public ServerResponse processRecord(int userId, String startTime, String endTime, int batchId, int cropId, int pageNum, int pageSize){
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
         Date eTime = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
-        ServerResponse<UserRelationship> serverResponse = isAdmin(userId);
+        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
         List<ProcessRecord> processRecordList = Lists.newArrayList();
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
@@ -258,41 +199,10 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(images);
     }
 
-    @Override
-    public ServerResponse returnInput(int id, float quantity) {
-        //1.利用id取回记录，判断数量是否超出
-        InputUser inputUser = inputUserMapper.selectByPrimaryKey(id);
-        if(inputUser == null){
-            return ServerResponse.createByErrorMessage("id无效，记录为空");
-        }
-        if(inputUser.getSource() == 0){
-            return ServerResponse.createByErrorMessage("该投入品不是由企业领用！");
-        }
-        double result = MathUtil.sub(inputUser.getQuantity(), quantity);
-        if(result < 0){
-            return ServerResponse.createByErrorMessage("数量超过存在额!");
-        }
-        //2.对数量进行删减，存入数据库
-        inputUser.setQuantity((float) result);
-        inputUserMapper.updateByPrimaryKeySelective(inputUser);
-        InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUser.getSourceId());
-        float resultE = (float)MathUtil.add(inputEnterprise.getQuantity(), quantity);
-        inputEnterprise.setQuantity(resultE);
-        inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
-        //3.更新退回表
-        InputReturn inputReturn = new InputReturn(inputUser.getUserId(), inputEnterprise.getId(), quantity);
-        inputReturnMapper.insert(inputReturn);
-        return ServerResponse.createBySuccess();
-    }
 
 
-    public ServerResponse isAdmin(int userId){
-        UserRelationship userRelationship = userRelationshipMapper.selectAdminByUserId(userId);
-        if (userRelationship == null){
-            return ServerResponse.createByErrorMessage("负责人信息查询出错");
-        }
-        return ServerResponse.createBySuccess(userRelationship);
-    }
+
+    
 
     public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){
         List<ProcessRecordVO> processRecords = Lists.newArrayList();

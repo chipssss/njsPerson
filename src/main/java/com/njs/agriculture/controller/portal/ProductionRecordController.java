@@ -5,13 +5,13 @@ import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Field;
+import com.njs.agriculture.pojo.ProductionBatch;
+import com.njs.agriculture.service.IBatchService;
+import com.njs.agriculture.service.IFieldService;
 import com.njs.agriculture.service.IProcessRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -31,30 +31,14 @@ public class ProductionRecordController {
     @Autowired
     private IProcessRecordService iProcessRecordService;
 
-    @PostMapping("fieldAdd.do")
-    public ServerResponse addField(@RequestBody FieldVO fieldVO){
-        return iProcessRecordService.addField(fieldVO);
-    }
-
-    @PostMapping("fieldDel.do")
-    public ServerResponse delField(@RequestBody JSONObject jsonObject){
-        int fieldId = jsonObject.getIntValue("fieldId");
-        return iProcessRecordService.delField(fieldId);
-    }
-
-    @PostMapping("fieldModify.do")
-    public ServerResponse modifyField(@RequestBody Field field){
-        return iProcessRecordService.modifyField(field);
-    }
-
-    @PostMapping("fieldInfo.do")
-    public ServerResponse fieldInfo(@RequestBody JSONObject jsonObject){
-        return iProcessRecordService.fieldInfo(jsonObject.getIntValue("userId"));
-    }
+    @Autowired
+    private IBatchService iBatchService;
+    
+    
 
     @PostMapping("batchInfo.do")
     public ServerResponse batchInfo(@RequestBody JSONObject jsonObject){
-        return iProcessRecordService.batchInfo(jsonObject.getIntValue("fieldId"));
+        return iBatchService.batchInfo(jsonObject.getIntValue("fieldId"));
     }
 
     @PostMapping("processRecord.do")
@@ -97,11 +81,16 @@ public class ProductionRecordController {
         return iProcessRecordService.processImgUpload(files);
     }
 
-    @PostMapping("inputReturn.do")
-    public ServerResponse inputReturn(@RequestBody JSONObject jsonObject){
-        return iProcessRecordService.returnInput(jsonObject.getIntValue("id"), jsonObject.getFloatValue("quantity"));
+
+    @PostMapping("batchAdd.do")
+    public ServerResponse batchInfo(@RequestBody ProductionBatch productionBatch){
+        return iBatchService.batchAdd(productionBatch);
     }
 
+    @GetMapping("batchDel.do")
+    public ServerResponse batchInfo(int id){
+        return iBatchService.batchDel(id);
+    }
 
 
 

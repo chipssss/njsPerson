@@ -2,6 +2,8 @@ package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.UserRelationship;
 
+import java.util.List;
+
 public interface UserRelationshipMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -16,4 +18,6 @@ public interface UserRelationshipMapper {
     int updateByPrimaryKey(UserRelationship record);
 
     UserRelationship selectAdminByUserId(int userId);
+
+    List<UserRelationship> selectByUserId(int userId);
 }

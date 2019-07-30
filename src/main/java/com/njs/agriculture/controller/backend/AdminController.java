@@ -24,6 +24,13 @@ public class AdminController {
     @Autowired
     private IUserService iUserSerivce;
 
+    @RequestMapping("usersGet.do")
+    public ServerResponse getUsers(@RequestBody(required = false) JSONObject jsonObject){
+        int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize",20);
+        return iUserSerivce.getUsers(pageNum, pageSize);
+    }
+
 
 
 

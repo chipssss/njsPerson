@@ -1,14 +1,10 @@
 package com.njs.agriculture.service;
 
-import com.njs.agriculture.VO.FieldVO;
+
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.pojo.Field;
-import com.njs.agriculture.pojo.ProcessRecord;
-import net.sf.jsqlparser.schema.Server;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -18,25 +14,7 @@ import java.util.List;
  */
 public interface IProcessRecordService {
 
-    ServerResponse addField(FieldVO fieldVO);
 
-    ServerResponse delField(int fieldId);
-
-    ServerResponse modifyField(Field field);
-
-    /**
-     * 田块获取
-     * @param userId
-     * @return 普通用户返回个人田块，企业负责人返回企业所有田块
-     */
-    ServerResponse fieldInfo(int userId);
-
-    /**
-     * 获取田块批次
-     * @param fieldId
-     * @return
-     */
-    ServerResponse batchInfo(int fieldId);
 
     /**
      *
@@ -65,9 +43,21 @@ public interface IProcessRecordService {
      */
     ServerResponse generateTrace(List<Integer> recordIds);
 
+    /**
+     * 添加生产记录
+     * @param processRecordInfoVO
+     * @return
+     */
     ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO);
 
+    /**
+     * 生产记录图片上传
+     * @param files
+     * @return
+     */
     ServerResponse processImgUpload(List<MultipartFile> files);
 
-    ServerResponse returnInput(int id, float quantity);
+
+
+
 }

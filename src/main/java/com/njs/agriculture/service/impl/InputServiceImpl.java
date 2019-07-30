@@ -11,6 +11,7 @@ import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
 import com.njs.agriculture.utils.DateUtil;
+import com.njs.agriculture.utils.MathUtil;
 import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.C;
@@ -28,6 +29,9 @@ import java.util.List;
  */
 @Service("iInputservice")
 public class InputServiceImpl implements IInputService {
+
+    @Autowired
+    private InputReturnMapper inputReturnMapper;
 
     @Autowired
     EnterpriseMapper enterpriseMapper;
@@ -271,6 +275,33 @@ public class InputServiceImpl implements IInputService {
             }
             return ServerResponse.createBySuccess(enterprises);
         }
+    }
+
+    @Override
+    public ServerResponse returnInput(int id, float quantity) {
+        //1.利用id取回记录，判断数量是否超出
+        InputUser inputUser = inputUserMapper.selectByPrimaryKey(id);
+        if(inputUser == null){
+            return ServerResponse.createByErrorMessage("id无效，记录为空");
+        }
+        if(inputUser.getSource() == 0){
+            return ServerResponse.createByErrorMessage("该投入品不是由企业领用！");
+        }
+        double result = MathUtil.sub(inputUser.getQuantity(), quantity);
+        if(result < 0){
+            return ServerResponse.createByErrorMessage("数量超过存在额!");
+        }
+        //2.对数量进行删减，存入数据库
+        inputUser.setQuantity((float) result);
+        inputUserMapper.updateByPrimaryKeySelective(inputUser);
+        InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUser.getSourceId());
+        float resultE = (float)MathUtil.add(inputEnterprise.getQuantity(), quantity);
+        inputEnterprise.setQuantity(resultE);
+        inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
+        //3.更新退回表
+        InputReturn inputReturn = new InputReturn(inputUser.getUserId(), inputEnterprise.getId(), quantity);
+        inputReturnMapper.insert(inputReturn);
+        return ServerResponse.createBySuccess();
     }
 
     public static void main(String[] args) {

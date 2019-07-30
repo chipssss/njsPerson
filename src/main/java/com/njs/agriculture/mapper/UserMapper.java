@@ -3,6 +3,8 @@ package com.njs.agriculture.mapper;
 import com.njs.agriculture.pojo.User;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface UserMapper {
     int deleteByPrimaryKey(Integer userId);
 
@@ -21,4 +23,6 @@ public interface UserMapper {
     int checkUserName(String userName);
 
     User selectLogin(@Param("phonenum") String phonenum,@Param("password") String password);
+
+    List<User> selectAll();
 }

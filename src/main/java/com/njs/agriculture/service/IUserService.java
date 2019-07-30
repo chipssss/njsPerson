@@ -21,4 +21,8 @@ public interface IUserService {
 
     ServerResponse updateInfo(String key, String value, int userId);
 
+    ServerResponse getUsers(int pageNum, int pageSize);
+
+    ServerResponse isManager(int id);
+
 }

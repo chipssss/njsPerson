@@ -26,6 +26,8 @@ public class InputController {
     @Autowired
     IInputService iInputService;
 
+
+
     @PostMapping("purchase.do")
     public ServerResponse purchase(@RequestBody InputVO inputVO, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -63,4 +65,9 @@ public class InputController {
        return iInputService.stockRemind(sourceId, source, type, threshold);
 
    }
+
+    @PostMapping("inputReturn.do")
+    public ServerResponse inputReturn(@RequestBody JSONObject jsonObject){
+        return iInputService.returnInput(jsonObject.getIntValue("id"), jsonObject.getFloatValue("quantity"));
+    }
 }

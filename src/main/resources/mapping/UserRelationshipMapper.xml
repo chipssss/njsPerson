@@ -88,4 +88,10 @@
     where user_id = #{userId}
     and position = 2
   </select>
+  <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_relationship
+    where user_id = #{userId}
+  </select>
 </mapper>
