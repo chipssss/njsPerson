@@ -119,4 +119,11 @@
     and DATE_FORMAT(plant_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{today}, '%Y-%m-%d')
     and DATE_FORMAT(collect_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{today}, '%Y-%m-%d')
   </select>
+  <select id="selectFieldIdByUserId" parameterType="int" resultType="int">
+    select
+    field_id
+    from production_batch
+    where source = #{source}
+    and source_id = #{sourceId}
+  </select>
 </mapper>

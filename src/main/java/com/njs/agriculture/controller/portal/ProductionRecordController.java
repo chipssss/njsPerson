@@ -81,7 +81,6 @@ public class ProductionRecordController {
         return iProcessRecordService.processImgUpload(files);
     }
 
-
     @PostMapping("batchAdd.do")
     public ServerResponse batchInfo(@RequestBody ProductionBatch productionBatch){
         return iBatchService.batchAdd(productionBatch);
@@ -90,6 +89,16 @@ public class ProductionRecordController {
     @GetMapping("batchDel.do")
     public ServerResponse batchInfo(int id){
         return iBatchService.batchDel(id);
+    }
+
+    @GetMapping("operationGet.do")
+    public ServerResponse operationGet(){
+        return iProcessRecordService.getOperation();
+    }
+
+    @GetMapping("getFieldsByBatchExist.do")
+    public ServerResponse getFieldsByBatchExist(int userId){
+        return iProcessRecordService.getFieldsByBatchExist(userId);
     }
 
 

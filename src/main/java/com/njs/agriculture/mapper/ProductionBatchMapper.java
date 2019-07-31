@@ -22,4 +22,6 @@ public interface ProductionBatchMapper {
     List<ProductionBatch> batchInfo(int fieldId);
 
     ProductionBatch onlyBatch(@Param("fieldId") int fieldId, @Param("today") Date today);
+
+    List<Integer> selectFieldIdByUserId(@Param("source") int source, @Param("sourceId") int sourceId);
 }

@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.njs.agriculture.VO.BatchInfoVO;
-import com.njs.agriculture.VO.FieldVO;
-import com.njs.agriculture.VO.ProcessRecordInfoVO;
-import com.njs.agriculture.VO.ProcessRecordVO;
+import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.*;
@@ -74,11 +71,14 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private ProcessQrcodeMapper processQrcodeMapper;
 
+    @Autowired
+    private CropInfoMapper cropInfoMapper;
 
+    @Autowired
+    private OperationMapper operationMapper;
 
-
-
-
+    @Autowired
+    private UserRelationshipMapper userRelationshipMapper;
 
     @Override
     public ServerResponse processRecord(int userId, String startTime, String endTime, int batchId, int cropId, int pageNum, int pageSize){
@@ -199,10 +199,26 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(images);
     }
 
+    @Override
+    public ServerResponse getOperation() {
+        List<String> operations = operationMapper.selectAll();
+        if(operations.isEmpty()){
+            return ServerResponse.createByErrorMessage("未知错误！");
+        }
+        return ServerResponse.createBySuccess(operations);
+    }
 
+    @Override
+    public ServerResponse getFieldsByBatchExist(int userId) {
+        List<UserRelationship> userRelationships = userRelationshipMapper.selectByUserId(userId);
+        List<FieldListVO> fields = Lists.newLinkedList();
+        for (UserRelationship relationship : userRelationships) {
+            fields.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
+        }
+        fields.addAll(fieldMapper.selectByUserId(0, userId));
+        return ServerResponse.createBySuccess(fields);
+    }
 
-
-    
 
     public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){
         List<ProcessRecordVO> processRecords = Lists.newArrayList();
@@ -215,6 +231,8 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(processRecord.getBatchId());
                 processRecordVO.setBatchName(productionBatch.getName());
                 processRecordVO.setFieldName(fieldMapper.selectByPrimaryKey(productionBatch.getFieldId()).getName());
+                CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(processRecord.getCropId());
+                processRecordVO.setCropName(cropInfo.getName());
                 processRecords.add(processRecordVO);
             }
         }

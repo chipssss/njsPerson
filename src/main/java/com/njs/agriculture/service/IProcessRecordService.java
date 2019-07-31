@@ -57,6 +57,10 @@ public interface IProcessRecordService {
      */
     ServerResponse processImgUpload(List<MultipartFile> files);
 
+    ServerResponse getOperation();
+
+    ServerResponse getFieldsByBatchExist(int userId);
+
 
 
 

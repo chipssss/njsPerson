@@ -85,9 +85,9 @@ public class FieldServiceImpl implements IFieldService {
         List<Field> fields = Lists.newArrayList();
         if(!serverResponse.isSuccess()){
             //用户id查询
-            fields = fieldMapper.selectBySourceId(userId);
+            fields = fieldMapper.selectBySourceId(0, userId);
         }else{
-            fields = fieldMapper.selectBySourceId(serverResponse.getData().getEnterpriseId());
+            fields = fieldMapper.selectBySourceId(1, serverResponse.getData().getEnterpriseId());
         }
         return ServerResponse.createBySuccess(fields);
     }

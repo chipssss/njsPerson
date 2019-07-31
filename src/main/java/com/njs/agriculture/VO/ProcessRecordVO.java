@@ -23,6 +23,8 @@ public class ProcessRecordVO {
 
     private Integer cropId;
 
+    private String cropName;
+
     private String operation;
 
     private String inputRecord;

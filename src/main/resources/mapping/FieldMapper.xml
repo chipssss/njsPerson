@@ -15,6 +15,12 @@
       <arg column="source" javaType="java.lang.Integer" jdbcType="TINYINT" />
     </constructor>
   </resultMap>
+  <resultMap id="SimpleMap" type="com.njs.agriculture.VO.FieldListVO">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
     id, square, name, manager, status, location, qrcode_id, remark, source_id, source
   </sql>
@@ -156,5 +162,13 @@
     <include refid="Base_Column_List"/>
     from field
     where source_id = #{sourceId}
+    and source = #{source}
+  </select>
+  <select id="selectByUserId" parameterType="map" resultMap="SimpleMap">
+    select a.id,a.name
+    from field a INNER JOIN production_batch b
+    on a.id = b.field_id
+    WHERE a.source = #{source}
+    and a.source_id = #{sourceId};
   </select>
 </mapper>

@@ -1,6 +1,8 @@
 package com.njs.agriculture.mapper;
 
+import com.njs.agriculture.VO.FieldListVO;
 import com.njs.agriculture.pojo.Field;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ public interface FieldMapper {
 
     int updateByPrimaryKey(Field record);
 
-    List<Field> selectBySourceId(int sourceId);
+    List<Field> selectBySourceId(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    List<FieldListVO> selectByUserId(@Param("source") int source, @Param("sourceId") int sourceId);
 
 }
