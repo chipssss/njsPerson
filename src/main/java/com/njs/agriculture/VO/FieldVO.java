@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class FieldVO {
 
+    private int id;
+
     private Float square;
 
     private String name;

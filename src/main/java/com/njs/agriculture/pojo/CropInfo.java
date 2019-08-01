@@ -19,6 +19,13 @@ public class CropInfo {
         this.source = source;
     }
 
+    public CropInfo(Integer categoryId, String name, Integer sourceId, Integer source) {
+        this.categoryId = categoryId;
+        this.name = name;
+        this.sourceId = sourceId;
+        this.source = source;
+    }
+
     public CropInfo() {
         super();
     }

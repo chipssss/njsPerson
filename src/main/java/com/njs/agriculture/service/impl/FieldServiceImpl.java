@@ -35,23 +35,9 @@ public class FieldServiceImpl implements IFieldService {
 
     @Override
     public ServerResponse addField(FieldVO fieldVO) {
-        Field field = new Field();
-        BeanUtils.copyProperties(fieldVO, field);
-        if(fieldVO.isPerson()){
-            field.setSource(0);
-            field.setSourceId(fieldVO.getUserId());
-        }else {
-            ServerResponse<UserRelationship> serverResponse = iUserService.isManager(fieldVO.getUserId());
-            if(!serverResponse.isSuccess()){
-                return serverResponse;
-            }
-            field.setSource(1);
-            field.setSourceId(serverResponse.getData().getEnterpriseId());
-        }
-        if(fieldVO.isFree()){
-            field.setStatus(0);
-        }else {
-            field.setStatus(1);
+        Field field = fieldVO2Field(fieldVO);
+        if(field == null){
+            return ServerResponse.createByErrorMessage("参数出错！");
         }
         int resultCount = fieldMapper.insert(field);
         if(resultCount == 0){
@@ -70,7 +56,11 @@ public class FieldServiceImpl implements IFieldService {
     }
 
     @Override
-    public ServerResponse modifyField(Field field) {
+    public ServerResponse modifyField(FieldVO fieldVO) {
+        Field field = fieldVO2Field(fieldVO);
+        if(field == null){
+            return ServerResponse.createByErrorMessage("参数出错！");
+        }
         int resultCount = fieldMapper.updateByPrimaryKeySelective(field);
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("更新田块失败！");
@@ -90,5 +80,27 @@ public class FieldServiceImpl implements IFieldService {
             fields = fieldMapper.selectBySourceId(1, serverResponse.getData().getEnterpriseId());
         }
         return ServerResponse.createBySuccess(fields);
+    }
+
+    private Field fieldVO2Field(FieldVO fieldVO){
+        Field field = new Field();
+        BeanUtils.copyProperties(fieldVO, field);
+        if(fieldVO.isPerson()){
+            field.setSource(0);
+            field.setSourceId(fieldVO.getUserId());
+        }else {
+            ServerResponse<UserRelationship> serverResponse = iUserService.isManager(fieldVO.getUserId());
+            if(!serverResponse.isSuccess()){
+                return null;
+            }
+            field.setSource(1);
+            field.setSourceId(serverResponse.getData().getEnterpriseId());
+        }
+        if(fieldVO.isFree()){
+            field.setStatus(0);
+        }else {
+            field.setStatus(1);
+        }
+        return field;
     }
 }

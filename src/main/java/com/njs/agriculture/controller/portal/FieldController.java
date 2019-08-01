@@ -36,8 +36,8 @@ public class FieldController {
     }
 
     @PostMapping("fieldModify.do")
-    public ServerResponse modifyField(@RequestBody Field field){
-        return iFieldService.modifyField(field);
+    public ServerResponse modifyField(@RequestBody FieldVO fieldVO){
+        return iFieldService.modifyField(fieldVO);
     }
 
     @PostMapping("fieldInfo.do")

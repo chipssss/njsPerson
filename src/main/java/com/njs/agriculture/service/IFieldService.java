@@ -14,7 +14,7 @@ public interface IFieldService {
 
     ServerResponse delField(int fieldId);
 
-    ServerResponse modifyField(Field field);
+    ServerResponse modifyField(FieldVO fieldVO);
 
     /**
      * 田块获取

@@ -70,4 +70,10 @@
       firstcate_id = #{firstcateId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByFirstCateId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from crop_secondcate
+    where firstcate_id = #{firstCateId}
+  </select>
 </mapper>

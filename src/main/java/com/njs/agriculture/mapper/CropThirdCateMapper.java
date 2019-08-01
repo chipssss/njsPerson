@@ -2,6 +2,8 @@ package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.CropThirdCate;
 
+import java.util.List;
+
 public interface CropThirdCateMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface CropThirdCateMapper {
     int updateByPrimaryKeySelective(CropThirdCate record);
 
     int updateByPrimaryKey(CropThirdCate record);
+
+    List<CropThirdCate> selectBySecondCateId(int secondCateId);
 }

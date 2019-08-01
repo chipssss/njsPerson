@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 /**
@@ -212,11 +209,12 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse getFieldsByBatchExist(int userId) {
         List<UserRelationship> userRelationships = userRelationshipMapper.selectByUserId(userId);
         List<FieldListVO> fields = Lists.newLinkedList();
+        Set<FieldListVO> set = new HashSet<>();
         for (UserRelationship relationship : userRelationships) {
-            fields.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
+            set.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
         }
-        fields.addAll(fieldMapper.selectByUserId(0, userId));
-        return ServerResponse.createBySuccess(fields);
+        set.addAll(fieldMapper.selectByUserId(0, userId));
+        return ServerResponse.createBySuccess(set);
     }
 
 
