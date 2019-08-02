@@ -2,6 +2,8 @@ package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.Enterprise;
 
+import java.util.List;
+
 public interface EnterpriseMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface EnterpriseMapper {
     int updateByPrimaryKeySelective(Enterprise record);
 
     int updateByPrimaryKey(Enterprise record);
+
+    List<Enterprise> selectByStatus(int status);
 }

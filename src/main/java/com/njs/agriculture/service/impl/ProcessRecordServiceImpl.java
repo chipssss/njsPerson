@@ -86,9 +86,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
         if(serverResponse.isSuccess()){
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, serverResponse.getData().getEnterpriseId());
+            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, serverResponse.getData().getEnterpriseId(), 1);
         }else {
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, userId);
+            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, userId, 0);
         }
 
         return ServerResponse.createBySuccess(records2recordVO(processRecordList));
@@ -225,11 +225,24 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 ProcessRecordVO processRecordVO = new ProcessRecordVO();
                 BeanUtils.copyProperties(processRecord, processRecordVO);
                 List<String> images = processImageMapper.selectByRecordId(processRecord.getId());
+                if(images.isEmpty()){
+                    continue;
+                }
                 processRecordVO.setImages(images);
                 ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(processRecord.getBatchId());
+                if(productionBatch == null){
+                    continue;
+                }
                 processRecordVO.setBatchName(productionBatch.getName());
-                processRecordVO.setFieldName(fieldMapper.selectByPrimaryKey(productionBatch.getFieldId()).getName());
+                Field field = fieldMapper.selectByPrimaryKey(productionBatch.getFieldId());
+                if(field == null){
+                    continue;
+                }
+                processRecordVO.setFieldName(field.getName());
                 CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(processRecord.getCropId());
+                if(cropInfo == null){
+                    continue;
+                }
                 processRecordVO.setCropName(cropInfo.getName());
                 processRecords.add(processRecordVO);
             }

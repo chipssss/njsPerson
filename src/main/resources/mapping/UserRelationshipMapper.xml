@@ -94,4 +94,10 @@
     from user_relationship
     where user_id = #{userId}
   </select>
+  <select id="selectByEnterpriseId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_relationship
+    where enterprise_id = #{enterpriseId}
+  </select>
 </mapper>

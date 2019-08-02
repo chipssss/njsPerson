@@ -18,6 +18,12 @@ public class Const {
 
     public static final String PROCESSIMGPREFIX ="img/process/";
 
+    public interface Position{
+        int STAFF = 0;
+        int MANAGER = 1;
+        int CHARGER = 2;
+    }
+
     public interface InputRole{
         int USER = 0;
         int ENTERPRISE = 1;

@@ -9,10 +9,12 @@
       <arg column="industry" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="main_product" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="valid_certificate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="address" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, credit_code, industry, main_product, valid_certificate
+    id, name, credit_code, industry, main_product, valid_certificate, status, address
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,13 +26,13 @@
     delete from enterprise
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.Enterprise">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.Enterprise" useGeneratedKeys="true" keyProperty="id">
     insert into enterprise (id, name, credit_code, 
-      industry, main_product, valid_certificate
-      )
+      industry, main_product, valid_certificate, 
+      status, address)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
-      #{industry,jdbcType=VARCHAR}, #{mainProduct,jdbcType=VARCHAR}, #{validCertificate,jdbcType=VARCHAR}
-      )
+      #{industry,jdbcType=VARCHAR}, #{mainProduct,jdbcType=VARCHAR}, #{validCertificate,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.Enterprise">
     insert into enterprise
@@ -53,6 +55,12 @@
       <if test="validCertificate != null">
         valid_certificate,
       </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -72,6 +80,12 @@
       </if>
       <if test="validCertificate != null">
         #{validCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -93,6 +107,12 @@
       <if test="validCertificate != null">
         valid_certificate = #{validCertificate,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -102,7 +122,15 @@
       credit_code = #{creditCode,jdbcType=VARCHAR},
       industry = #{industry,jdbcType=VARCHAR},
       main_product = #{mainProduct,jdbcType=VARCHAR},
-      valid_certificate = #{validCertificate,jdbcType=VARCHAR}
+      valid_certificate = #{validCertificate,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByStatus" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from enterprise
+    where status = #{status}
+  </select>
 </mapper>

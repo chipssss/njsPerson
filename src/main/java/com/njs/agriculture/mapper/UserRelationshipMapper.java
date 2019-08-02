@@ -20,4 +20,6 @@ public interface UserRelationshipMapper {
     UserRelationship selectAdminByUserId(int userId);
 
     List<UserRelationship> selectByUserId(int userId);
+
+    List<UserRelationship> selectByEnterpriseId(int enterpriseId);
 }
