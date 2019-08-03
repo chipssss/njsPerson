@@ -4,10 +4,7 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.service.IEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auther: SaikeiLEe
@@ -27,7 +24,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("enterpriseGet.do")
-    public ServerResponse enterpriseGet(int status){
+    public ServerResponse enterpriseGet( int status){
         return iEnterpriseService.enterpriseGet(status);
     }
 

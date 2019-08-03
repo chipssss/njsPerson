@@ -11,6 +11,6 @@ import java.util.List;
  * @Description:
  */
 @Data
-public class CropVO extends CropFirstCate{
+public class CropCateVO extends CropFirstCate{
     private List<CropSecondCateVO> secondCateList;
 }

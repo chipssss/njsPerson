@@ -3,7 +3,7 @@ package com.njs.agriculture.service.impl;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.CropSecondCateVO;
 import com.njs.agriculture.VO.CropThirdCateVO;
-import com.njs.agriculture.VO.CropVO;
+import com.njs.agriculture.VO.CropCateVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.CropFirstCateMapper;
 import com.njs.agriculture.mapper.CropInfoMapper;
@@ -62,11 +62,11 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse cropGet() {
-        List<CropVO> cropVOList = Lists.newLinkedList();
+        List<CropCateVO> cropCateVOList = Lists.newLinkedList();
         List<CropFirstCate> firstCateList = cropFirstCateMapper.selectAll();
         for (CropFirstCate cropFirstCate : firstCateList) {
-            CropVO cropVO = new CropVO();
-            BeanUtils.copyProperties(cropFirstCate,cropVO);
+            CropCateVO cropCateVO = new CropCateVO();
+            BeanUtils.copyProperties(cropFirstCate, cropCateVO);
 
             List<CropSecondCateVO> cropSecondCateVOS = Lists.newLinkedList();
             List<CropSecondCate> secondCateList = cropSecondCateMapper.selectByFirstCateId(cropFirstCate.getId());
@@ -88,9 +88,9 @@ public class CropServiceImpl implements ICropService {
                 cropSecondCateVOS.add(cropSecondCateVO);
 
             }
-            cropVO.setSecondCateList(cropSecondCateVOS);
-            cropVOList.add(cropVO);
+            cropCateVO.setSecondCateList(cropSecondCateVOS);
+            cropCateVOList.add(cropCateVO);
         }
-        return ServerResponse.createBySuccess(cropVOList);
+        return ServerResponse.createBySuccess(cropCateVOList);
     }
 }
