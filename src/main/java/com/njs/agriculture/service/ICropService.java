@@ -11,5 +11,5 @@ import com.njs.agriculture.common.ServerResponse;
 public interface ICropService {
     ServerResponse cropAdd(int userId, String name, int typeId);
 
-    ServerResponse cropGet();
+    ServerResponse cropGet(int pageNum, int pageSize);
 }

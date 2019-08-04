@@ -13,7 +13,7 @@ import com.njs.agriculture.pojo.ProductionThirdCate;
  */
 public interface IProductService {
 
-    ServerResponse categoryGet();
+    ServerResponse categoryGet(int pageNum, int pageSize);
 
     ServerResponse productAdd(ProductPool productPool);
 

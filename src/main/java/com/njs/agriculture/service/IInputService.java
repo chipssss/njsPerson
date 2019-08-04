@@ -24,7 +24,7 @@ public interface IInputService {
      * 农资类别获取
      * @return
      */
-    ServerResponse<List<InputCategoryVO>> categoryInfo();
+    ServerResponse<List<InputCategoryVO>> categoryInfo(int pageNum, int pageSize);
 
     /**
      * 农资获取

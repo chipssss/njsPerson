@@ -118,7 +118,8 @@ public class InputServiceImpl implements IInputService {
     }
 
     @Override
-    public ServerResponse<List<InputCategoryVO>> categoryInfo() {
+    public ServerResponse<List<InputCategoryVO>> categoryInfo(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<InputCategoryVO> inputCategoryVOS = Lists.newArrayList();
         //1.先获取一级类别
         List<InputFirstCate> inputFirstCateList = inputFirstCateMapper.selectAll();

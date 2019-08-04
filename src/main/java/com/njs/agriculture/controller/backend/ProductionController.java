@@ -23,9 +23,11 @@ public class ProductionController {
     @Autowired
     private IProductService iProductService;
 
-    @GetMapping("categoryGet.do")
-    public ServerResponse categoryGet(){
-        return iProductService.categoryGet();
+    @PostMapping("categoryGet.do")
+    public ServerResponse categoryGet(@RequestBody JSONObject jsonObject){
+        int pageNum = jsonObject.getIntValue("pageNum");
+        int pageSize = jsonObject.getIntValue("pageSize");
+        return iProductService.categoryGet(pageNum, pageSize);
     }
 
     @PostMapping("productAdd.do")

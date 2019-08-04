@@ -26,8 +26,6 @@ public class InputController {
     @Autowired
     IInputService iInputService;
 
-
-
     @PostMapping("purchase.do")
     public ServerResponse purchase(@RequestBody InputVO inputVO, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -39,8 +37,10 @@ public class InputController {
     }
 
    @RequestMapping("categoryInfo.do")
-    public ServerResponse categoryInfo(){
-        return iInputService.categoryInfo();
+    public ServerResponse categoryInfo(@RequestBody JSONObject jsonObject){
+       int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
+       int pageSize = (int)jsonObject.getOrDefault("pageSize",10);
+        return iInputService.categoryInfo(pageNum, pageSize);
    }
 
    @PostMapping("infoGet.do")

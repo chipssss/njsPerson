@@ -12,8 +12,10 @@ public interface IEnterpriseService {
 
     ServerResponse enterpriseAdd(Enterprise enterprise);
 
-    ServerResponse enterpriseGet(int status);
+    ServerResponse enterpriseGet(int status, int pageNum, int pageSize);
 
     ServerResponse personnelGet(int enterpriseId);
+
+    ServerResponse enterpriseExamine(int status, int enterpriseId);
 
 }

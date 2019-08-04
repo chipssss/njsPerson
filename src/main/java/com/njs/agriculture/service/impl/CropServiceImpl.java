@@ -1,5 +1,6 @@
 package com.njs.agriculture.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.CropSecondCateVO;
 import com.njs.agriculture.VO.CropThirdCateVO;
@@ -61,8 +62,9 @@ public class CropServiceImpl implements ICropService {
     }
 
     @Override
-    public ServerResponse cropGet() {
+    public ServerResponse cropGet(int pageNum, int pageSize) {
         List<CropCateVO> cropCateVOList = Lists.newLinkedList();
+        PageHelper.startPage(pageNum, pageSize);
         List<CropFirstCate> firstCateList = cropFirstCateMapper.selectAll();
         for (CropFirstCate cropFirstCate : firstCateList) {
             CropCateVO cropCateVO = new CropCateVO();

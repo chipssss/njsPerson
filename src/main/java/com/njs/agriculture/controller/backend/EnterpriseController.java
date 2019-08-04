@@ -1,5 +1,6 @@
 package com.njs.agriculture.controller.backend;
 
+import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.service.IEnterpriseService;
@@ -23,13 +24,23 @@ public class EnterpriseController {
         return iEnterpriseService.enterpriseAdd(enterprise);
     }
 
-    @GetMapping("enterpriseGet.do")
-    public ServerResponse enterpriseGet( int status){
-        return iEnterpriseService.enterpriseGet(status);
+    @PostMapping("enterpriseGet.do")
+    public ServerResponse enterpriseGet(@RequestBody JSONObject jsonObject){
+        int status = jsonObject.getIntValue("status");
+        int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize",10);
+        return iEnterpriseService.enterpriseGet(status, pageNum, pageSize);
     }
 
     @GetMapping("personnelGet.do")
     public ServerResponse personnelGet(int enterpriseId){
         return iEnterpriseService.personnelGet(enterpriseId);
+    }
+
+    @PostMapping("enterpriseExamine.do")
+    public ServerResponse enterpriseExamine(@RequestBody JSONObject jsonObject){
+        int status = jsonObject.getIntValue("status");
+        int enterpriseId = jsonObject.getIntValue("enterpriseId");
+        return iEnterpriseService.enterpriseExamine(status, enterpriseId);
     }
 }

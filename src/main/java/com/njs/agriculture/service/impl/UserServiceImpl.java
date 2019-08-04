@@ -186,7 +186,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse isManager(int userId) {
         UserRelationship userRelationship = userRelationshipMapper.selectAdminByUserId(userId);
         if (userRelationship == null) {
-            return ServerResponse.createByErrorMessage("负责人信息查询出错");
+            return ServerResponse.createByErrorMessage("不是负责人！");
         }
         return ServerResponse.createBySuccess(userRelationship);
     }

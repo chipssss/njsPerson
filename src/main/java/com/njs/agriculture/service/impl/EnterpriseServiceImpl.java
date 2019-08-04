@@ -1,5 +1,6 @@
 package com.njs.agriculture.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.PersonnelVO;
 import com.njs.agriculture.common.Const;
@@ -47,7 +48,8 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
     }
 
     @Override
-    public ServerResponse enterpriseGet(int status) {
+    public ServerResponse enterpriseGet(int status, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         if(status == 0 || status == 1){
             List<Enterprise> enterprises = enterpriseMapper.selectByStatus(status);
             return ServerResponse.createBySuccess(enterprises);
@@ -81,5 +83,17 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
             personnelVOS.add(personnelVO);
         }
         return ServerResponse.createBySuccess(personnelVOS);
+    }
+
+    @Override
+    public ServerResponse enterpriseExamine(int status, int enterpriseId) {
+        Enterprise enterprise = new Enterprise();
+        enterprise.setId(enterpriseId);
+        enterprise.setStatus(status);
+        int resultRow = enterpriseMapper.updateByPrimaryKeySelective(enterprise);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("更新失败！");
+        }
+        return ServerResponse.createBySuccess();
     }
 }

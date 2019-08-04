@@ -1,5 +1,6 @@
 package com.njs.agriculture.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.ProductCateVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
@@ -43,7 +44,8 @@ public class ProductServiceImpl implements IProductService {
     private ProductionThirdCateMapper productionThirdCateMapper;
 
     @Override
-    public ServerResponse categoryGet() {
+    public ServerResponse categoryGet(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ProductCateVO> cateVOS = Lists.newLinkedList();
         List<ProductionFirstCate> firstCates = productionFirstCateMapper.selectAll();
         for (ProductionFirstCate firstCate : firstCates) {

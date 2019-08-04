@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.service.ICropService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auther: SaikeiLEe
@@ -29,9 +26,11 @@ public class CropController {
         return iCropService.cropAdd(userId, name, typeId);
     }
 
-    @GetMapping("cropGet.do")
-    public ServerResponse cropGet(){
-        return iCropService.cropGet();
+    @PostMapping("cropGet.do")
+    public ServerResponse cropGet(@RequestBody JSONObject jsonObject){
+        int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize",10);
+        return iCropService.cropGet(pageNum, pageSize);
     }
 
 
