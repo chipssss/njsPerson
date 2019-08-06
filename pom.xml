@@ -10,7 +10,6 @@
     </parent>
     <groupId>com.njs</groupId>
     <artifactId>agriculture</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>agriculture</name>
     <description>Demo project for Spring Boot</description>
     <!--修改打包形式-->
