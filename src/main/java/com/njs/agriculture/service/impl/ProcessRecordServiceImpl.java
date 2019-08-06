@@ -209,12 +209,16 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse getFieldsByBatchExist(int userId) {
         List<UserRelationship> userRelationships = userRelationshipMapper.selectByUserId(userId);
         List<FieldListVO> fields = Lists.newLinkedList();
-        Set<FieldListVO> set = new HashSet<>();
         for (UserRelationship relationship : userRelationships) {
-            set.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
+            fields.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
         }
-        set.addAll(fieldMapper.selectByUserId(0, userId));
-        return ServerResponse.createBySuccess(set);
+        fields.addAll(fieldMapper.selectByUserId(0, userId));
+        return ServerResponse.createBySuccess(fields);
+    }
+
+    @Override
+    public ServerResponse getBatchesByUserId(int userId) {
+        return ServerResponse.createBySuccess(productionBatchMapper.selectByExistProcessRecord(userId));
     }
 
 

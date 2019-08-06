@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +44,19 @@ public class BatchServiceImpl implements IBatchService {
 
     @Override
     public ServerResponse batchAdd(ProductionBatch productionBatch) {
+        List<ProductionBatch> batchesExisted = productionBatchMapper.selectByFieldId(productionBatch.getFieldId());
+        Date start = productionBatch.getPlantTime();
+        Date end = productionBatch.getCollectTime();
+        if(productionBatch.getPlantTime().after(productionBatch.getCollectTime())){
+            return ServerResponse.createByErrorMessage("时间不规范，种植时间比采割时间早!");
+        }
+        for (ProductionBatch batch : batchesExisted) {
+            if(!((start.after(batch.getCollectTime()) ||start.equals(batch.getCollectTime()))
+                    ||
+                    (end.before(batch.getPlantTime()) || end.equals(batch.getPlantTime())))){
+                return ServerResponse.createByErrorMessage("时间冲突,请重新输入数据!");
+            }
+        }
         int resultRow = productionBatchMapper.insert(productionBatch);
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("插入记录失败!");

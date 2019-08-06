@@ -24,4 +24,8 @@ public interface ProductionBatchMapper {
     ProductionBatch onlyBatch(@Param("fieldId") int fieldId, @Param("today") Date today);
 
     List<Integer> selectFieldIdByUserId(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    List<ProductionBatch> selectByExistProcessRecord(int userId);
+
+    List<ProductionBatch> selectByFieldId(int fieldId);
 }

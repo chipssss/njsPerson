@@ -2,13 +2,16 @@ package com.njs.agriculture.utils;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.njs.agriculture.pojo.InputBarcode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -21,6 +24,9 @@ import java.security.cert.X509Certificate;
  */
 @Slf4j
 public class HttpsUtil {
+
+    public static final String APPKEY = PropertiesUtil.getProperty("APPKEY");// 你的appkey
+    public static final String BARCODEURL = PropertiesUtil.getProperty("BARCODEURL");
 
     /**
      * 发送https请求
@@ -91,5 +97,30 @@ public class HttpsUtil {
             log.error("https请求异常：{}", e);
         }
         return jsonObject;
+    }
+
+    public static InputBarcode Get(String barcode) {
+        JSONObject result = null;
+        String url = BARCODEURL + "?appkey=" + APPKEY + "&barcode=" + barcode;
+        JSONObject jsonObject = HttpsUtil.httpsRequest(url, "GET", "");
+        if(jsonObject.getIntValue("status") != 0){
+            return null;
+        }
+        result = jsonObject.getJSONObject("result");
+        InputBarcode inputBarcode = new InputBarcode();
+        inputBarcode.setManufacturer(result.getString("company"));
+        inputBarcode.setName(result.getString("name"));
+        String price = result.getString("price");
+        if (StringUtils.isNotBlank(price)) {
+            inputBarcode.setPrice(BigDecimal.valueOf(Double.valueOf(price)));
+        }
+        inputBarcode.setSpecification(result.getString("type"));
+        inputBarcode.setBarcode(barcode);
+        return inputBarcode;
+    }
+
+    public static void main(String[] args) {
+        InputBarcode inputBarcode = Get("6917878036526");
+        System.out.println();
     }
 }

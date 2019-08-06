@@ -54,4 +54,6 @@ public interface IInputService {
      * @return
      */
     ServerResponse returnInput(int id, float quantity);
+
+    ServerResponse scanBarcode(String barCode);
 }

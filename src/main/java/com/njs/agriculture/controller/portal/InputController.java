@@ -7,10 +7,7 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IInputService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -69,5 +66,10 @@ public class InputController {
     @PostMapping("inputReturn.do")
     public ServerResponse inputReturn(@RequestBody JSONObject jsonObject){
         return iInputService.returnInput(jsonObject.getIntValue("id"), jsonObject.getFloatValue("quantity"));
+    }
+
+    @GetMapping("scanBarcode.do")
+    public ServerResponse barcodeScan(String barcode){
+        return iInputService.scanBarcode(barcode);
     }
 }

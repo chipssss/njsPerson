@@ -165,7 +165,7 @@
     and source = #{source}
   </select>
   <select id="selectByUserId" parameterType="map" resultMap="SimpleMap">
-    select a.id,a.name
+    select distinct a.id,a.name
     from field a INNER JOIN production_batch b
     on a.id = b.field_id
     WHERE a.source = #{source}

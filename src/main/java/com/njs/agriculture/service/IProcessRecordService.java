@@ -61,6 +61,7 @@ public interface IProcessRecordService {
 
     ServerResponse getFieldsByBatchExist(int userId);
 
+    ServerResponse getBatchesByUserId(int userId);
 
 
 

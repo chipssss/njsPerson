@@ -6,6 +6,7 @@ import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.ProductionBatch;
+import com.njs.agriculture.pojo.ServicePool;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IFieldService;
 import com.njs.agriculture.service.IProcessRecordService;
@@ -99,6 +100,11 @@ public class ProductionRecordController {
     @GetMapping("getFieldsByBatchExist.do")
     public ServerResponse getFieldsByBatchExist(int userId){
         return iProcessRecordService.getFieldsByBatchExist(userId);
+    }
+
+    @GetMapping("getBatchesByExistProcessRecord.do")
+    public ServerResponse getBatchesByUserId(int userId){
+        return iProcessRecordService.getBatchesByUserId(userId);
     }
 
 

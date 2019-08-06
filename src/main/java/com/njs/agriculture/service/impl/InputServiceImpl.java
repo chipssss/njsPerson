@@ -11,6 +11,7 @@ import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
 import com.njs.agriculture.utils.DateUtil;
+import com.njs.agriculture.utils.HttpsUtil;
 import com.njs.agriculture.utils.MathUtil;
 import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,9 @@ public class InputServiceImpl implements IInputService {
 
     @Autowired
     InputConsumeMapper inputConsumeMapper;
+
+    @Autowired
+    InputBarcodeMapper inputBarcodeMapper;
 
 
     @Override
@@ -305,11 +309,18 @@ public class InputServiceImpl implements IInputService {
         return ServerResponse.createBySuccess();
     }
 
-    public static void main(String[] args) {
-        /*String orderBy = "c_time_desc";
-        String[] orderByArray = orderBy.split("_");
-        orderByArray = new String[]{orderByArray[0] + "_" + orderByArray[1], orderByArray[2]};
-        System.out.println();*/
-
+    @Override
+    public ServerResponse scanBarcode(String barCode) {
+        InputBarcode inputBarcode = inputBarcodeMapper.selectByBarCode(barCode);
+        if(inputBarcode != null){
+            return ServerResponse.createBySuccess(inputBarcode);
+        }
+        InputBarcode inputBarcode1 = HttpsUtil.Get(barCode);
+        if(inputBarcode1 == null){
+            return ServerResponse.createByErrorMessage("查询不到记录!");
+        }
+        inputBarcodeMapper.insert(inputBarcode1);
+        return ServerResponse.createBySuccess(inputBarcode1);
     }
+
 }

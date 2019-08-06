@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.InputBarcodeMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.InputBarcode">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <idArg column="barcode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="specification" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="manufacturer" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, barcode, name, specification, price, manufacturer
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputBarcodeKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from input_barcode
+    where id = #{id,jdbcType=INTEGER}
+      and barcode = #{barcode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputBarcodeKey">
+    delete from input_barcode
+    where id = #{id,jdbcType=INTEGER}
+      and barcode = #{barcode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputBarcode">
+    insert into input_barcode (id, barcode, name, 
+      specification, price, manufacturer
+      )
+    values (#{id,jdbcType=INTEGER}, #{barcode,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{manufacturer,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.InputBarcode">
+    insert into input_barcode
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="barcode != null">
+        barcode,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="manufacturer != null">
+        manufacturer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="barcode != null">
+        #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="manufacturer != null">
+        #{manufacturer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.InputBarcode">
+    update input_barcode
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null">
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="manufacturer != null">
+        manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+      and barcode = #{barcode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputBarcode">
+    update input_barcode
+    set name = #{name,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      manufacturer = #{manufacturer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+      and barcode = #{barcode,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByBarCode" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_barcode
+    where barcode = #{barCode}
+  </select>
+</mapper>
