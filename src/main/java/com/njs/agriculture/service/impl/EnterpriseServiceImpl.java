@@ -68,11 +68,11 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
             User user = userMapper.selectByPrimaryKey(userRelationship.getUserId());
             PersonnelVO personnelVO = new PersonnelVO();
             int position = userRelationship.getPosition();
-            if(position == Const.Position.STAFF){
+            if(position == Const.Position.STAFF.getCode()){
                 personnelVO.setPosition("员工");
-            }else if(position == Const.Position.MANAGER){
+            }else if(position == Const.Position.MANAGER.getCode()){
                 personnelVO.setPosition("经理");
-            }else if (position == Const.Position.CHARGER){
+            }else if (position == Const.Position.CHARGER.getCode()){
                 personnelVO.setPosition("负责人");
             }else{
                 personnelVO.setPosition("未知");

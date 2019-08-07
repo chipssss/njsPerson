@@ -31,6 +31,13 @@ public class AdminController {
         return iUserSerivce.getUsers(pageNum, pageSize);
     }
 
+    @RequestMapping("positionUpdate.do")
+    public ServerResponse positionUpdate(@RequestBody JSONObject jsonObject){
+         int id = jsonObject.getIntValue("id");
+         int position = jsonObject.getIntValue("position");
+         return iUserSerivce.positionUpdate(id, position);
+    }
+
 
 
 

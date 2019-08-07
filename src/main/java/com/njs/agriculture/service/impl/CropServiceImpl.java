@@ -95,4 +95,22 @@ public class CropServiceImpl implements ICropService {
         }
         return ServerResponse.createBySuccess(cropCateVOList);
     }
+
+    @Override
+    public ServerResponse cropDel(int id, int flag) {
+        int resultRow = 0;
+        if(flag == 1){
+            resultRow = cropFirstCateMapper.deleteByPrimaryKey(id);
+        }else if(flag == 2){
+            resultRow = cropSecondCateMapper.deleteByPrimaryKey(id);
+        }else if(flag == 3){
+            resultRow = cropThirdCateMapper.deleteByPrimaryKey(id);
+        }else {
+            resultRow = cropInfoMapper.deleteByPrimaryKey(id);
+        }
+       if(resultRow == 0){
+           return ServerResponse.createByErrorMessage("删除失败！");
+       }
+        return ServerResponse.createBySuccess();
+    }
 }

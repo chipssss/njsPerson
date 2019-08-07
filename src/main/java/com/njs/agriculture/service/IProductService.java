@@ -26,8 +26,8 @@ public interface IProductService {
     /**
      * 类别删除
      * @param id
-     * @param flag 1为一类，2为二类，3为三类
+     * @param flag 0为农作物，1为一类，2为二类，3为三类
      * @return
      */
-    ServerResponse cateDel(int id, int flag);
+    ServerResponse productionDel(int id, int flag);
 }

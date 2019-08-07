@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.InputCategoryVO;
 import com.njs.agriculture.VO.InputInfoVO;
+import com.njs.agriculture.VO.InputRecordVO;
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -29,7 +30,7 @@ import java.util.List;
  * @Description:
  */
 @Service("iInputservice")
-public class InputServiceImpl implements IInputService {
+public class InputServiceImpl<T> implements IInputService {
 
     @Autowired
     private InputReturnMapper inputReturnMapper;
@@ -57,6 +58,9 @@ public class InputServiceImpl implements IInputService {
 
     @Autowired
     InputBarcodeMapper inputBarcodeMapper;
+
+    @Autowired
+    InputUsedMapper inputUsedMapper;
 
 
     @Override
@@ -106,7 +110,7 @@ public class InputServiceImpl implements IInputService {
             inputUser.setSourceId(null);
             resultRount = inputUserMapper.insert(inputUser);
             if (resultRount == 0) {
-                return ServerResponse.createByErrorMessage("农资信息表录入失败！");
+                return ServerResponse.createByErrorMessage("农资录入失败！");
             }
             int id = inputUser.getId();
             InputConsume inputConsume = new InputConsume();
@@ -286,21 +290,21 @@ public class InputServiceImpl implements IInputService {
     public ServerResponse returnInput(int id, float quantity) {
         //1.利用id取回记录，判断数量是否超出
         InputUser inputUser = inputUserMapper.selectByPrimaryKey(id);
-        if(inputUser == null){
+        if (inputUser == null) {
             return ServerResponse.createByErrorMessage("id无效，记录为空");
         }
-        if(inputUser.getSource() == 0){
+        if (inputUser.getSource() == 0) {
             return ServerResponse.createByErrorMessage("该投入品不是由企业领用！");
         }
         double result = MathUtil.sub(inputUser.getQuantity(), quantity);
-        if(result < 0){
+        if (result < 0) {
             return ServerResponse.createByErrorMessage("数量超过存在额!");
         }
         //2.对数量进行删减，存入数据库
         inputUser.setQuantity((float) result);
         inputUserMapper.updateByPrimaryKeySelective(inputUser);
         InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUser.getSourceId());
-        float resultE = (float)MathUtil.add(inputEnterprise.getQuantity(), quantity);
+        float resultE = (float) MathUtil.add(inputEnterprise.getQuantity(), quantity);
         inputEnterprise.setQuantity(resultE);
         inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
         //3.更新退回表
@@ -312,15 +316,108 @@ public class InputServiceImpl implements IInputService {
     @Override
     public ServerResponse scanBarcode(String barCode) {
         InputBarcode inputBarcode = inputBarcodeMapper.selectByBarCode(barCode);
-        if(inputBarcode != null){
+        if (inputBarcode != null) {
             return ServerResponse.createBySuccess(inputBarcode);
         }
         InputBarcode inputBarcode1 = HttpsUtil.Get(barCode);
-        if(inputBarcode1 == null){
+        if (inputBarcode1 == null) {
             return ServerResponse.createByErrorMessage("查询不到记录!");
         }
         inputBarcodeMapper.insert(inputBarcode1);
         return ServerResponse.createBySuccess(inputBarcode1);
+    }
+
+    @Override
+    public ServerResponse inputRecord(int source, int sourceId, int type) {
+        // TODO 解决重复代码
+        List<InputRecordVO> recordVOList = Lists.newLinkedList();
+        //1.先判断type，购入/领用/退回/使用 为 1/2/3/4
+        if (type == 1) {
+            List<InputPurchase> purchaseList = inputPurchaseMapper.selectBySource(source, sourceId);
+            for (InputPurchase inputPurchase : purchaseList) {
+                InputRecordVO inputRecordVO;
+                //企业
+                if (source == 1) {
+                    InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputPurchase.getSourceId());
+                    String enterpriseName = enterpriseMapper.selectByPrimaryKey(inputEnterprise.getEnterpriseId()).getName();
+                    inputRecordVO = new InputRecordVO(inputPurchase.getSourceId(), inputEnterprise.getName(),
+                            inputPurchase.getQuantity(), inputPurchase.getCreateTime(), enterpriseName);
+                } else {
+                    InputUser inputUser = inputUserMapper.selectByPrimaryKey(inputPurchase.getSourceId());
+                    inputRecordVO = new InputRecordVO(inputPurchase.getSourceId(), inputUser.getName(),
+                            inputPurchase.getQuantity(), inputPurchase.getCreateTime(), Const.PERSONNAL);
+                }
+                recordVOList.add(inputRecordVO);
+            }
+        } else if (type == 2) {
+            //领用
+            List<InputConsume> consumeList;
+            if (source == 1) {
+                consumeList = inputConsumeMapper.selectByEnterpriseId(sourceId);
+            } else {
+                consumeList = inputConsumeMapper.selectByUserId(sourceId);
+            }
+            for (InputConsume inputConsume : consumeList) {
+                InputRecordVO inputRecordVO;
+                InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputConsume.getEnterpriseinputId());
+                String enterpriseName = enterpriseMapper.selectByPrimaryKey(inputEnterprise.getEnterpriseId()).getName();
+                inputRecordVO = new InputRecordVO(inputConsume.getEnterpriseinputId(), inputEnterprise.getName(),
+                        inputConsume.getQuantity(), inputConsume.getCreateTime(), enterpriseName);
+                recordVOList.add(inputRecordVO);
+            }
+        } else if (type == 3) {
+            List<InputReturn> returnList;
+            if (source == 1) {
+                returnList = inputReturnMapper.selectByEnterpriseId(sourceId);
+            } else {
+                returnList = inputReturnMapper.selectByUserId(sourceId);
+            }
+            for (InputReturn inputReturn : returnList) {
+                InputRecordVO inputRecordVO;
+                InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputReturn.getEnterpriseinputId());
+                Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(inputEnterprise.getEnterpriseId());
+                inputRecordVO = new InputRecordVO(inputReturn.getEnterpriseinputId(), inputEnterprise.getName(),
+                        inputReturn.getQuantity(), inputReturn.getCreateTime(), enterprise.getName());
+                recordVOList.add(inputRecordVO);
+            }
+        }else if(type == 4){
+            List<InputUsed> usedList = inputUsedMapper.selectBySource(source, sourceId);
+            for (InputUsed inputUsed : usedList) {
+                InputRecordVO inputRecordVO;
+                if(source == 1){
+                    InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUsed.getSourceId());
+                    String enterpriseName = enterpriseMapper.selectByPrimaryKey(inputEnterprise.getEnterpriseId()).getName();
+                    inputRecordVO = new InputRecordVO(inputUsed.getSourceId(), inputEnterprise.getName(),
+                            inputUsed.getQuantity(), inputUsed.getCreateTime(), enterpriseName);
+                }else{
+                    InputUser inputUser = inputUserMapper.selectByPrimaryKey(inputUsed.getSourceId());
+                    inputRecordVO = new InputRecordVO(inputUsed.getSourceId(), inputUser.getName(),
+                            inputUsed.getQuantity(), inputUsed.getCreateTime(), Const.PERSONNAL);
+                }
+                recordVOList.add(inputRecordVO);
+            }
+        }
+        return ServerResponse.createBySuccess(recordVOList);
+    }
+
+    @Override
+    public ServerResponse inputDel(int id, int flag, int source) {
+        int resultRow = 0;
+        if(flag == 1){
+            resultRow = inputFirstCateMapper.deleteByPrimaryKey(id);
+        }else if(flag == 2){
+            resultRow = inputSecondCateMapper.deleteByPrimaryKey(id);
+        }else{
+            if(source == 1){
+                resultRow = inputEnterpriseMapper.deleteByPrimaryKey(id);
+            }else {
+                resultRow = inputUserMapper.deleteByPrimaryKey(id);
+            }
+        }
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("删除失败！");
+        }
+        return ServerResponse.createBySuccess();
     }
 
 }

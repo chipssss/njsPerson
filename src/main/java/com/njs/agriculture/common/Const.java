@@ -18,10 +18,27 @@ public class Const {
 
     public static final String PROCESSIMGPREFIX ="img/process/";
 
-    public interface Position{
-        int STAFF = 0;
-        int MANAGER = 1;
-        int CHARGER = 2;
+    public static final String PERSONNAL = "个人";
+
+
+    public enum Position{
+        STAFF(0,"员工"),
+        MANAGER(1,"经理"),
+        CHARGER(2,"负责人");
+        private String value;
+        private int code;
+        Position(int code,String value){
+            this.code = code;
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getCode() {
+            return code;
+        }
     }
 
     public interface InputRole{

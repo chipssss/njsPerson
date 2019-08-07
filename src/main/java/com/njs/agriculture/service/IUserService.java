@@ -25,4 +25,6 @@ public interface IUserService {
 
     ServerResponse isManager(int id);
 
+    ServerResponse positionUpdate(int id, int position);
+
 }

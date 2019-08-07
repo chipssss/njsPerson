@@ -112,7 +112,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ServerResponse cateDel(int id, int flag) {
+    public ServerResponse productionDel(int id, int flag) {
         int resultRow = 0;
         if(flag == 1){
             resultRow = productionFirstCateMapper.deleteByPrimaryKey(id);
@@ -120,6 +120,8 @@ public class ProductServiceImpl implements IProductService {
             resultRow = productionSecondCateMapper.deleteByPrimaryKey(id);
         }else if(flag == 3){
             resultRow = productionThirdCateMapper.deleteByPrimaryKey(id);
+        }else if(flag == 0){
+            resultRow = productPoolMapper.deleteByPrimaryKey(id);
         }
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("删除失败！");

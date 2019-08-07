@@ -33,5 +33,12 @@ public class CropController {
         return iCropService.cropGet(pageNum, pageSize);
     }
 
+    @PostMapping("cropDel.do")
+    public ServerResponse cropDel(@RequestBody JSONObject jsonObject){
+        int id = jsonObject.getIntValue("id");
+        int flag = jsonObject.getIntValue("flag");
+        return iCropService.cropDel(id, flag);
+    }
+
 
 }

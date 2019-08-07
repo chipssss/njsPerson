@@ -1,6 +1,9 @@
 package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.InputReturn;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface InputReturnMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,8 @@ public interface InputReturnMapper {
     int updateByPrimaryKeySelective(InputReturn record);
 
     int updateByPrimaryKey(InputReturn record);
+
+    List<InputReturn> selectByEnterpriseId(int enterpriseId);
+
+    List<InputReturn> selectByUserId(int userId);
 }

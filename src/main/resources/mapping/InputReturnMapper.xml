@@ -92,4 +92,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByEnterpriseId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_return
+    where enterpriseinput_id = #{enterpriseId}
+  </select>
+  <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_return
+    where userinput_id = #{userinputId,jdbcType=INTEGER}
+  </select>
 </mapper>

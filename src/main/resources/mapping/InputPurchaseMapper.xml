@@ -105,4 +105,11 @@
       price = #{price,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from input_purchase
+    where input_source = #{inputSource}
+    and source_id = #{sourceId}
+  </select>
 </mapper>

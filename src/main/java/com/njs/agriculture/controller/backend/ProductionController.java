@@ -50,11 +50,11 @@ public class ProductionController {
         return iProductService.thirdCateAdd(thirdCate);
     }
 
-    @RequestMapping("cateDel.do")
-    public ServerResponse cateDel(@RequestBody JSONObject jsonObject){
+    @RequestMapping("productionDel.do")
+    public ServerResponse productionDel(@RequestBody JSONObject jsonObject){
         int id = jsonObject.getIntValue("id");
         int flag = jsonObject.getIntValue("flag");
-        return iProductService.cateDel(id, flag);
+        return iProductService.productionDel(id, flag);
     }
 
 }

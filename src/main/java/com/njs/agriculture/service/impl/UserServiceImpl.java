@@ -191,6 +191,18 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccess(userRelationship);
     }
 
+    @Override
+    public ServerResponse positionUpdate(int id, int position) {
+        UserRelationship userRelationship = new UserRelationship();
+        userRelationship.setId(id);
+        userRelationship.setPosition(position);
+        int resultRow = userRelationshipMapper.updateByPrimaryKeySelective(userRelationship);
+        if(resultRow == 0 ){
+            return ServerResponse.createByErrorMessage("更新职位失败！");
+        }
+        return ServerResponse.createBySuccess();
+    }
+
     public ServerResponse<String> checkValid(String str, String type) {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(type)) {
             //开始校验

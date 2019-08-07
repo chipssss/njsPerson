@@ -72,4 +72,20 @@ public class InputController {
     public ServerResponse barcodeScan(String barcode){
         return iInputService.scanBarcode(barcode);
     }
+
+    @PostMapping("recordGet.do")
+    public ServerResponse recordGet(@RequestBody JSONObject jsonObject){
+        int source = jsonObject.getIntValue("source");
+        int sourceId = jsonObject.getIntValue("sourceId");
+        int type = jsonObject.getIntValue("type");
+        return iInputService.inputRecord(source, sourceId, type);
+    }
+
+    @PostMapping("inputDel.do")
+    public ServerResponse inputDel(@RequestBody JSONObject jsonObject){
+        int id = jsonObject.getIntValue("id");
+        int flag = jsonObject.getIntValue("flag");
+        int source = jsonObject.getIntValue("source");
+        return iInputService.inputDel(id, flag, source);
+    }
 }

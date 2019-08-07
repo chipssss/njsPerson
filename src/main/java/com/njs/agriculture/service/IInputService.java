@@ -56,4 +56,15 @@ public interface IInputService {
     ServerResponse returnInput(int id, float quantity);
 
     ServerResponse scanBarcode(String barCode);
+
+    ServerResponse inputRecord(int source, int sourceId, int type);
+
+    /**
+     * 农资删除接口
+     * @param id
+     * @param flag 0/1/2代表农资 一类 二类
+     * @param source 0为表示用户，1表示企业
+     * @return
+     */
+    ServerResponse inputDel(int id, int flag, int source);
 }
