@@ -172,7 +172,7 @@
                 source_id = #{sourceId}
             </if>
             <if test="source != null and source != 0">
-                source = #{source}
+                AND source = #{source}
             </if>
             <if test="batchId != null and batchId != 0">
                 AND batch_id = #{batchId}

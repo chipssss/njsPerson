@@ -82,7 +82,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
         Date eTime = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
         ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
-        List<ProcessRecord> processRecordList = Lists.newArrayList();
+        List<ProcessRecord> processRecordList;
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
         if(serverResponse.isSuccess()){
