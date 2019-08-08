@@ -13,6 +13,7 @@ import com.njs.agriculture.mapper.CropThirdCateMapper;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.ICropService;
 import com.njs.agriculture.service.IUserService;
+import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,5 +113,10 @@ public class CropServiceImpl implements ICropService {
            return ServerResponse.createByErrorMessage("删除失败！");
        }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse cropSecondCateGet() {
+        return ServerResponse.createBySuccess(cropSecondCateMapper.selectAll());
     }
 }

@@ -1,9 +1,11 @@
 package com.njs.agriculture.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -208,12 +210,31 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Override
     public ServerResponse getFieldsByBatchExist(int userId) {
         List<UserRelationship> userRelationships = userRelationshipMapper.selectByUserId(userId);
-        List<FieldListVO> fields = Lists.newLinkedList();
+
+        List<FieldListVO> fieldListExisted = Lists.newLinkedList();
+        List<FieldListVO> fieldListNotExisted = Lists.newLinkedList();
         for (UserRelationship relationship : userRelationships) {
-            fields.addAll(fieldMapper.selectByUserId(1, relationship.getEnterpriseId()));
+            List<FieldListVO> enterpriseExisted = fieldMapper.selectExistedByUserId(1, relationship.getEnterpriseId());
+            List<FieldListVO> enterpriseNotExisted = fieldMapper.selectAllBySourceId(1, relationship.getEnterpriseId());
+            enterpriseNotExisted.removeAll(enterpriseExisted);
+            fieldListNotExisted.addAll(enterpriseNotExisted);
+            fieldListExisted.addAll(enterpriseExisted);
         }
-        fields.addAll(fieldMapper.selectByUserId(0, userId));
-        return ServerResponse.createBySuccess(fields);
+        List<FieldListVO> userExisted = fieldMapper.selectExistedByUserId(0, userId);
+        List<FieldListVO> userNotExisted = fieldMapper.selectAllBySourceId(0, userId);
+        userNotExisted.removeAll(userExisted);
+        fieldListNotExisted.addAll(userNotExisted);
+        fieldListExisted.addAll(userExisted);
+        for (FieldListVO fieldListVO : fieldListExisted) {
+            fieldListVO.setHasBatch(true);
+        }
+        for (FieldListVO fieldListVO : fieldListNotExisted) {
+            fieldListVO.setHasBatch(false);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("fieldListExisted", fieldListExisted);
+        jsonObject.put("fieldListNotExisted", fieldListNotExisted);
+        return ServerResponse.createBySuccess(jsonObject);
     }
 
     @Override

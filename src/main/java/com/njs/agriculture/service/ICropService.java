@@ -20,4 +20,6 @@ public interface ICropService {
      * @return
      */
     ServerResponse cropDel(int id, int flag);
+
+    ServerResponse cropSecondCateGet();
 }

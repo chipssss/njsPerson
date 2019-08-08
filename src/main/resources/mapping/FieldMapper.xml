@@ -157,14 +157,20 @@
       source = #{source,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectBySourceId" parameterType="int" resultMap="BaseResultMap">
+  <select id="selectBySourceId" parameterType="map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from field
     where source_id = #{sourceId}
     and source = #{source}
   </select>
-  <select id="selectByUserId" parameterType="map" resultMap="SimpleMap">
+  <select id="selectAllBySourceId" parameterType="map" resultMap="SimpleMap">
+    select id,name
+    from field
+    where source_id = #{sourceId}
+    and source = #{source}
+  </select>
+  <select id="selectExistedByUserId" parameterType="map" resultMap="SimpleMap">
     select distinct a.id,a.name
     from field a INNER JOIN production_batch b
     on a.id = b.field_id

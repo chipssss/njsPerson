@@ -16,6 +16,8 @@ public class FieldListVO {
 
     private String name;
 
+    private boolean hasBatch;
+
     public FieldListVO() {
     }
 

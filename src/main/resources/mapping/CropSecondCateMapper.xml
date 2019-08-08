@@ -76,4 +76,9 @@
     from crop_secondcate
     where firstcate_id = #{firstCateId}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from crop_secondcate
+  </select>
 </mapper>
