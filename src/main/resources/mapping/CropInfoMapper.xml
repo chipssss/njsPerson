@@ -98,4 +98,9 @@
         from crop_info
         where category_id = #{categoryId,jdbcType=INTEGER}
     </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from crop_info
+    </select>
 </mapper>

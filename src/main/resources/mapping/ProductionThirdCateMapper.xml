@@ -87,4 +87,9 @@
     from production_thirdcate
     where secondcate_id = #{secondCateId,jdbcType=INTEGER}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from production_thirdcate
+  </select>
 </mapper>

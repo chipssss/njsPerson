@@ -18,4 +18,6 @@ public interface InputSecondCateMapper {
     int updateByPrimaryKey(InputSecondCate record);
 
     List<InputSecondCate> selectByFirstCate(int firstCateId);
+
+    List<InputSecondCate> selectAll();
 }

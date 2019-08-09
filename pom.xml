@@ -121,6 +121,12 @@
             <artifactId>joda-time</artifactId>
             <version>2.3</version>
         </dependency>
+        <!--防止tomcat部署造成得内存泄漏-->
+        <dependency>
+            <groupId>se.jiderhamn.classloader-leak-prevention</groupId>
+            <artifactId>classloader-leak-prevention-servlet</artifactId>
+            <version>2.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -139,6 +145,22 @@
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
+            </plugin>
+
+            <plugin>
+
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+
+                <configuration>
+                    <url>http://120.79.185.173:8080/manager/text</url>
+                    <username>admin</username>
+                    <password>!@#123njs</password>
+                    <update>true</update>
+                    <path>/agriculture</path>
+                </configuration>
+
             </plugin>
         </plugins>
     </build>

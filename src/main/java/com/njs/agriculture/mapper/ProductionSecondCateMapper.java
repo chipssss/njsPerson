@@ -18,4 +18,6 @@ public interface ProductionSecondCateMapper {
     int updateByPrimaryKey(ProductionSecondCate record);
 
     List<ProductionSecondCate> selectByFirstCateId(int firstCateId);
+
+    List<ProductionSecondCate> selectAll();
 }

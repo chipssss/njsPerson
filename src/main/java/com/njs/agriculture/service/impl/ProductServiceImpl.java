@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.ProductCateVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
 import com.njs.agriculture.VO.ProductThirdCateVO;
+import com.njs.agriculture.VO.ProductionThirdCateVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.ProductPoolMapper;
 import com.njs.agriculture.mapper.ProductionFirstCateMapper;
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<ProductCateVO> cateVOS = Lists.newLinkedList();
+        /*List<ProductCateVO> cateVOS = Lists.newLinkedList();
         List<ProductionFirstCate> firstCates = productionFirstCateMapper.selectAll();
         for (ProductionFirstCate firstCate : firstCates) {
             ProductCateVO productCateVO = new ProductCateVO();
@@ -70,9 +71,39 @@ public class ProductServiceImpl implements IProductService {
             }
             productCateVO.setSecondCateVOList(secondCateVOS);
             cateVOS.add(productCateVO);
+        }*/
+
+        List<ProductionThirdCate> thirdCateList = productionThirdCateMapper.selectAll();
+        List<ProductionThirdCateVO> thirdCateVOList = Lists.newLinkedList();
+        for (ProductionThirdCate productionThirdCate : thirdCateList) {
+            ProductionThirdCateVO thirdCateVO = new ProductionThirdCateVO();
+            thirdCateVO.setThirdCateId(productionThirdCate.getId());
+            thirdCateVO.setThirdCateName(productionThirdCate.getName());
+            ProductionSecondCate secondCate = productionSecondCateMapper.selectByPrimaryKey(productionThirdCate.getSecondcateId());
+            thirdCateVO.setSecondCateId(secondCate.getId());
+            thirdCateVO.setSecondCateName(secondCate.getName());
+            ProductionFirstCate firstCate = productionFirstCateMapper.selectByPrimaryKey(secondCate.getFirstcateId());
+            thirdCateVO.setFirstCateId(firstCate.getId());
+            thirdCateVO.setFirstCateName(firstCate.getName());
+            thirdCateVOList.add(thirdCateVO);
         }
 
-        return ServerResponse.createBySuccess(cateVOS);
+        return ServerResponse.createBySuccess(thirdCateVOList);
+    }
+
+    @Override
+    public ServerResponse firstCateGet() {
+        return ServerResponse.createBySuccess(productionFirstCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse secondCateGet() {
+        return ServerResponse.createBySuccess(productionSecondCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse thirdCateGet() {
+        return ServerResponse.createBySuccess(productionThirdCateMapper.selectAll());
     }
 
     @Override

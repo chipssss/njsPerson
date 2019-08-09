@@ -18,4 +18,6 @@ public interface CropThirdCateMapper {
     int updateByPrimaryKey(CropThirdCate record);
 
     List<CropThirdCate> selectBySecondCateId(int secondCateId);
+
+    List<CropThirdCate> selectAll();
 }

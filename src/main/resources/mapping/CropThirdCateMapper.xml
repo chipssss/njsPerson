@@ -87,4 +87,9 @@
     from crop_thirdcate
     where secondcate_id = #{secondCateId}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from crop_thirdcate
+  </select>
 </mapper>

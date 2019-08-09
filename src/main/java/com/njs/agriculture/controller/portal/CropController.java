@@ -38,6 +38,17 @@ public class CropController {
         return iCropService.cropSecondCateGet();
     }
 
+    @GetMapping("cropFirstCateGet.do")
+    public ServerResponse cropFirstCateGet(){
+        return iCropService.cropFirstCateGet();
+    }
+
+    @GetMapping("cropThirdCateGet.do")
+    public ServerResponse cropThirdCateGet(){
+        return iCropService.cropThirdCateGet();
+    }
+
+
     @PostMapping("cropDel.do")
     public ServerResponse cropDel(@RequestBody JSONObject jsonObject){
         int id = jsonObject.getIntValue("id");

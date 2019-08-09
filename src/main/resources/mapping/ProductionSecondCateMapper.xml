@@ -76,4 +76,9 @@
     from production_secondcate
     where firstcate_id = #{firstCateId,jdbcType=INTEGER}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from production_secondcate
+  </select>
 </mapper>

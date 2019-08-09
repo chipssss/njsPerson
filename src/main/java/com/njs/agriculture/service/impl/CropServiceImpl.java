@@ -2,6 +2,7 @@ package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.njs.agriculture.VO.CropInfoVO;
 import com.njs.agriculture.VO.CropSecondCateVO;
 import com.njs.agriculture.VO.CropThirdCateVO;
 import com.njs.agriculture.VO.CropCateVO;
@@ -64,7 +65,7 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse cropGet(int pageNum, int pageSize) {
-        List<CropCateVO> cropCateVOList = Lists.newLinkedList();
+        /*List<CropCateVO> cropCateVOList = Lists.newLinkedList();
         PageHelper.startPage(pageNum, pageSize);
         List<CropFirstCate> firstCateList = cropFirstCateMapper.selectAll();
         for (CropFirstCate cropFirstCate : firstCateList) {
@@ -94,7 +95,26 @@ public class CropServiceImpl implements ICropService {
             cropCateVO.setSecondCateList(cropSecondCateVOS);
             cropCateVOList.add(cropCateVO);
         }
-        return ServerResponse.createBySuccess(cropCateVOList);
+        return ServerResponse.createBySuccess(cropCateVOList);*/
+        PageHelper.startPage(pageNum, pageSize);
+        List<CropInfo> cropInfoList = cropInfoMapper.selectAll();
+        List<CropInfoVO> cropInfoVOList = Lists.newLinkedList();
+        for (CropInfo cropInfo : cropInfoList) {
+            CropInfoVO infoVO = new CropInfoVO();
+            infoVO.setCropInfoId(cropInfo.getId());
+            infoVO.setCropInfoName(cropInfo.getName());
+            CropThirdCate cropThirdCate = cropThirdCateMapper.selectByPrimaryKey(cropInfo.getCategoryId());
+            infoVO.setThirdCateId(cropThirdCate.getId());
+            infoVO.setThirdCateName(cropThirdCate.getName());
+            CropSecondCate cropSecondCate = cropSecondCateMapper.selectByPrimaryKey(cropThirdCate.getSecondcateId());
+            infoVO.setSecondCateId(cropSecondCate.getId());
+            infoVO.setSecondCateName(cropSecondCate.getName());
+            CropFirstCate cropFirstCate = cropFirstCateMapper.selectByPrimaryKey(cropSecondCate.getFirstcateId());
+            infoVO.setFirstCateId(cropFirstCate.getId());
+            infoVO.setFirstCateName(cropFirstCate.getName());
+            cropInfoVOList.add(infoVO);
+        }
+        return ServerResponse.createBySuccess(cropInfoVOList);
     }
 
     @Override
@@ -118,5 +138,15 @@ public class CropServiceImpl implements ICropService {
     @Override
     public ServerResponse cropSecondCateGet() {
         return ServerResponse.createBySuccess(cropSecondCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse cropFirstCateGet() {
+        return ServerResponse.createBySuccess(cropFirstCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse cropThirdCateGet() {
+        return ServerResponse.createBySuccess(cropThirdCateMapper.selectAll());
     }
 }

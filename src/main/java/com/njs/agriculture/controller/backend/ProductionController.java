@@ -30,6 +30,21 @@ public class ProductionController {
         return iProductService.categoryGet(pageNum, pageSize);
     }
 
+    @GetMapping("firstCateGet.do")
+    public ServerResponse firstCateGet(){
+        return iProductService.firstCateGet();
+    }
+
+    @GetMapping("secondCateGet.do")
+    public ServerResponse secondCateGet(){
+        return iProductService.secondCateGet();
+    }
+
+    @GetMapping("thirdCateGet.do")
+    public ServerResponse thirdCateGet(){
+        return iProductService.thirdCateGet();
+    }
+
     @PostMapping("productAdd.do")
     public ServerResponse productAdd(@RequestBody ProductPool productPool){
         return iProductService.productAdd(productPool);

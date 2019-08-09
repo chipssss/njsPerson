@@ -22,4 +22,8 @@ public interface ICropService {
     ServerResponse cropDel(int id, int flag);
 
     ServerResponse cropSecondCateGet();
+
+    ServerResponse cropFirstCateGet();
+
+    ServerResponse cropThirdCateGet();
 }

@@ -40,7 +40,18 @@ public class InputController {
         return iInputService.categoryInfo(pageNum, pageSize);
    }
 
-   @PostMapping("infoGet.do")
+   @GetMapping("firstCateGet")
+   public ServerResponse firstCateGet(){
+       return iInputService.firstCateGet();
+   }
+
+    @GetMapping("secondCateGet")
+    public ServerResponse secondCateGet(){
+        return iInputService.secondCateGet();
+    }
+
+
+    @PostMapping("infoGet.do")
     public ServerResponse infoGet(@RequestBody JSONObject jsonObject){
         int firstCateId = jsonObject.getIntValue("firstCateId");
         int secondCateId = jsonObject.getIntValue("secondCateId");

@@ -2,10 +2,7 @@ package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.njs.agriculture.VO.InputCategoryVO;
-import com.njs.agriculture.VO.InputInfoVO;
-import com.njs.agriculture.VO.InputRecordVO;
-import com.njs.agriculture.VO.InputVO;
+import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.*;
@@ -126,9 +123,9 @@ public class InputServiceImpl<T> implements IInputService {
     }
 
     @Override
-    public ServerResponse<List<InputCategoryVO>> categoryInfo(int pageNum, int pageSize) {
+    public ServerResponse categoryInfo(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<InputCategoryVO> inputCategoryVOS = Lists.newArrayList();
+        /*List<InputCategoryVO> inputCategoryVOS = Lists.newArrayList();
         //1.先获取一级类别
         List<InputFirstCate> inputFirstCateList = inputFirstCateMapper.selectAll();
         //2.然后循环获取二级类别
@@ -138,9 +135,30 @@ public class InputServiceImpl<T> implements IInputService {
             inputCategoryVO.setInputFirstCate(inputFirstCate);
             inputCategoryVO.setInputSecondCates(inputSecondCateList);
             inputCategoryVOS.add(inputCategoryVO);
+        }*/
+        List<InputSecondCate> secondCateList = inputSecondCateMapper.selectAll();
+        List<InputSecondCateVO> secondCateVOList = Lists.newLinkedList();
+        for (InputSecondCate inputSecondCate : secondCateList) {
+            InputSecondCateVO secondCateVO = new InputSecondCateVO();
+            secondCateVO.setSecondCateId(inputSecondCate.getId());
+            secondCateVO.setSecondCateName(inputSecondCate.getName());
+            InputFirstCate firstCate = inputFirstCateMapper.selectByPrimaryKey(inputSecondCate.getFirstcateId());
+            secondCateVO.setFirstCateId(firstCate.getId());
+            secondCateVO.setFirstCateName(firstCate.getName());
+            secondCateVOList.add(secondCateVO);
         }
         //3.构造类别对象
-        return ServerResponse.createBySuccess(inputCategoryVOS);
+        return ServerResponse.createBySuccess(secondCateVOList);
+    }
+
+    @Override
+    public ServerResponse firstCateGet() {
+        return ServerResponse.createBySuccess(inputFirstCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse secondCateGet() {
+        return ServerResponse.createBySuccess(inputSecondCateMapper.selectAll());
     }
 
     /**

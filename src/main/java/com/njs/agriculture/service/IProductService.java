@@ -15,6 +15,12 @@ public interface IProductService {
 
     ServerResponse categoryGet(int pageNum, int pageSize);
 
+    ServerResponse firstCateGet();
+
+    ServerResponse secondCateGet();
+
+    ServerResponse thirdCateGet();
+
     ServerResponse productAdd(ProductPool productPool);
 
     ServerResponse firstCateAdd(ProductionFirstCate firstCate);

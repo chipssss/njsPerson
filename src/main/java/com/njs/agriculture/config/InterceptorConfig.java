@@ -2,11 +2,14 @@ package com.njs.agriculture.config;
 
 import com.njs.agriculture.common.Const;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventorListener;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,16 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 @Slf4j
 public class InterceptorConfig implements WebMvcConfigurer {
+
+
+    //防止内存泄漏，远程部署tomcat,监听器
+    @Bean
+    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
+        ServletListenerRegistrationBean slrBean = new ServletListenerRegistrationBean();
+        slrBean.setListener(new ClassLoaderLeakPreventorListener());
+        return slrBean;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //日志
@@ -85,6 +98,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
             }
         });
     }
+
+
 
     public static void main(String[] args) {
         String url = "/portal/re.do";

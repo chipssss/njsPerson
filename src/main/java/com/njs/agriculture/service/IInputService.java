@@ -1,10 +1,10 @@
 package com.njs.agriculture.service;
 
-import com.njs.agriculture.VO.InputCategoryVO;
+
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.ServerResponse;
 
-import java.util.List;
+
 
 /**
  * @Auther: SaikeiLEe
@@ -24,7 +24,11 @@ public interface IInputService {
      * 农资类别获取
      * @return
      */
-    ServerResponse<List<InputCategoryVO>> categoryInfo(int pageNum, int pageSize);
+    ServerResponse categoryInfo(int pageNum, int pageSize);
+
+    ServerResponse firstCateGet();
+
+    ServerResponse secondCateGet();
 
     /**
      * 农资获取

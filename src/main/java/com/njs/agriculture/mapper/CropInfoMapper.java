@@ -18,4 +18,6 @@ public interface CropInfoMapper {
     int updateByPrimaryKey(CropInfo record);
 
     List<CropInfo> selectByCateId(int id);
+
+    List<CropInfo> selectAll();
 }
