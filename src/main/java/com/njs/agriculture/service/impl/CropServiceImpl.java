@@ -1,6 +1,7 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.CropInfoVO;
 import com.njs.agriculture.VO.CropSecondCateVO;
@@ -114,7 +115,9 @@ public class CropServiceImpl implements ICropService {
             infoVO.setFirstCateName(cropFirstCate.getName());
             cropInfoVOList.add(infoVO);
         }
-        return ServerResponse.createBySuccess(cropInfoVOList);
+        PageInfo pageResult = new PageInfo(cropInfoList);
+        pageResult.setList(cropInfoVOList);
+        return ServerResponse.createBySuccess(pageResult);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.ProductCateVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
@@ -87,8 +88,9 @@ public class ProductServiceImpl implements IProductService {
             thirdCateVO.setFirstCateName(firstCate.getName());
             thirdCateVOList.add(thirdCateVO);
         }
-
-        return ServerResponse.createBySuccess(thirdCateVOList);
+        PageInfo pageResult = new PageInfo(thirdCateList);
+        pageResult.setList(thirdCateVOList);
+        return ServerResponse.createBySuccess(pageResult);
     }
 
     @Override

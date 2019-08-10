@@ -1,6 +1,7 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
@@ -147,8 +148,10 @@ public class InputServiceImpl<T> implements IInputService {
             secondCateVO.setFirstCateName(firstCate.getName());
             secondCateVOList.add(secondCateVO);
         }
+        PageInfo pageResult = new PageInfo(secondCateList);
+        pageResult.setList(secondCateVOList);
         //3.构造类别对象
-        return ServerResponse.createBySuccess(secondCateVOList);
+        return ServerResponse.createBySuccess(pageResult);
     }
 
     @Override

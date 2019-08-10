@@ -1,6 +1,7 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.PersonnelVO;
 import com.njs.agriculture.common.Const;
@@ -52,7 +53,8 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
         PageHelper.startPage(pageNum, pageSize);
         if(status == 0 || status == 1){
             List<Enterprise> enterprises = enterpriseMapper.selectByStatus(status);
-            return ServerResponse.createBySuccess(enterprises);
+            PageInfo pageResult = new PageInfo(enterprises);
+            return ServerResponse.createBySuccess(pageResult);
         }else {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),"status参数错误！");
         }

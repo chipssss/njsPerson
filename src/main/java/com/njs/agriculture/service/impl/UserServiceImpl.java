@@ -1,6 +1,7 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.RelationshipVO;
@@ -179,7 +180,9 @@ public class UserServiceImpl implements IUserService {
             userVO.setRelationships(relationships);
             userVOS.add(userVO);
         }
-        return ServerResponse.createBySuccess(userVOS);
+        PageInfo pageResult = new PageInfo(users);
+        pageResult.setList(userVOS);
+        return ServerResponse.createBySuccess(pageResult);
     }
 
     @Override
