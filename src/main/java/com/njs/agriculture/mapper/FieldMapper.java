@@ -24,5 +24,4 @@ public interface FieldMapper {
     List<FieldListVO> selectAllBySourceId(@Param("source") int source, @Param("sourceId") int sourceId);
 
     List<FieldListVO> selectExistedByUserId(@Param("source") int source, @Param("sourceId") int sourceId);
-
 }

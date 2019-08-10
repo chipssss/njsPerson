@@ -1,12 +1,15 @@
 package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.ServicePool;
+import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IFieldService;
 import com.njs.agriculture.service.IProcessRecordService;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -73,8 +77,9 @@ public class ProductionRecordController {
     }
 
     @PostMapping("processRecordAdd.do")
-    public ServerResponse processRecordAdd(@RequestBody ProcessRecordInfoVO processRecordInfoVO){
-        return iProcessRecordService.addProcess(processRecordInfoVO);
+    public ServerResponse processRecordAdd(@RequestBody ProcessRecordInfoVO processRecordInfoVO, HttpSession session){
+        String userName = ((User)session.getAttribute(Const.CURRENT_USER)).getUsername();
+        return iProcessRecordService.addProcess(processRecordInfoVO, userName);
     }
 
     @PostMapping("processImgUpload.do")
@@ -107,6 +112,12 @@ public class ProductionRecordController {
         return iProcessRecordService.getBatchesByUserId(userId);
     }
 
+    @PostMapping("getRecoveryRecord.do")
+    public ServerResponse getRecoveryRecord(@RequestBody JSONObject jsonObject){
+        int source = jsonObject.getIntValue("source");
+        int sourceId = jsonObject.getIntValue("sourceId");
+        return iProcessRecordService.getRecoveryRecord(source, sourceId);
+    }
 
 
 }

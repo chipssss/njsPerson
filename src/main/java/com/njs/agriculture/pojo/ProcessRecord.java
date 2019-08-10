@@ -7,7 +7,7 @@ import java.util.Date;
 public class ProcessRecord {
     private Integer id;
 
-    private Integer batchId;
+    private Integer fieldId;
 
     private String location;
 
@@ -28,9 +28,9 @@ public class ProcessRecord {
 
     private Integer sourceId;
 
-    public ProcessRecord(Integer id, Integer batchId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId) {
+    public ProcessRecord(Integer id, Integer fieldId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId) {
         this.id = id;
-        this.batchId = batchId;
+        this.fieldId = fieldId;
         this.location = location;
         this.cropId = cropId;
         this.operation = operation;
@@ -54,12 +54,12 @@ public class ProcessRecord {
         this.id = id;
     }
 
-    public Integer getBatchId() {
-        return batchId;
+    public Integer getFieldId() {
+        return fieldId;
     }
 
-    public void setBatchId(Integer batchId) {
-        this.batchId = batchId;
+    public void setFieldId(Integer fieldId) {
+        this.fieldId = fieldId;
     }
 
     public String getLocation() {
@@ -126,11 +126,11 @@ public class ProcessRecord {
         this.source = source;
     }
 
-    public Integer getSourceid() {
+    public Integer getSourceId() {
         return sourceId;
     }
 
-    public void setSourceid(Integer sourceId) {
+    public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
     }
 }

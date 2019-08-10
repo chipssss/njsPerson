@@ -30,4 +30,6 @@ public class FieldVO {
 
     @JsonProperty("isPerson")
     private boolean isPerson;
+
+    private int cropId;
 }

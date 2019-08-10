@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.RecoveryRecordMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.RecoveryRecord">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="crop" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, crop, field_id, create_time, source, source_id, user_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from recovery_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from recovery_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.RecoveryRecord" useGeneratedKeys="true" keyProperty="id">
+    insert into recovery_record (id, crop, field_id, 
+      create_time, source, source_id, 
+      user_name)
+    values (#{id,jdbcType=INTEGER}, #{crop,jdbcType=VARCHAR}, #{fieldId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, 
+      #{userName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.RecoveryRecord">
+    insert into recovery_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="crop != null">
+        crop,
+      </if>
+      <if test="fieldId != null">
+        field_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="crop != null">
+        #{crop,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldId != null">
+        #{fieldId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.RecoveryRecord">
+    update recovery_record
+    <set>
+      <if test="crop != null">
+        crop = #{crop,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldId != null">
+        field_id = #{fieldId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.RecoveryRecord">
+    update recovery_record
+    set crop = #{crop,jdbcType=VARCHAR},
+      field_id = #{fieldId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      source = #{source,jdbcType=INTEGER},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectBySource" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from recovery_record
+    where source = #{source,jdbcType=INTEGER}
+    and source_id = #{sourceId,jdbcType=INTEGER}
+  </select>
+</mapper>

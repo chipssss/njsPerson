@@ -3,7 +3,9 @@ package com.njs.agriculture.service.impl;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.mapper.CropInfoMapper;
 import com.njs.agriculture.mapper.FieldMapper;
+import com.njs.agriculture.pojo.CropInfo;
 import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.UserRelationship;
 import com.njs.agriculture.service.IFieldService;
@@ -23,6 +25,7 @@ import java.util.List;
  * @Date: 2019/7/30
  * @Description:
  */
+
 @Service("iFieldService")
 @Slf4j
 public class FieldServiceImpl implements IFieldService {
@@ -32,6 +35,9 @@ public class FieldServiceImpl implements IFieldService {
 
     @Autowired
     private FieldMapper fieldMapper;
+
+    @Autowired
+    private CropInfoMapper cropInfoMapper;
 
     @Override
     public ServerResponse addField(FieldVO fieldVO) {
@@ -101,6 +107,13 @@ public class FieldServiceImpl implements IFieldService {
         }else {
             field.setStatus(1);
         }
+        field.setCropId(fieldVO.getCropId());
+        CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(fieldVO.getCropId());
+        if(cropInfo == null ){
+            return null;
+        }
+        field.setCropName(cropInfo.getName());
         return field;
     }
 }
+

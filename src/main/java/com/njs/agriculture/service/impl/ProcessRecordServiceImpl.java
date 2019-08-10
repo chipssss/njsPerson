@@ -17,6 +17,7 @@ import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import com.njs.agriculture.utils.MathUtil;
 import com.njs.agriculture.utils.PropertiesUtil;
+import com.sun.scenario.effect.Crop;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private UserRelationshipMapper userRelationshipMapper;
 
+    @Autowired
+    private RecoveryRecordMapper recoveryRecordMapper;
+
     @Override
     public ServerResponse processRecord(int userId, String startTime, String endTime, int batchId, int cropId, int pageNum, int pageSize){
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
@@ -124,21 +128,37 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     @Transactional //设置事务回滚，保证原子操作
-    public ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO) {
+    public ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, String userName) {
 
-        ProductionBatch productionBatch = productionBatchMapper.onlyBatch(processRecordInfoVO.getFieldId(), new Date());
-        if(productionBatch == null){
-            return ServerResponse.createByErrorMessage("找不到批次记录！");
-        }
+        //有依赖，如果可以建议重写接口
         Field field = fieldMapper.selectByPrimaryKey(processRecordInfoVO.getFieldId());
+        CropInfo crop = cropInfoMapper.selectByPrimaryKey(field.getCropId());
+        if(field == null || crop == null){
+            return ServerResponse.createByErrorMessage("找不到田块或者农作物");
+        }
+        for (String s : processRecordInfoVO.getOperationList()) {
+            if(s.contains(Const.RECOVERY)){
+                //插入到记录表
+                RecoveryRecord recoveryRecord = new RecoveryRecord();
+                recoveryRecord.setCrop(crop.getName());
+                recoveryRecord.setFieldId(field.getId());
+                recoveryRecord.setSource(field.getSource());
+                recoveryRecord.setSourceId(field.getSourceId());
+                recoveryRecord.setUserName(userName);
+                ServerResponse serverResponse = insertRecoveryRecord(recoveryRecord);
+                return serverResponse;
+            }
+        }
+
         ProcessRecord processRecord = new ProcessRecord();
-        processRecord.setBatchId(productionBatch.getId());
-        processRecord.setCropId(productionBatch.getCropInfoId());
+//        processRecord.setBatchId(productionBatch.getId());
+        processRecord.setFieldId(processRecordInfoVO.getFieldId());
+        processRecord.setCropId(field.getCropId());
         processRecord.setLocation(processRecordInfoVO.getLocation());
         processRecord.setWeather(processRecordInfoVO.getWeather());
         processRecord.setRemark(processRecordInfoVO.getRemark());
         processRecord.setSource(field.getSource());
-        processRecord.setSourceid(field.getSourceId());
+        processRecord.setSourceId(field.getSourceId());
         String operations = Joiner.on(",").join(processRecordInfoVO.getOperationList());
         processRecord.setOperation(operations);
         StringBuilder s = new StringBuilder();
@@ -146,6 +166,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
             if(input.getSource() == 0){
                 //先进行记录，删减，然后进行拼接
                 InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
+                if(inputUser == null){
+                    return ServerResponse.createByErrorMessage("找不到投入品");
+                }
                 double result = MathUtil.sub(inputUser.getQuantity(), input.getQuantity());
                 if(result < 0){
                     return ServerResponse.createByErrorMessage("数量超过存在额!");
@@ -157,6 +180,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 s.append(inputUser.getName() + ",");
             }else {
                 InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
+                if(inputEnterprise == null){
+                    return ServerResponse.createByErrorMessage("找不到投入品");
+                }
                 double result = MathUtil.sub(inputEnterprise.getQuantity(), input.getQuantity());
                 if(result < 0){
                     return ServerResponse.createByErrorMessage("数量超过存在额!");
@@ -242,6 +268,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(productionBatchMapper.selectByExistProcessRecord(userId));
     }
 
+    @Override
+    public ServerResponse getRecoveryRecord(int source, int sourceId) {
+        return ServerResponse.createBySuccess(recoveryRecordMapper.selectBySource(source, sourceId));
+    }
+
 
     public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){
         List<ProcessRecordVO> processRecords = Lists.newArrayList();
@@ -254,12 +285,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                     continue;
                 }
                 processRecordVO.setImages(images);
-                ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(processRecord.getBatchId());
-                if(productionBatch == null){
-                    continue;
-                }
-                processRecordVO.setBatchName(productionBatch.getName());
-                Field field = fieldMapper.selectByPrimaryKey(productionBatch.getFieldId());
+                Field field = fieldMapper.selectByPrimaryKey(processRecord.getFieldId());
                 if(field == null){
                     continue;
                 }
@@ -275,5 +301,13 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return processRecords;
     }
 
+    public ServerResponse insertRecoveryRecord(RecoveryRecord recoveryRecord){
+        int resultRow = recoveryRecordMapper.insert(recoveryRecord);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("插入失败！");
+        }
+        return ServerResponse.createBySuccess(recoveryRecord);
+    }
 
 }
+

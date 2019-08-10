@@ -21,7 +21,11 @@ public class Field {
 
     private Integer source;
 
-    public Field(Integer id, Float square, String name, String manager, Integer status, String location, Integer qrcodeId, String remark, Integer sourceId, Integer source) {
+    private Integer cropId;
+
+    private String cropName;
+
+    public Field(Integer id, Float square, String name, String manager, Integer status, String location, Integer qrcodeId, String remark, Integer sourceId, Integer source, Integer cropId, String cropName) {
         this.id = id;
         this.square = square;
         this.name = name;
@@ -32,6 +36,8 @@ public class Field {
         this.remark = remark;
         this.sourceId = sourceId;
         this.source = source;
+        this.cropId = cropId;
+        this.cropName = cropName;
     }
 
     public Field() {
@@ -116,5 +122,21 @@ public class Field {
 
     public void setSource(Integer source) {
         this.source = source;
+    }
+
+    public Integer getCropId() {
+        return cropId;
+    }
+
+    public void setCropId(Integer cropId) {
+        this.cropId = cropId;
+    }
+
+    public String getCropName() {
+        return cropName;
+    }
+
+    public void setCropName(String cropName) {
+        this.cropName = cropName == null ? null : cropName.trim();
     }
 }

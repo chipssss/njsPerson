@@ -48,7 +48,7 @@ public interface IProcessRecordService {
      * @param processRecordInfoVO
      * @return
      */
-    ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO);
+    ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, String userName);
 
     /**
      * 生产记录图片上传
@@ -63,6 +63,7 @@ public interface IProcessRecordService {
 
     ServerResponse getBatchesByUserId(int userId);
 
+    ServerResponse getRecoveryRecord(int source, int sourceId);
 
 
 }
