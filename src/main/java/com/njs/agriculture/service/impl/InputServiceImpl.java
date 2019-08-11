@@ -1,5 +1,6 @@
 package com.njs.agriculture.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -126,17 +127,7 @@ public class InputServiceImpl<T> implements IInputService {
     @Override
     public ServerResponse categoryInfo(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        /*List<InputCategoryVO> inputCategoryVOS = Lists.newArrayList();
-        //1.先获取一级类别
-        List<InputFirstCate> inputFirstCateList = inputFirstCateMapper.selectAll();
-        //2.然后循环获取二级类别
-        for (InputFirstCate inputFirstCate : inputFirstCateList) {
-            InputCategoryVO inputCategoryVO = new InputCategoryVO();
-            List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(inputFirstCate.getId());
-            inputCategoryVO.setInputFirstCate(inputFirstCate);
-            inputCategoryVO.setInputSecondCates(inputSecondCateList);
-            inputCategoryVOS.add(inputCategoryVO);
-        }*/
+
         List<InputSecondCate> secondCateList = inputSecondCateMapper.selectAll();
         List<InputSecondCateVO> secondCateVOList = Lists.newLinkedList();
         for (InputSecondCate inputSecondCate : secondCateList) {
@@ -152,6 +143,22 @@ public class InputServiceImpl<T> implements IInputService {
         pageResult.setList(secondCateVOList);
         //3.构造类别对象
         return ServerResponse.createBySuccess(pageResult);
+    }
+
+    @Override
+    public ServerResponse categoryInfoForAndroid() {
+        List<InputCategoryVO> inputCategoryVOS = Lists.newArrayList();
+        //1.先获取一级类别
+        List<InputFirstCate> inputFirstCateList = inputFirstCateMapper.selectAll();
+        //2.然后循环获取二级类别
+        for (InputFirstCate inputFirstCate : inputFirstCateList) {
+            InputCategoryVO inputCategoryVO = new InputCategoryVO();
+            List<InputSecondCate> inputSecondCateList = inputSecondCateMapper.selectByFirstCate(inputFirstCate.getId());
+            inputCategoryVO.setInputFirstCate(inputFirstCate);
+            inputCategoryVO.setInputSecondCates(inputSecondCateList);
+            inputCategoryVOS.add(inputCategoryVO);
+        }
+        return ServerResponse.createBySuccess(inputCategoryVOS);
     }
 
     @Override
@@ -196,6 +203,35 @@ public class InputServiceImpl<T> implements IInputService {
         }
         return infoGet(secondCateId, firstCateId, pageNum, pageSize, orderString, source, sourceId);
 
+    }
+
+    @Override
+    public ServerResponse sumGet(int source, int sourceId) {
+        int totalEntries;
+        double totalInputs = 0 ;
+        double totalAmount = 0;
+        if(source == 0){
+            List<InputUser> inputUsers = inputUserMapper.selectAll(sourceId);
+            totalEntries = inputUsers.size();
+            for (InputUser inputUser : inputUsers) {
+                totalInputs = MathUtil.add(totalInputs, inputUser.getQuantity());
+                double amount = MathUtil.sub(inputUser.getQuantity(), inputUser.getPrice().doubleValue());
+                totalAmount = MathUtil.add(totalAmount, amount);
+            }
+        }else {
+            List<InputEnterprise> inputEnterprises = inputEnterpriseMapper.selectAll(sourceId);
+            totalEntries = inputEnterprises.size();
+            for (InputEnterprise inputEnterprise : inputEnterprises) {
+                totalInputs = MathUtil.add(totalInputs, Double.valueOf(inputEnterprise.getQuantity().toString()));
+                double amount = MathUtil.mul(Double.valueOf(inputEnterprise.getQuantity().toString()), inputEnterprise.getPrice().doubleValue());
+                totalAmount = MathUtil.add(totalAmount, amount);
+            }
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("totalEntries", totalEntries);
+        jsonObject.put("totalInputs", totalInputs);
+        jsonObject.put("totalAmount", totalAmount);
+        return ServerResponse.createBySuccess(jsonObject);
     }
 
 

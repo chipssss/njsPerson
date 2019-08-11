@@ -26,6 +26,13 @@ public interface IInputService {
      */
     ServerResponse categoryInfo(int pageNum, int pageSize);
 
+    /**
+     * 农资获取安卓接口
+     * @return
+     */
+    ServerResponse categoryInfoForAndroid();
+
+
     ServerResponse firstCateGet();
 
     ServerResponse secondCateGet();
@@ -41,6 +48,13 @@ public interface IInputService {
      */
     ServerResponse infoGet(int firstCateId, int secondCateId, String orderBy, int sourceId, int source, int pageNum, int pageSize);
 
+    /**
+     * 农资汇总接口
+     * @param source 0为用户 1 为企业
+     * @param sourceId id
+     * @return
+     */
+    ServerResponse sumGet(int source, int sourceId);
     /**
      * 库存提醒
      * @param sourceId 来源id

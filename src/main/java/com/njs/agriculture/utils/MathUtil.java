@@ -8,7 +8,7 @@ public class MathUtil {
     private static final Double MONEY_RANGE = 0.01;
 
     //默认运算精度,小数点后几位
-    private static final int DEF_DIV_SCALE = 2;
+    private static final int DEF_DIV_SCALE = 1;
 
     /**
      * 比较2个金额是否相等

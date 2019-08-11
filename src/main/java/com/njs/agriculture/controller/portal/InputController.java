@@ -1,6 +1,7 @@
 package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -33,12 +34,17 @@ public class InputController {
         return iInputService.purchase(inputVO);
     }
 
-   @RequestMapping("categoryInfo.do")
+   @PostMapping("categoryInfo.do")
     public ServerResponse categoryInfo(@RequestBody JSONObject jsonObject){
        int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
        int pageSize = (int)jsonObject.getOrDefault("pageSize",10);
         return iInputService.categoryInfo(pageNum, pageSize);
    }
+
+    @GetMapping("categoryInfo.do")
+    public ServerResponse categoryInfoForAndroid(){
+        return iInputService.categoryInfoForAndroid();
+    }
 
    @GetMapping("firstCateGet")
    public ServerResponse firstCateGet(){
@@ -61,7 +67,13 @@ public class InputController {
         int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
        int pageSize = (int)jsonObject.getOrDefault("pageSize",10);
        return iInputService.infoGet(firstCateId, secondCateId, orderBy, sourceId, source, pageNum, pageSize);
+   }
 
+   @PostMapping("sumGet.do")
+   public ServerResponse sumGet(@RequestBody JSONObject jsonObject){
+        int source = jsonObject.getIntValue("source");
+        int sourceId = jsonObject.getIntValue("sourceId");
+        return iInputService.sumGet(source, sourceId);
    }
 
    @PostMapping("stockRemind.do")

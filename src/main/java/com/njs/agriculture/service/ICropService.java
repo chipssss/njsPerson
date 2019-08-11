@@ -13,6 +13,8 @@ public interface ICropService {
 
     ServerResponse cropGet(int pageNum, int pageSize);
 
+    ServerResponse cropGetAndroid();
+
     /**
      * 删除农作物，info / 一类 /二类 0 / 1 /2
      * @param id

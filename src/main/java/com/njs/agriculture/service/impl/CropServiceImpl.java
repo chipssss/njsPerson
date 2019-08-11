@@ -66,8 +66,32 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse cropGet(int pageNum, int pageSize) {
-        /*List<CropCateVO> cropCateVOList = Lists.newLinkedList();
         PageHelper.startPage(pageNum, pageSize);
+        List<CropInfo> cropInfoList = cropInfoMapper.selectAll();
+        List<CropInfoVO> cropInfoVOList = Lists.newLinkedList();
+        for (CropInfo cropInfo : cropInfoList) {
+            CropInfoVO infoVO = new CropInfoVO();
+            infoVO.setCropInfoId(cropInfo.getId());
+            infoVO.setCropInfoName(cropInfo.getName());
+            CropThirdCate cropThirdCate = cropThirdCateMapper.selectByPrimaryKey(cropInfo.getCategoryId());
+            infoVO.setThirdCateId(cropThirdCate.getId());
+            infoVO.setThirdCateName(cropThirdCate.getName());
+            CropSecondCate cropSecondCate = cropSecondCateMapper.selectByPrimaryKey(cropThirdCate.getSecondcateId());
+            infoVO.setSecondCateId(cropSecondCate.getId());
+            infoVO.setSecondCateName(cropSecondCate.getName());
+            CropFirstCate cropFirstCate = cropFirstCateMapper.selectByPrimaryKey(cropSecondCate.getFirstcateId());
+            infoVO.setFirstCateId(cropFirstCate.getId());
+            infoVO.setFirstCateName(cropFirstCate.getName());
+            cropInfoVOList.add(infoVO);
+        }
+        PageInfo pageResult = new PageInfo(cropInfoList);
+        pageResult.setList(cropInfoVOList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    @Override
+    public ServerResponse cropGetAndroid() {
+         List<CropCateVO> cropCateVOList = Lists.newLinkedList();
         List<CropFirstCate> firstCateList = cropFirstCateMapper.selectAll();
         for (CropFirstCate cropFirstCate : firstCateList) {
             CropCateVO cropCateVO = new CropCateVO();
@@ -96,28 +120,7 @@ public class CropServiceImpl implements ICropService {
             cropCateVO.setSecondCateList(cropSecondCateVOS);
             cropCateVOList.add(cropCateVO);
         }
-        return ServerResponse.createBySuccess(cropCateVOList);*/
-        PageHelper.startPage(pageNum, pageSize);
-        List<CropInfo> cropInfoList = cropInfoMapper.selectAll();
-        List<CropInfoVO> cropInfoVOList = Lists.newLinkedList();
-        for (CropInfo cropInfo : cropInfoList) {
-            CropInfoVO infoVO = new CropInfoVO();
-            infoVO.setCropInfoId(cropInfo.getId());
-            infoVO.setCropInfoName(cropInfo.getName());
-            CropThirdCate cropThirdCate = cropThirdCateMapper.selectByPrimaryKey(cropInfo.getCategoryId());
-            infoVO.setThirdCateId(cropThirdCate.getId());
-            infoVO.setThirdCateName(cropThirdCate.getName());
-            CropSecondCate cropSecondCate = cropSecondCateMapper.selectByPrimaryKey(cropThirdCate.getSecondcateId());
-            infoVO.setSecondCateId(cropSecondCate.getId());
-            infoVO.setSecondCateName(cropSecondCate.getName());
-            CropFirstCate cropFirstCate = cropFirstCateMapper.selectByPrimaryKey(cropSecondCate.getFirstcateId());
-            infoVO.setFirstCateId(cropFirstCate.getId());
-            infoVO.setFirstCateName(cropFirstCate.getName());
-            cropInfoVOList.add(infoVO);
-        }
-        PageInfo pageResult = new PageInfo(cropInfoList);
-        pageResult.setList(cropInfoVOList);
-        return ServerResponse.createBySuccess(pageResult);
+        return ServerResponse.createBySuccess(cropCateVOList);
     }
 
     @Override

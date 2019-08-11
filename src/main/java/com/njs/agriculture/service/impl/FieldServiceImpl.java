@@ -109,10 +109,9 @@ public class FieldServiceImpl implements IFieldService {
         }
         field.setCropId(fieldVO.getCropId());
         CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(fieldVO.getCropId());
-        if(cropInfo == null ){
-            return null;
+        if(cropInfo != null ){
+            field.setCropName(cropInfo.getName());
         }
-        field.setCropName(cropInfo.getName());
         return field;
     }
 }

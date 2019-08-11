@@ -33,6 +33,11 @@ public class CropController {
         return iCropService.cropGet(pageNum, pageSize);
     }
 
+    @GetMapping("cropGet.do")
+    public ServerResponse cropGetAndroid(){
+        return iCropService.cropGetAndroid();
+    }
+
     @GetMapping("cropSecondCateGet.do")
     public ServerResponse cropSecondCateGet(){
         return iCropService.cropSecondCateGet();
