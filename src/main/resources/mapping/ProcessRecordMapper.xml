@@ -171,11 +171,11 @@
       <if test="sourceId != null and sourceId != 0">
         source_id = #{sourceId}
       </if>
-      <if test="source != null and source != 0">
+      <if test="source != null">
         AND source = #{source}
       </if>
-      <if test="batchId != null and batchId != 0">
-        AND batch_id = #{batchId}
+      <if test="fieldId != null and fieldId != 0">
+        AND field_id = #{fieldId}
       </if>
       <if test="cropId != null and cropId != 0">
         AND crop_id = #{cropId}

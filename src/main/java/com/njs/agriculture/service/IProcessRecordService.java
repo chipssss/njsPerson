@@ -21,13 +21,13 @@ public interface IProcessRecordService {
      * @param userId
      * @param startTime
      * @param endTime
-     * @param batchId
+     * @param fieldId
      * @param cropId
      * @param pageNum 默认为1
      * @param pageSize 默认为20
      * @return
      */
-    ServerResponse processRecord(int userId, String startTime, String endTime, int batchId, int cropId, int pageNum, int pageSize);
+    ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize);
 
     /**
      * 溯源，通过二维码查询对应的记录

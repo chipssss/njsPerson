@@ -84,7 +84,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     private RecoveryRecordMapper recoveryRecordMapper;
 
     @Override
-    public ServerResponse processRecord(int userId, String startTime, String endTime, int batchId, int cropId, int pageNum, int pageSize){
+    public ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize){
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
         Date eTime = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
         ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
@@ -92,9 +92,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
         if(serverResponse.isSuccess()){
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, serverResponse.getData().getEnterpriseId(), 1);
+            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, serverResponse.getData().getEnterpriseId(), 1);
         }else {
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, batchId, cropId, userId, 0);
+            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, userId, 0);
         }
 
         return ServerResponse.createBySuccess(records2recordVO(processRecordList));
@@ -281,20 +281,17 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 ProcessRecordVO processRecordVO = new ProcessRecordVO();
                 BeanUtils.copyProperties(processRecord, processRecordVO);
                 List<String> images = processImageMapper.selectByRecordId(processRecord.getId());
-                if(images.isEmpty()){
-                    continue;
+                if(!images.isEmpty()){
+                    processRecordVO.setImages(images);
                 }
-                processRecordVO.setImages(images);
                 Field field = fieldMapper.selectByPrimaryKey(processRecord.getFieldId());
-                if(field == null){
-                    continue;
+                if(field != null){
+                    processRecordVO.setFieldName(field.getName());
                 }
-                processRecordVO.setFieldName(field.getName());
                 CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(processRecord.getCropId());
-                if(cropInfo == null){
-                    continue;
+                if(cropInfo != null){
+                    processRecordVO.setCropName(cropInfo.getName());
                 }
-                processRecordVO.setCropName(cropInfo.getName());
                 processRecords.add(processRecordVO);
             }
         }

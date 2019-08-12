@@ -58,11 +58,11 @@ public class ProductionRecordController {
             // TODO 有可能随年份改变而失效
             endTime = "2050-01-01";
         }
-        int batchId = jsonObject.getIntValue("batchId");
+        int fieldId = jsonObject.getIntValue("fieldId");
         int cropId = jsonObject.getIntValue("cropId");
         int pageNum = (int)jsonObject.getOrDefault("pageNum",1);
         int pageSize = (int)jsonObject.getOrDefault("pageSize",20);
-        return iProcessRecordService.processRecord(userId, startTime, endTime, batchId, cropId, pageNum, pageSize);
+        return iProcessRecordService.processRecord(userId, startTime, endTime, fieldId, cropId, pageNum, pageSize);
     }
 
 
@@ -78,6 +78,9 @@ public class ProductionRecordController {
 
     @PostMapping("processRecordAdd.do")
     public ServerResponse processRecordAdd(@RequestBody ProcessRecordInfoVO processRecordInfoVO, HttpSession session){
+        if(session == null){
+            return ServerResponse.createByErrorMessage("sorry,请登录！");
+        }
         String userName = ((User)session.getAttribute(Const.CURRENT_USER)).getUsername();
         return iProcessRecordService.addProcess(processRecordInfoVO, userName);
     }
