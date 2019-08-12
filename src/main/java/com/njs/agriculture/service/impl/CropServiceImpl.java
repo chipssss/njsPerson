@@ -55,7 +55,7 @@ public class CropServiceImpl implements ICropService {
             cropInfo = new CropInfo(typeId, name, response.getData().getEnterpriseId(), 1);
             resultRow = cropInfoMapper.insert(cropInfo);
         }else {
-            cropInfo = new CropInfo(typeId, name, response.getData().getEnterpriseId(), 0);
+            cropInfo = new CropInfo(typeId, name, userId, 0);
             resultRow = cropInfoMapper.insert(cropInfo);
         }
         if(resultRow == 0){

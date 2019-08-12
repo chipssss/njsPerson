@@ -30,7 +30,7 @@
     delete from process_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessRecord">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessRecord" useGeneratedKeys="true" keyProperty="id">
     insert into process_record (id, field_id, location, 
       crop_id, operation, input_record, 
       create_time, remark, weather, 
