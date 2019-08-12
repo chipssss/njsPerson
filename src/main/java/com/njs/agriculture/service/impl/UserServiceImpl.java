@@ -186,7 +186,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ServerResponse isManager(int userId) {
+    public ServerResponse<UserRelationship> isManager(int userId) {
         UserRelationship userRelationship = userRelationshipMapper.selectAdminByUserId(userId);
         if (userRelationship == null) {
             return ServerResponse.createByErrorMessage("不是负责人！");

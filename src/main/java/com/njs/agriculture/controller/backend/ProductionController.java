@@ -2,14 +2,14 @@ package com.njs.agriculture.controller.backend;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.pojo.ProductPool;
-import com.njs.agriculture.pojo.ProductionFirstCate;
-import com.njs.agriculture.pojo.ProductionSecondCate;
-import com.njs.agriculture.pojo.ProductionThirdCate;
+import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @Auther: SaikeiLEe
@@ -45,11 +45,6 @@ public class ProductionController {
         return iProductService.thirdCateGet();
     }
 
-    @PostMapping("productAdd.do")
-    public ServerResponse productAdd(@RequestBody ProductPool productPool){
-        return iProductService.productAdd(productPool);
-    }
-
     @RequestMapping("firstCateAdd.do")
     public ServerResponse firstCateAdd(@RequestBody ProductionFirstCate firstCate){
         return iProductService.firstCateAdd(firstCate);
@@ -72,4 +67,33 @@ public class ProductionController {
         return iProductService.productionDel(id, flag);
     }
 
+    /*基础栏目和库存操作*/
+    @RequestMapping("productBasicAdd.do")
+    public ServerResponse productBasicAdd(@RequestBody ProductBasic productBasic, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productBasicAdd(productBasic, user.getUserId());
+    }
+
+    @RequestMapping("productBasicUpdate.do")
+    public ServerResponse productBasicUpdate(@RequestBody ProductBasic productBasic){
+        return iProductService.productBasicUpdate(productBasic);
+    }
+
+    @GetMapping("productBasicGet.do")
+    public ServerResponse productBasicGet(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productBasicGet(user.getUserId());
+    }
+
+    @RequestMapping("productStockAdd.do")
+    public ServerResponse productStockAdd(@RequestBody ProductStock productStock, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productStockAdd(productStock, user.getUserId());
+    }
+
+    @RequestMapping("productStockGet.do")
+    public ServerResponse productStockGet( HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productStockGet(user.getUserId());
+    }
 }

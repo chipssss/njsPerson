@@ -1,10 +1,10 @@
 package com.njs.agriculture.service;
 
+import com.njs.agriculture.VO.ProductSecondCateVO;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.pojo.ProductPool;
-import com.njs.agriculture.pojo.ProductionFirstCate;
-import com.njs.agriculture.pojo.ProductionSecondCate;
-import com.njs.agriculture.pojo.ProductionThirdCate;
+import com.njs.agriculture.pojo.*;
+
+import java.util.Date;
 
 /**
  * @Auther: SaikeiLEe
@@ -21,8 +21,6 @@ public interface IProductService {
 
     ServerResponse thirdCateGet();
 
-    ServerResponse productAdd(ProductPool productPool);
-
     ServerResponse firstCateAdd(ProductionFirstCate firstCate);
 
     ServerResponse secondCateAdd(ProductionSecondCate secondCate);
@@ -36,4 +34,14 @@ public interface IProductService {
      * @return
      */
     ServerResponse productionDel(int id, int flag);
+
+    ServerResponse productBasicAdd(ProductBasic productBasic, int userId);
+
+    ServerResponse productBasicUpdate(ProductBasic productBasic);
+
+    ServerResponse productBasicGet(int userId);
+
+    ServerResponse productStockAdd(ProductStock productStock, int userId);
+
+    ServerResponse productStockGet(int userId);
 }

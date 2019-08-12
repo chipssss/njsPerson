@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.ProductBasicMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.ProductBasic">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="process" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="feature" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="packing" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="level" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, type_id, process, feature, packing, level, image, source, source_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product_basic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product_basic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProductBasic" keyProperty="id" useGeneratedKeys="true">
+    insert into product_basic (id, name, type_id, 
+      process, feature, packing, 
+      level, image, source, 
+      source_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
+      #{process,jdbcType=VARCHAR}, #{feature,jdbcType=VARCHAR}, #{packing,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER}, 
+      #{sourceId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProductBasic">
+    insert into product_basic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="process != null">
+        process,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+      <if test="packing != null">
+        packing,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="image != null">
+        image,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="process != null">
+        #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="packing != null">
+        #{packing,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.ProductBasic">
+    update product_basic
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="process != null">
+        process = #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="packing != null">
+        packing = #{packing,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.ProductBasic">
+    update product_basic
+    set name = #{name,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      process = #{process,jdbcType=VARCHAR},
+      feature = #{feature,jdbcType=VARCHAR},
+      packing = #{packing,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      source = #{source,jdbcType=INTEGER},
+      source_id = #{sourceId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from product_basic
+    where source = #{source,jdbcType=INTEGER}
+    and source_id = #{sourceId,jdbcType=INTEGER}
+  </select>
+</mapper>

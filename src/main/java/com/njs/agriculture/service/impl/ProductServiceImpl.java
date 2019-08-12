@@ -8,15 +8,10 @@ import com.njs.agriculture.VO.ProductSecondCateVO;
 import com.njs.agriculture.VO.ProductThirdCateVO;
 import com.njs.agriculture.VO.ProductionThirdCateVO;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.mapper.ProductPoolMapper;
-import com.njs.agriculture.mapper.ProductionFirstCateMapper;
-import com.njs.agriculture.mapper.ProductionSecondCateMapper;
-import com.njs.agriculture.mapper.ProductionThirdCateMapper;
-import com.njs.agriculture.pojo.ProductPool;
-import com.njs.agriculture.pojo.ProductionFirstCate;
-import com.njs.agriculture.pojo.ProductionSecondCate;
-import com.njs.agriculture.pojo.ProductionThirdCate;
+import com.njs.agriculture.mapper.*;
+import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
+import com.njs.agriculture.service.IUserService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +26,10 @@ import java.util.List;
  * @Description:
  */
 @Service("iProductService")
-public class ProductServiceImpl implements IProductService {
+public class ProductServiceImpl<T> implements IProductService {
 
     @Autowired
-    private ProductPoolMapper productPoolMapper;
+    private ProductBasicMapper productBasicMapper;
 
     @Autowired
     private ProductionFirstCateMapper productionFirstCateMapper;
@@ -44,6 +39,12 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductionThirdCateMapper productionThirdCateMapper;
+
+    @Autowired
+    private IUserService iUserService;
+
+    @Autowired
+    private ProductStockMapper productStockMapper;
 
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
@@ -109,15 +110,6 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ServerResponse productAdd(ProductPool productPool) {
-        int resultRow = productPoolMapper.insert(productPool);
-        if(resultRow == 0){
-            return ServerResponse.createByErrorMessage("插入失败！");
-        }
-        return ServerResponse.createBySuccess(productPool);
-    }
-
-    @Override
     public ServerResponse firstCateAdd(ProductionFirstCate firstCate) {
         int resultRow = productionFirstCateMapper.insert(firstCate);
         if(resultRow == 0){
@@ -154,11 +146,79 @@ public class ProductServiceImpl implements IProductService {
         }else if(flag == 3){
             resultRow = productionThirdCateMapper.deleteByPrimaryKey(id);
         }else if(flag == 0){
-            resultRow = productPoolMapper.deleteByPrimaryKey(id);
+            resultRow = productBasicMapper.deleteByPrimaryKey(id);
         }
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("删除失败！");
         }
         return ServerResponse.createBySuccess();
     }
+
+    @Override
+    public ServerResponse productBasicAdd(ProductBasic productBasic, int userId) {
+        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        if(serverResponse.isSuccess()){
+            productBasic.setSource(1);
+            productBasic.setSourceId(serverResponse.getData().getEnterpriseId());
+        }else{
+            productBasic.setSource(0);
+            productBasic.setSourceId(userId);
+        }
+        int resultRow = productBasicMapper.insert(productBasic);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("插入新数据失败！");
+        }
+        return ServerResponse.createBySuccess(productBasic);
+    }
+
+    @Override
+    public ServerResponse productBasicUpdate(ProductBasic productBasic) {
+        int resultRow = productBasicMapper.updateByPrimaryKeySelective(productBasic);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("更新失败！");
+        }
+        return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse productBasicGet(int userId) {
+        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        List<ProductBasic> productBasicList;
+        if(serverResponse.isSuccess()){
+            productBasicList = productBasicMapper.selectBySource(1, serverResponse.getData().getEnterpriseId());
+        }else{
+            productBasicList = productBasicMapper.selectBySource(0, userId);
+        }
+        return ServerResponse.createBySuccess(productBasicList);
+    }
+
+    @Override
+    public ServerResponse productStockAdd(ProductStock productStock, int userId) {
+        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        if(serverResponse.isSuccess()){
+            productStock.setSource(1);
+            productStock.setSourceId(serverResponse.getData().getEnterpriseId());
+        }else{
+            productStock.setSource(0);
+            productStock.setSourceId(userId);
+        }
+        int resultRow = productStockMapper.insert(productStock);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("插入新数据失败！");
+        }
+        return ServerResponse.createBySuccess(productStock);
+    }
+
+    @Override
+    public ServerResponse productStockGet(int userId) {
+        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        List<ProductStock> productStockList;
+        if(serverResponse.isSuccess()){
+            productStockList = productStockMapper.selectBySource(1, serverResponse.getData().getEnterpriseId());
+        }else{
+            productStockList = productStockMapper.selectBySource(0, userId);
+        }
+        return ServerResponse.createBySuccess(productStockList);
+    }
+
 }

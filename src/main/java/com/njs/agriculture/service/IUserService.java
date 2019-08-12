@@ -2,6 +2,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.User;
+import com.njs.agriculture.pojo.UserRelationship;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -23,7 +24,7 @@ public interface IUserService {
 
     ServerResponse getUsers(int pageNum, int pageSize);
 
-    ServerResponse isManager(int id);
+    ServerResponse<UserRelationship> isManager(int id);
 
     ServerResponse positionUpdate(int id, int position);
 
