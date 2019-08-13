@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import sun.dc.pr.PRError;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -42,11 +43,11 @@ public class FieldServiceImpl implements IFieldService {
     @Override
     public ServerResponse addField(FieldVO fieldVO) {
         Field field = fieldVO2Field(fieldVO);
-        if(field == null){
+        if (field == null) {
             return ServerResponse.createByErrorMessage("参数出错！");
         }
         int resultCount = fieldMapper.insert(field);
-        if(resultCount == 0){
+        if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("插入田块信息失败！");
         }
         return ServerResponse.createBySuccess();
@@ -55,7 +56,7 @@ public class FieldServiceImpl implements IFieldService {
     @Override
     public ServerResponse delField(int fieldId) {
         int resultCount = fieldMapper.deleteByPrimaryKey(fieldId);
-        if(resultCount == 0){
+        if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("删除田块失败！");
         }
         return ServerResponse.createBySuccess();
@@ -64,11 +65,11 @@ public class FieldServiceImpl implements IFieldService {
     @Override
     public ServerResponse modifyField(FieldVO fieldVO) {
         Field field = fieldVO2Field(fieldVO);
-        if(field == null){
+        if (field == null) {
             return ServerResponse.createByErrorMessage("参数出错！");
         }
         int resultCount = fieldMapper.updateByPrimaryKeySelective(field);
-        if(resultCount == 0){
+        if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("更新田块失败！");
         }
         return ServerResponse.createBySuccess();
@@ -77,39 +78,36 @@ public class FieldServiceImpl implements IFieldService {
     @Override
     public ServerResponse fieldInfo(int userId) {
         //1.先判断是否负责人
-        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<Field> fields = Lists.newArrayList();
-        if(!serverResponse.isSuccess()){
-            //用户id查询
-            fields = fieldMapper.selectBySourceId(0, userId);
-        }else{
-            fields = fieldMapper.selectBySourceId(1, serverResponse.getData().getEnterpriseId());
-        }
+        //用户id查询
+        fields = fieldMapper.selectBySourceId((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
+
         return ServerResponse.createBySuccess(fields);
     }
 
-    private Field fieldVO2Field(FieldVO fieldVO){
+    private Field fieldVO2Field(FieldVO fieldVO) {
         Field field = new Field();
         BeanUtils.copyProperties(fieldVO, field);
-        if(fieldVO.isPerson()){
+        if (fieldVO.isPerson()) {
             field.setSource(0);
             field.setSourceId(fieldVO.getUserId());
-        }else {
-            ServerResponse<UserRelationship> serverResponse = iUserService.isManager(fieldVO.getUserId());
-            if(!serverResponse.isSuccess()){
+        } else {
+            ServerResponse<Map> serverResponse = iUserService.isManager(fieldVO.getUserId());
+            if ((int)serverResponse.getData().get("source") == 0) {
                 return null;
             }
             field.setSource(1);
-            field.setSourceId(serverResponse.getData().getEnterpriseId());
+            field.setSourceId((int)serverResponse.getData().get("sourceId"));
         }
-        if(fieldVO.isFree()){
+        if (fieldVO.isFree()) {
             field.setStatus(0);
-        }else {
+        } else {
             field.setStatus(1);
         }
         field.setCropId(fieldVO.getCropId());
         CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(fieldVO.getCropId());
-        if(cropInfo != null ){
+        if (cropInfo != null) {
             field.setCropName(cropInfo.getName());
         }
         return field;

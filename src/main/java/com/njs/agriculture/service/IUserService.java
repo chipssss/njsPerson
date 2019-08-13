@@ -5,6 +5,8 @@ import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.pojo.UserRelationship;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 
 /**
  * @Auther: SaikeiLEe
@@ -24,7 +26,7 @@ public interface IUserService {
 
     ServerResponse getUsers(int pageNum, int pageSize);
 
-    ServerResponse<UserRelationship> isManager(int id);
+    ServerResponse<Map> isManager(int id);
 
     ServerResponse positionUpdate(int id, int position);
 

@@ -214,17 +214,17 @@ public class InputServiceImpl<T> implements IInputService {
             List<InputUser> inputUsers = inputUserMapper.selectAll(sourceId);
             totalEntries = inputUsers.size();
             for (InputUser inputUser : inputUsers) {
-                totalInputs = MathUtil.add(totalInputs, inputUser.getQuantity());
-                double amount = MathUtil.sub(inputUser.getQuantity(), inputUser.getPrice().doubleValue());
-                totalAmount = MathUtil.add(totalAmount, amount);
+                totalInputs = MathUtil.add(String.valueOf(totalInputs), inputUser.getQuantity().toString());
+                double amount = MathUtil.mul(inputUser.getQuantity().toString(), inputUser.getPrice().toString());
+                totalAmount = MathUtil.add(String.valueOf(totalAmount), String.valueOf(amount));
             }
         }else {
             List<InputEnterprise> inputEnterprises = inputEnterpriseMapper.selectAll(sourceId);
             totalEntries = inputEnterprises.size();
             for (InputEnterprise inputEnterprise : inputEnterprises) {
-                totalInputs = MathUtil.add(totalInputs, Double.valueOf(inputEnterprise.getQuantity().toString()));
-                double amount = MathUtil.mul(Double.valueOf(inputEnterprise.getQuantity().toString()), inputEnterprise.getPrice().doubleValue());
-                totalAmount = MathUtil.add(totalAmount, amount);
+                totalInputs = MathUtil.add(String.valueOf(totalInputs), inputEnterprise.getQuantity().toString());
+                double amount = MathUtil.mul(inputEnterprise.getQuantity().toString(), inputEnterprise.getPrice().toString());
+                totalAmount = MathUtil.add(String.valueOf(totalAmount), String.valueOf(amount));
             }
         }
         JSONObject jsonObject = new JSONObject();
@@ -353,7 +353,7 @@ public class InputServiceImpl<T> implements IInputService {
         if (inputUser.getSource() == 0) {
             return ServerResponse.createByErrorMessage("该投入品不是由企业领用！");
         }
-        double result = MathUtil.sub(inputUser.getQuantity(), quantity);
+        double result = MathUtil.sub(inputUser.getQuantity().toString(), String.valueOf(quantity));
         if (result < 0) {
             return ServerResponse.createByErrorMessage("数量超过存在额!");
         }
@@ -361,7 +361,7 @@ public class InputServiceImpl<T> implements IInputService {
         inputUser.setQuantity((float) result);
         inputUserMapper.updateByPrimaryKeySelective(inputUser);
         InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUser.getSourceId());
-        float resultE = (float) MathUtil.add(inputEnterprise.getQuantity(), quantity);
+        float resultE = (float) MathUtil.add(inputEnterprise.getQuantity().toString(), String.valueOf(quantity));
         inputEnterprise.setQuantity(resultE);
         inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
         //3.更新退回表

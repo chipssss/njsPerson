@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -47,18 +48,12 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse cropAdd(int userId, String name, int typeId) {
-        ServerResponse<UserRelationship> response =  iUserService.isManager(userId);
+        ServerResponse<Map> response = iUserService.isManager(userId);
         int resultRow;
         CropInfo cropInfo;
-        if(response.isSuccess()){
-            //企业
-            cropInfo = new CropInfo(typeId, name, response.getData().getEnterpriseId(), 1);
-            resultRow = cropInfoMapper.insert(cropInfo);
-        }else {
-            cropInfo = new CropInfo(typeId, name, userId, 0);
-            resultRow = cropInfoMapper.insert(cropInfo);
-        }
-        if(resultRow == 0){
+        cropInfo = new CropInfo(typeId, name, (int) response.getData().get("sourceId"), (int) response.getData().get("source"));
+        resultRow = cropInfoMapper.insert(cropInfo);
+        if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("添加失败！");
         }
         return ServerResponse.createBySuccess(cropInfo);
@@ -91,7 +86,7 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse cropGetAndroid() {
-         List<CropCateVO> cropCateVOList = Lists.newLinkedList();
+        List<CropCateVO> cropCateVOList = Lists.newLinkedList();
         List<CropFirstCate> firstCateList = cropFirstCateMapper.selectAll();
         for (CropFirstCate cropFirstCate : firstCateList) {
             CropCateVO cropCateVO = new CropCateVO();
@@ -101,13 +96,13 @@ public class CropServiceImpl implements ICropService {
             List<CropSecondCate> secondCateList = cropSecondCateMapper.selectByFirstCateId(cropFirstCate.getId());
             for (CropSecondCate cropSecondCate : secondCateList) {
                 CropSecondCateVO cropSecondCateVO = new CropSecondCateVO();
-                BeanUtils.copyProperties(cropSecondCate,cropSecondCateVO);
+                BeanUtils.copyProperties(cropSecondCate, cropSecondCateVO);
 
                 List<CropThirdCateVO> cropThirdCateVOS = Lists.newLinkedList();
                 List<CropThirdCate> thirdCateList = cropThirdCateMapper.selectBySecondCateId(cropSecondCate.getId());
                 for (CropThirdCate cropThirdCate : thirdCateList) {
                     CropThirdCateVO cropThirdCateVO = new CropThirdCateVO();
-                    BeanUtils.copyProperties(cropThirdCate,cropThirdCateVO);
+                    BeanUtils.copyProperties(cropThirdCate, cropThirdCateVO);
 
                     List<CropInfo> cropInfoList = cropInfoMapper.selectByCateId(cropThirdCate.getId());
                     cropThirdCateVO.setCropInfoList(cropInfoList);
@@ -126,18 +121,18 @@ public class CropServiceImpl implements ICropService {
     @Override
     public ServerResponse cropDel(int id, int flag) {
         int resultRow = 0;
-        if(flag == 1){
+        if (flag == 1) {
             resultRow = cropFirstCateMapper.deleteByPrimaryKey(id);
-        }else if(flag == 2){
+        } else if (flag == 2) {
             resultRow = cropSecondCateMapper.deleteByPrimaryKey(id);
-        }else if(flag == 3){
+        } else if (flag == 3) {
             resultRow = cropThirdCateMapper.deleteByPrimaryKey(id);
-        }else {
+        } else {
             resultRow = cropInfoMapper.deleteByPrimaryKey(id);
         }
-       if(resultRow == 0){
-           return ServerResponse.createByErrorMessage("删除失败！");
-       }
+        if (resultRow == 0) {
+            return ServerResponse.createByErrorMessage("删除失败！");
+        }
         return ServerResponse.createBySuccess();
     }
 

@@ -15,10 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Auther: SaikeiLEe
@@ -50,13 +47,11 @@ public class ServiceServiceIml implements IServiceService {
     public ServerResponse serviceApply(ServicePool servicePool) {
         servicePool.setStatus(0);
         int sourceId = servicePool.getSourceId();
-        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(sourceId);
-        if (serverResponse.isSuccess()) {
-            servicePool.setSource(1);
-            servicePool.setSourceId(serverResponse.getData().getEnterpriseId());
-        } else {
-            servicePool.setSource(0);
-        }
+        ServerResponse<Map> serverResponse = iUserService.isManager(sourceId);
+
+        servicePool.setSource((int) serverResponse.getData().get("source"));
+        servicePool.setSourceId((int) serverResponse.getData().get("sourceId"));
+
         if (servicePoolMapper.validExist(servicePool.getServiceId(),
                 servicePool.getSourceId(), servicePool.getSource()) != 0) {
             return ServerResponse.createByErrorMessage("重复申请！");
@@ -112,15 +107,11 @@ public class ServiceServiceIml implements IServiceService {
 
     @Override
     public ServerResponse serviceApplyRecord(int userId) {
-        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<ServicePool> servicePoolList;
         PageHelper.orderBy("source");
-        if (serverResponse.isSuccess()) {
-            servicePoolList = servicePoolMapper.
-                    selectByUserId(serverResponse.getData().getEnterpriseId(), 1);
-        } else {
-            servicePoolList = servicePoolMapper.selectByUserId(userId, 0);
-        }
+        servicePoolList = servicePoolMapper.
+                selectByUserId((int) serverResponse.getData().get("sourceId"), (int) serverResponse.getData().get("source"));
         return ServerResponse.createBySuccess(pool2VO(servicePoolList));
     }
 
@@ -144,15 +135,15 @@ public class ServiceServiceIml implements IServiceService {
         return ServerResponse.createBySuccess();
     }
 
-    private List<ServicePoolVO> pool2VO(List<ServicePool> servicePoolList){
+    private List<ServicePoolVO> pool2VO(List<ServicePool> servicePoolList) {
         List<ServicePoolVO> servicePoolVOList = Lists.newLinkedList();
         for (ServicePool servicePool : servicePoolList) {
             ServicePoolVO servicePoolVO = new ServicePoolVO();
             BeanUtils.copyProperties(servicePool, servicePoolVO);
-            if(servicePool.getSource() == 0){
-                servicePoolVO.setName("个人:"+userMapper.selectByPrimaryKey(servicePool.getSourceId()).getUsername());
-            }else {
-                servicePoolVO.setName("企业:"+enterpriseMapper.selectByPrimaryKey(servicePool.getSourceId()).getName());
+            if (servicePool.getSource() == 0) {
+                servicePoolVO.setName("个人:" + userMapper.selectByPrimaryKey(servicePool.getSourceId()).getUsername());
+            } else {
+                servicePoolVO.setName("企业:" + enterpriseMapper.selectByPrimaryKey(servicePool.getSourceId()).getName());
             }
             servicePoolVOList.add(servicePoolVO);
         }

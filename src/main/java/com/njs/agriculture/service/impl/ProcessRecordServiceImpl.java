@@ -87,16 +87,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize){
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
         Date eTime = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
-        ServerResponse<UserRelationship> serverResponse = iUserService.isManager(userId);
+        ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<ProcessRecord> processRecordList;
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
-        if(serverResponse.isSuccess()){
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, serverResponse.getData().getEnterpriseId(), 1);
-        }else {
-            processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, userId, 0);
-        }
-
+        processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, (int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
         return ServerResponse.createBySuccess(records2recordVO(processRecordList));
     }
 
@@ -169,7 +164,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 if(inputUser == null){
                     return ServerResponse.createByErrorMessage("找不到投入品");
                 }
-                double result = MathUtil.sub(inputUser.getQuantity(), input.getQuantity());
+                double result = MathUtil.sub(inputUser.getQuantity().toString(), String.valueOf(input.getQuantity()));
                 if(result < 0){
                     return ServerResponse.createByErrorMessage("数量超过存在额!");
                 }
@@ -183,7 +178,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 if(inputEnterprise == null){
                     return ServerResponse.createByErrorMessage("找不到投入品");
                 }
-                double result = MathUtil.sub(inputEnterprise.getQuantity(), input.getQuantity());
+                double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), String.valueOf(input.getQuantity()));
                 if(result < 0){
                     return ServerResponse.createByErrorMessage("数量超过存在额!");
                 }

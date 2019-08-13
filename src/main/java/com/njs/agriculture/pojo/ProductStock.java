@@ -1,7 +1,5 @@
 package com.njs.agriculture.pojo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
 
 public class ProductStock {
@@ -19,7 +17,6 @@ public class ProductStock {
 
     private Integer batchId;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm",timezone = "GMT+8")
     private Date createTime;
 
     private String secureImage;
@@ -28,7 +25,9 @@ public class ProductStock {
 
     private Integer sourceId;
 
-    public ProductStock(Integer id, Integer productId, Integer quantity, Date productionTime, String productionMessage, Integer shelfLife, Integer batchId, Date createTime, String secureImage, Integer source, Integer sourceId) {
+    private String barcode;
+
+    public ProductStock(Integer id, Integer productId, Integer quantity, Date productionTime, String productionMessage, Integer shelfLife, Integer batchId, Date createTime, String secureImage, Integer source, Integer sourceId, String barcode) {
         this.id = id;
         this.productId = productId;
         this.quantity = quantity;
@@ -40,6 +39,7 @@ public class ProductStock {
         this.secureImage = secureImage;
         this.source = source;
         this.sourceId = sourceId;
+        this.barcode = barcode;
     }
 
     public ProductStock() {
@@ -132,5 +132,13 @@ public class ProductStock {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode == null ? null : barcode.trim();
     }
 }

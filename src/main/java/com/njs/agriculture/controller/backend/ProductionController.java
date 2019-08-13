@@ -96,4 +96,21 @@ public class ProductionController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iProductService.productStockGet(user.getUserId());
     }
+
+    @RequestMapping("productOut.do")
+    public ServerResponse productOut( @RequestBody ProductOut productOut, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productOut(productOut, user.getUserId());
+    }
+
+    @GetMapping("productOutGetBySource.do")
+    public ServerResponse productOut( HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productOutGetBySource(user.getUserId());
+    }
+
+    @GetMapping("productOutGetByProductId.do")
+    public ServerResponse productOut(int productId){
+        return iProductService.productOutGetByProductId(productId);
+    }
 }

@@ -163,17 +163,17 @@ public class UserServiceImpl implements IUserService {
         for (User user : users) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(user, userVO);
-            ServerResponse<UserRelationship> serverResponse = isManager(user.getUserId());
             List<RelationshipVO> relationships = Lists.newLinkedList();
-            if (serverResponse.isSuccess()) {
-                Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(serverResponse.getData().getEnterpriseId());
-                RelationshipVO relationship = new RelationshipVO(enterprise.getName(), getPosition(serverResponse.getData().getPosition()));
+            UserRelationship userRelationship1 = userRelationshipMapper.selectAdminByUserId(user.getUserId());
+            if (userRelationship1 != null) {
+                Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(userRelationship1.getEnterpriseId());
+                RelationshipVO relationship = new RelationshipVO(enterprise.getName(), getPosition(userRelationship1.getPosition()));
                 relationships.add(relationship);
             } else {
                 List<UserRelationship> userRelationships = userRelationshipMapper.selectByUserId(user.getUserId());
                 for (UserRelationship userRelationship : userRelationships) {
-                    Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(serverResponse.getData().getEnterpriseId());
-                    RelationshipVO relationship = new RelationshipVO(enterprise.getName(), getPosition(serverResponse.getData().getPosition()));
+                    Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(userRelationship.getEnterpriseId());
+                    RelationshipVO relationship = new RelationshipVO(enterprise.getName(), getPosition(userRelationship.getPosition()));
                     relationships.add(relationship);
                 }
             }
@@ -186,12 +186,17 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ServerResponse<UserRelationship> isManager(int userId) {
+    public ServerResponse<Map> isManager(int userId) {
         UserRelationship userRelationship = userRelationshipMapper.selectAdminByUserId(userId);
+        Map map = Maps.newHashMap();
         if (userRelationship == null) {
-            return ServerResponse.createByErrorMessage("不是负责人！");
+            map.put("source",0);
+            map.put("sourceId", userId);
+        }else{
+            map.put("source",1);
+            map.put("sourceId", userRelationship.getEnterpriseId());
         }
-        return ServerResponse.createBySuccess(userRelationship);
+        return ServerResponse.createBySuccess(map);
     }
 
     @Override
