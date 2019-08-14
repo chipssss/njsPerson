@@ -29,6 +29,8 @@ public interface IProcessRecordService {
      */
     ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize);
 
+    ServerResponse getRecordCrop(int userId);
+
     /**
      * 溯源，通过二维码查询对应的记录
      * @param qrcodeId

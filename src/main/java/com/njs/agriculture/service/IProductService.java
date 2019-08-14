@@ -15,6 +15,8 @@ public interface IProductService {
 
     ServerResponse categoryGet(int pageNum, int pageSize);
 
+    ServerResponse categoryGetForAndroid();
+
     ServerResponse firstCateGet();
 
     ServerResponse secondCateGet();

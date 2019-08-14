@@ -10,10 +10,11 @@
       <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, crop, field_id, create_time, source, source_id, user_name
+    id, crop, field_id, create_time, source, source_id, user_name, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,13 +26,13 @@
     delete from recovery_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.RecoveryRecord" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.RecoveryRecord">
     insert into recovery_record (id, crop, field_id, 
       create_time, source, source_id, 
-      user_name)
+      user_name, status)
     values (#{id,jdbcType=INTEGER}, #{crop,jdbcType=VARCHAR}, #{fieldId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, 
-      #{userName,jdbcType=VARCHAR})
+      #{userName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.RecoveryRecord">
     insert into recovery_record
@@ -57,6 +58,9 @@
       <if test="userName != null">
         user_name,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -79,6 +83,9 @@
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -103,6 +110,9 @@
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -113,7 +123,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       source = #{source,jdbcType=INTEGER},
       source_id = #{sourceId,jdbcType=INTEGER},
-      user_name = #{userName,jdbcType=VARCHAR}
+      user_name = #{userName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectBySource" resultMap="BaseResultMap">

@@ -65,6 +65,12 @@ public class ProductionRecordController {
         return iProcessRecordService.processRecord(userId, startTime, endTime, fieldId, cropId, pageNum, pageSize);
     }
 
+    @GetMapping("getRecordCrop.do")
+    public ServerResponse getRecordCrop(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProcessRecordService.getRecordCrop(user.getUserId());
+    }
+
 
     @PostMapping("trace.do")
     public ServerResponse trace(@RequestBody JSONObject jsonObject){

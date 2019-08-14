@@ -11,7 +11,7 @@ public class RecoveryRecord {
 
     private Integer fieldId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "GMT+8")
     private Date createTime;
 
     private Integer source;
@@ -20,7 +20,9 @@ public class RecoveryRecord {
 
     private String userName;
 
-    public RecoveryRecord(Integer id, String crop, Integer fieldId, Date createTime, Integer source, Integer sourceId, String userName) {
+    private Integer status;
+
+    public RecoveryRecord(Integer id, String crop, Integer fieldId, Date createTime, Integer source, Integer sourceId, String userName, Integer status) {
         this.id = id;
         this.crop = crop;
         this.fieldId = fieldId;
@@ -28,6 +30,7 @@ public class RecoveryRecord {
         this.source = source;
         this.sourceId = sourceId;
         this.userName = userName;
+        this.status = status;
     }
 
     public RecoveryRecord() {
@@ -88,5 +91,13 @@ public class RecoveryRecord {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

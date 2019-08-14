@@ -99,6 +99,36 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public ServerResponse categoryGetForAndroid() {
+        List<ProductCateVO> cateVOS = Lists.newLinkedList();
+        List<ProductionFirstCate> firstCates = productionFirstCateMapper.selectAll();
+        for (ProductionFirstCate firstCate : firstCates) {
+            ProductCateVO productCateVO = new ProductCateVO();
+            BeanUtils.copyProperties(firstCate, productCateVO);
+
+            List<ProductSecondCateVO> secondCateVOS = Lists.newLinkedList();
+            List<ProductionSecondCate> secondCates = productionSecondCateMapper.selectByFirstCateId(firstCate.getId());
+            for (ProductionSecondCate secondCate : secondCates) {
+                ProductSecondCateVO productSecondCateVO = new ProductSecondCateVO();
+                BeanUtils.copyProperties(secondCate, productSecondCateVO);
+
+                List<ProductThirdCateVO> thirdCateVOS = Lists.newLinkedList();
+                List<ProductionThirdCate> thirdCates = productionThirdCateMapper.selectBySecondCateId(secondCate.getId());
+                for (ProductionThirdCate thirdCate : thirdCates) {
+                    ProductThirdCateVO productThirdCateVO = new ProductThirdCateVO();
+                    BeanUtils.copyProperties(thirdCate, productThirdCateVO);
+                    thirdCateVOS.add(productThirdCateVO);
+                }
+                productSecondCateVO.setThirdCateList(thirdCateVOS);
+                secondCateVOS.add(productSecondCateVO);
+            }
+            productCateVO.setSecondCateVOList(secondCateVOS);
+            cateVOS.add(productCateVO);
+        }
+        return ServerResponse.createBySuccess(cateVOS);
+    }
+
+    @Override
     public ServerResponse firstCateGet() {
         return ServerResponse.createBySuccess(productionFirstCateMapper.selectAll());
     }

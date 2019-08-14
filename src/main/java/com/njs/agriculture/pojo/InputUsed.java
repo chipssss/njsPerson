@@ -1,5 +1,6 @@
 package com.njs.agriculture.pojo;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
 public class InputUsed {
@@ -12,6 +13,10 @@ public class InputUsed {
     private Float quantity;
 
     private Date createTime;
+
+    public static MethodHandles.Lookup lookup() {
+        return MethodHandles.lookup();
+    }
 
     public InputUsed(Integer id, Integer source, Integer sourceId, Float quantity, Date createTime) {
         this.id = id;

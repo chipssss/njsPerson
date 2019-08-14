@@ -2,6 +2,7 @@ package com.njs.agriculture.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -92,7 +93,27 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
         processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, (int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
-        return ServerResponse.createBySuccess(records2recordVO(processRecordList));
+        PageInfo pageInfo = new PageInfo(processRecordList);
+        pageInfo.setList(records2recordVO(processRecordList));
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse getRecordCrop(int userId) {
+        ServerResponse<Map> serverResponse = iUserService.isManager(userId);
+        List<Integer> cropIdList = processRecordMapper
+                .selectCropIdBySource((int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
+
+        List<SimpleVO> simpleVOS = Lists.newLinkedList();
+        for (Integer integer : cropIdList) {
+            CropInfo cropInfo =  cropInfoMapper.selectByPrimaryKey(integer);
+            if(cropInfo == null){
+                continue;
+            }
+            SimpleVO simpleVO = new SimpleVO(integer, cropInfo.getName());
+            simpleVOS.add(simpleVO);
+        }
+        return ServerResponse.createBySuccess(simpleVOS);
     }
 
     @Override
@@ -265,8 +286,18 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     public ServerResponse getRecoveryRecord(int source, int sourceId) {
-        return ServerResponse.createBySuccess(recoveryRecordMapper.selectBySource(source, sourceId));
+        List<RecoveryRecord> recoveryRecordList = recoveryRecordMapper.selectBySource(source, sourceId);
+        List<RecoveryRecordVO> recoveryRecordVOList = Lists.newLinkedList();
+        for (RecoveryRecord recoveryRecord : recoveryRecordList) {
+            RecoveryRecordVO recoveryRecordVO = new RecoveryRecordVO();
+            BeanUtils.copyProperties(recoveryRecord, recoveryRecordVO);
+            Field field = fieldMapper.selectByPrimaryKey(recoveryRecord.getFieldId());
+            recoveryRecordVO.setFieldName(field.getName());
+            recoveryRecordVOList.add(recoveryRecordVO);
+        }
+        return ServerResponse.createBySuccess(recoveryRecordVOList);
     }
+
 
 
     public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){

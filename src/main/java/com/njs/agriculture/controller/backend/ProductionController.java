@@ -30,6 +30,11 @@ public class ProductionController {
         return iProductService.categoryGet(pageNum, pageSize);
     }
 
+    @GetMapping("categoryGet.do")
+    public ServerResponse categoryGet(){
+        return iProductService.categoryGetForAndroid();
+    }
+
     @GetMapping("firstCateGet.do")
     public ServerResponse firstCateGet(){
         return iProductService.firstCateGet();

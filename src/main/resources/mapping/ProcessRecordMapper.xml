@@ -198,4 +198,11 @@
       #{item}
     </foreach>
   </select>
+  <select id="selectCropIdBySource" parameterType="map" resultType="int">
+    select
+    DISTINCT crop_id
+    from process_record
+    where source = #{source}
+    and source_id = #{sourceId}
+  </select>
 </mapper>
