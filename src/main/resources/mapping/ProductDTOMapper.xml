@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.ProductDTOMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.dto.ProductionDTO">
+    <constructor>
+      <arg column="firstcate_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="fisrtcate_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="secondcate_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="secondcate_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="thirdcate_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="thirdcate_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    firstcate_id, fisrtcate_name, secondcate_id, secondcate_name, thirdcate_id, thirdcate_name
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from view_product
+  </select>
+</mapper>
