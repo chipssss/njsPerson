@@ -28,13 +28,13 @@ import java.time.format.DateTimeFormatter;
 public class InterceptorConfig implements WebMvcConfigurer {
 
 
-    //防止内存泄漏，远程部署tomcat,监听器
-    @Bean
-    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
-        ServletListenerRegistrationBean slrBean = new ServletListenerRegistrationBean();
-        slrBean.setListener(new ClassLoaderLeakPreventorListener());
-        return slrBean;
-    }
+//    //防止内存泄漏，远程部署tomcat,监听器
+//    @Bean
+//    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
+//        ServletListenerRegistrationBean slrBean = new ServletListenerRegistrationBean();
+//        slrBean.setListener(new ClassLoaderLeakPreventorListener());
+//        return slrBean;
+//    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

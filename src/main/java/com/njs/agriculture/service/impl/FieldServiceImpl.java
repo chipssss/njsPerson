@@ -1,11 +1,14 @@
 package com.njs.agriculture.service.impl;
 
 import com.google.common.collect.Lists;
+import com.njs.agriculture.VO.FieldInfoVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.CropInfoMapper;
+import com.njs.agriculture.mapper.EnterpriseMapper;
 import com.njs.agriculture.mapper.FieldMapper;
 import com.njs.agriculture.pojo.CropInfo;
+import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.UserRelationship;
 import com.njs.agriculture.service.IFieldService;
@@ -39,6 +42,9 @@ public class FieldServiceImpl implements IFieldService {
 
     @Autowired
     private CropInfoMapper cropInfoMapper;
+
+    @Autowired
+    private EnterpriseMapper enterpriseMapper;
 
     @Override
     public ServerResponse addField(FieldVO fieldVO) {
@@ -83,7 +89,26 @@ public class FieldServiceImpl implements IFieldService {
         //用户id查询
         fields = fieldMapper.selectBySourceId((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
 
-        return ServerResponse.createBySuccess(fields);
+        return ServerResponse.createBySuccess(fieldList2FieldInfoVOList(fields));
+    }
+
+
+    private List<FieldInfoVO> fieldList2FieldInfoVOList(List<Field> fieldList){
+        List<FieldInfoVO> fieldInfoVOList = Lists.newLinkedList();
+        for (Field field : fieldList) {
+            FieldInfoVO fieldInfoVO = new FieldInfoVO();
+            BeanUtils.copyProperties(field, fieldInfoVO);
+            if(field.getSource() == 1){
+                Enterprise enterprise  = enterpriseMapper.selectByPrimaryKey(field.getSourceId());
+                if(enterprise != null){
+                    fieldInfoVO.setSourceName(enterprise.getName());
+                }
+            }else {
+                fieldInfoVO.setSourceName("个人");
+            }
+            fieldInfoVOList.add(fieldInfoVO);
+        }
+        return fieldInfoVOList;
     }
 
     private Field fieldVO2Field(FieldVO fieldVO) {
