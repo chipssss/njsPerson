@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.dto.InputDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
@@ -60,6 +61,9 @@ public class InputServiceImpl<T> implements IInputService {
 
     @Autowired
     InputUsedMapper inputUsedMapper;
+
+    @Autowired
+    InputDTOMapper inputDTOMapper;
 
 
     @Override
@@ -127,20 +131,8 @@ public class InputServiceImpl<T> implements IInputService {
     @Override
     public ServerResponse categoryInfo(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-
-        List<InputSecondCate> secondCateList = inputSecondCateMapper.selectAll();
-        List<InputSecondCateVO> secondCateVOList = Lists.newLinkedList();
-        for (InputSecondCate inputSecondCate : secondCateList) {
-            InputSecondCateVO secondCateVO = new InputSecondCateVO();
-            secondCateVO.setSecondCateId(inputSecondCate.getId());
-            secondCateVO.setSecondCateName(inputSecondCate.getName());
-            InputFirstCate firstCate = inputFirstCateMapper.selectByPrimaryKey(inputSecondCate.getFirstcateId());
-            secondCateVO.setFirstCateId(firstCate.getId());
-            secondCateVO.setFirstCateName(firstCate.getName());
-            secondCateVOList.add(secondCateVO);
-        }
-        PageInfo pageResult = new PageInfo(secondCateList);
-        pageResult.setList(secondCateVOList);
+        List<InputDTO> inputDTOList = inputDTOMapper.selectAll();
+        PageInfo pageResult = new PageInfo(inputDTOList);
         //3.构造类别对象
         return ServerResponse.createBySuccess(pageResult);
     }

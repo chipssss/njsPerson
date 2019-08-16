@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.dto.ProductionDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
@@ -50,6 +51,9 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProductOutMapper productOutMapper;
 
+    @Autowired
+    private ProductDTOMapper productDTOMapper;
+
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -78,23 +82,8 @@ public class ProductServiceImpl implements IProductService {
             productCateVO.setSecondCateVOList(secondCateVOS);
             cateVOS.add(productCateVO);
         }*/
-
-        List<ProductionThirdCate> thirdCateList = productionThirdCateMapper.selectAll();
-        List<ProductionThirdCateVO> thirdCateVOList = Lists.newLinkedList();
-        for (ProductionThirdCate productionThirdCate : thirdCateList) {
-            ProductionThirdCateVO thirdCateVO = new ProductionThirdCateVO();
-            thirdCateVO.setThirdCateId(productionThirdCate.getId());
-            thirdCateVO.setThirdCateName(productionThirdCate.getName());
-            ProductionSecondCate secondCate = productionSecondCateMapper.selectByPrimaryKey(productionThirdCate.getSecondcateId());
-            thirdCateVO.setSecondCateId(secondCate.getId());
-            thirdCateVO.setSecondCateName(secondCate.getName());
-            ProductionFirstCate firstCate = productionFirstCateMapper.selectByPrimaryKey(secondCate.getFirstcateId());
-            thirdCateVO.setFirstCateId(firstCate.getId());
-            thirdCateVO.setFirstCateName(firstCate.getName());
-            thirdCateVOList.add(thirdCateVO);
-        }
-        PageInfo pageResult = new PageInfo(thirdCateList);
-        pageResult.setList(thirdCateVOList);
+        List<ProductionDTO> productionDTOList = productDTOMapper.selectAll();
+        PageInfo pageResult = new PageInfo(productionDTOList);
         return ServerResponse.createBySuccess(pageResult);
     }
 
