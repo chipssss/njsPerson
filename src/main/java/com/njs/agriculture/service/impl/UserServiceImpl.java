@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.njs.agriculture.VO.EnterpriseInfoVO;
 import com.njs.agriculture.VO.RelationshipVO;
+import com.njs.agriculture.VO.UserInfoVO;
 import com.njs.agriculture.VO.UserVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -23,6 +25,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,14 +92,28 @@ public class UserServiceImpl implements IUserService {
         if (user == null) {
             return ServerResponse.createByErrorMessage("密码错误");
         }
-
+        List<UserRelationship> userRelationshipList = userRelationshipMapper.selectByUserId(user.getUserId());
+        List<EnterpriseInfoVO> enterpriseInfoVOList = Lists.newLinkedList();
+        for (UserRelationship userRelationship : userRelationshipList) {
+            Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(userRelationship.getEnterpriseId());
+            if(enterprise != null){
+                EnterpriseInfoVO enterpriseInfoVO = new EnterpriseInfoVO();
+                enterpriseInfoVO.setEnterpriseId(enterprise.getId());
+                enterpriseInfoVO.setEnterpriseName(enterprise.getName());
+                enterpriseInfoVO.setRole(getPosition(userRelationship.getPosition()));
+                enterpriseInfoVOList.add(enterpriseInfoVO);
+            }
+        }
         user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
+        UserInfoVO userInfoVO = new UserInfoVO();
+        BeanUtils.copyProperties(user, userInfoVO);
+        userInfoVO.setEnterpriseInfoVOList(enterpriseInfoVOList);
         /*String token = UUID.randomUUID().toString();
         TokenCache.setKey(TokenCache.TOKEN_PREFIX + user.getUserId(), token);
         Map map = Maps.newHashMap();
         map.put("user", user);
         map.put("token", token);*/
-        return ServerResponse.createBySuccess("登录成功", user);
+        return ServerResponse.createBySuccess("登录成功", userInfoVO);
 
     }
 
