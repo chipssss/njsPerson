@@ -161,6 +161,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 recoveryRecord.setSource(field.getSource());
                 recoveryRecord.setSourceId(field.getSourceId());
                 recoveryRecord.setUserName(userName);
+                recoveryRecord.setStatus(0);
                 ServerResponse serverResponse = insertRecoveryRecord(recoveryRecord);
                 return serverResponse;
             }
