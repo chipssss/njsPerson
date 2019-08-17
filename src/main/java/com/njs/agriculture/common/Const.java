@@ -20,7 +20,7 @@ public class Const {
 
     public static final String PERSONNAL = "个人";
 
-    public static final String RECOVERY = "采摘";
+    public static final String RECOVERY = "成熟采收";
 
    public enum Position{
         STAFF(0,"员工"),

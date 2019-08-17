@@ -14,9 +14,11 @@ public class ProductionDTO {
 
     private String firstcateName;
 
+    //设置json序列化时候默认值如0不参加序列化
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int secondcateId;
 
+    //值为空不参加序列化
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String secondcateName;
 
