@@ -22,7 +22,7 @@
     delete from crop_thirdcate
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.CropThirdCate">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.CropThirdCate" keyProperty="id" useGeneratedKeys="true">
     insert into crop_thirdcate (id, name, firstcate_id, 
       secondcate_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{firstcateId,jdbcType=INTEGER}, 

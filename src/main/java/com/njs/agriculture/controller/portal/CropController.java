@@ -61,5 +61,13 @@ public class CropController {
         return iCropService.cropDel(id, flag);
     }
 
+    @PostMapping("cropCateAdd.do")
+    public ServerResponse inputCateAdd(@RequestBody JSONObject jsonObject){
+        int type = jsonObject.getIntValue("type");
+        String name = jsonObject.getString("name");
+        int superiorId = jsonObject.getIntValue("superiorId");
+        return iCropService.cropCateAdd(type, name, superiorId);
+    }
+
 
 }

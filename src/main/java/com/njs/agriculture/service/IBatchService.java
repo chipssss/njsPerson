@@ -1,5 +1,6 @@
 package com.njs.agriculture.service;
 
+import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.ProductionBatch;
 
@@ -16,7 +17,7 @@ public interface IBatchService {
      */
     ServerResponse batchInfo(int fieldId);
 
-    ServerResponse batchAdd(ProductionBatch productionBatch);
+    ServerResponse batchAdd(BatchInfoVO batchInfoVO);
 
     ServerResponse batchDel(int id);
 }

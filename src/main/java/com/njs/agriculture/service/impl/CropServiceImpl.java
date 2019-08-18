@@ -7,6 +7,7 @@ import com.njs.agriculture.VO.CropInfoVO;
 import com.njs.agriculture.VO.CropSecondCateVO;
 import com.njs.agriculture.VO.CropThirdCateVO;
 import com.njs.agriculture.VO.CropCateVO;
+import com.njs.agriculture.common.ResponseCode;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.dto.CropDTO;
 import com.njs.agriculture.mapper.*;
@@ -133,5 +134,34 @@ public class CropServiceImpl implements ICropService {
     @Override
     public ServerResponse cropThirdCateGet() {
         return ServerResponse.createBySuccess(cropThirdCateMapper.selectAll());
+    }
+
+    @Override
+    public ServerResponse cropCateAdd(int type, String name, int superiorId) {
+        int resultRow = 0;
+        if(type == 1){
+            CropFirstCate cropFirstCate = new CropFirstCate();
+            cropFirstCate.setName(name);
+            resultRow = cropFirstCateMapper.insert(cropFirstCate);
+            return ServerResponse.createByResultRow(resultRow, cropFirstCate);
+        }else if(type == 2){
+            CropSecondCate secondCate = new CropSecondCate();
+            secondCate.setFirstcateId(superiorId);
+            secondCate.setName(name);
+            resultRow = cropSecondCateMapper.insert(secondCate);
+            return ServerResponse.createByResultRow(resultRow, secondCate);
+        }else if(type == 3){
+            CropThirdCate cropThirdCate = new CropThirdCate();
+            CropSecondCate cropSecondCate = cropSecondCateMapper.selectByPrimaryKey(superiorId);
+            if(cropSecondCate == null){
+                return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "双亲id错误");
+            }
+            cropThirdCate.setName(name);
+            cropThirdCate.setFirstcateId(cropSecondCate.getFirstcateId());
+            cropThirdCate.setSecondcateId(superiorId);
+            resultRow = cropThirdCateMapper.insert(cropThirdCate);
+            return ServerResponse.createByResultRow(resultRow, cropThirdCate);
+        }
+        return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "入参错误");
     }
 }

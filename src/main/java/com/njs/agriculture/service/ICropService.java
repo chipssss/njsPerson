@@ -28,4 +28,13 @@ public interface ICropService {
     ServerResponse cropFirstCateGet();
 
     ServerResponse cropThirdCateGet();
+
+    /**
+     *
+     * @param type 1 2 3 分别1 2 3类
+     * @param name
+     * @param superiorId 上级id
+     * @return
+     */
+    ServerResponse cropCateAdd(int type, String name, int superiorId);
 }

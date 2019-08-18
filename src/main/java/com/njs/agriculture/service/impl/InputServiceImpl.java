@@ -200,9 +200,9 @@ public class InputServiceImpl<T> implements IInputService {
     @Override
     public ServerResponse sumGet(int source, int sourceId) {
         int totalEntries;
-        double totalInputs = 0 ;
+        double totalInputs = 0;
         double totalAmount = 0;
-        if(source == 0){
+        if (source == 0) {
             List<InputUser> inputUsers = inputUserMapper.selectAll(sourceId);
             totalEntries = inputUsers.size();
             for (InputUser inputUser : inputUsers) {
@@ -210,7 +210,7 @@ public class InputServiceImpl<T> implements IInputService {
                 double amount = MathUtil.mul(inputUser.getQuantity().toString(), inputUser.getPrice().toString());
                 totalAmount = MathUtil.add(String.valueOf(totalAmount), String.valueOf(amount));
             }
-        }else {
+        } else {
             List<InputEnterprise> inputEnterprises = inputEnterpriseMapper.selectAll(sourceId);
             totalEntries = inputEnterprises.size();
             for (InputEnterprise inputEnterprise : inputEnterprises) {
@@ -429,16 +429,16 @@ public class InputServiceImpl<T> implements IInputService {
                         inputReturn.getQuantity(), inputReturn.getCreateTime(), enterprise.getName());
                 recordVOList.add(inputRecordVO);
             }
-        }else if(type == 4){
+        } else if (type == 4) {
             List<InputUsed> usedList = inputUsedMapper.selectBySource(source, sourceId);
             for (InputUsed inputUsed : usedList) {
                 InputRecordVO inputRecordVO;
-                if(source == 1){
+                if (source == 1) {
                     InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputUsed.getSourceId());
                     String enterpriseName = enterpriseMapper.selectByPrimaryKey(inputEnterprise.getEnterpriseId()).getName();
                     inputRecordVO = new InputRecordVO(inputUsed.getSourceId(), inputEnterprise.getName(),
                             inputUsed.getQuantity(), inputUsed.getCreateTime(), enterpriseName);
-                }else{
+                } else {
                     InputUser inputUser = inputUserMapper.selectByPrimaryKey(inputUsed.getSourceId());
                     inputRecordVO = new InputRecordVO(inputUsed.getSourceId(), inputUser.getName(),
                             inputUsed.getQuantity(), inputUsed.getCreateTime(), Const.PERSONNAL);
@@ -452,21 +452,41 @@ public class InputServiceImpl<T> implements IInputService {
     @Override
     public ServerResponse inputDel(int id, int flag, int source) {
         int resultRow = 0;
-        if(flag == 1){
+        if (flag == 1) {
             resultRow = inputFirstCateMapper.deleteByPrimaryKey(id);
-        }else if(flag == 2){
+        } else if (flag == 2) {
             resultRow = inputSecondCateMapper.deleteByPrimaryKey(id);
-        }else{
-            if(source == 1){
+        } else {
+            if (source == 1) {
                 resultRow = inputEnterpriseMapper.deleteByPrimaryKey(id);
-            }else {
+            } else {
                 resultRow = inputUserMapper.deleteByPrimaryKey(id);
             }
         }
-        if(resultRow == 0){
+        if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("删除失败！");
         }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse inputCateAdd(int type, String name, int superiorId) {
+        int resultRow = 0;
+        int id = 0;
+        if (type == 1) {
+            InputFirstCate inputFirstCate = new InputFirstCate();
+            inputFirstCate.setName(name);
+            resultRow = inputFirstCateMapper.insert(inputFirstCate);
+            return ServerResponse.createByResultRow(resultRow, inputFirstCate);
+        } else if (type == 2) {
+            InputSecondCate inputSecondCate = new InputSecondCate();
+            inputSecondCate.setFirstcateId(superiorId);
+            inputSecondCate.setName(name);
+            resultRow = inputSecondCateMapper.insert(inputSecondCate);
+            return ServerResponse.createByResultRow(resultRow, inputSecondCate);
+        }
+        return ServerResponse.createByErrorMessage("插入失败！");
+
     }
 
 }

@@ -296,7 +296,19 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
             recoveryRecordVO.setFieldName(field.getName());
             recoveryRecordVOList.add(recoveryRecordVO);
         }
-        return ServerResponse.createBySuccess(recoveryRecordVOList);
+        List<RecoveryRecord> created = Lists.newLinkedList();
+        List<RecoveryRecord> uncreated = Lists.newLinkedList();
+        for (RecoveryRecordVO recoveryRecordVO : recoveryRecordVOList) {
+            if(recoveryRecordVO.getStatus() == 0){
+                uncreated.add(recoveryRecordVO);
+            }else {
+                created.add(recoveryRecordVO);
+            }
+        }
+        Map map = Maps.newHashMap();
+        map.put("created", created);
+        map.put("uncreated", uncreated);
+        return ServerResponse.createBySuccess(map);
     }
 
 

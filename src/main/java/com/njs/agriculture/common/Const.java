@@ -18,6 +18,8 @@ public class Const {
 
     public static final String PROCESSIMGPREFIX ="img/process/";
 
+    public static final String ENTERPRISEPREFIX ="img/enterprise/";
+
     public static final String PERSONNAL = "个人";
 
     public static final String RECOVERY = "成熟采收";

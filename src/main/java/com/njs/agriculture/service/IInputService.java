@@ -85,4 +85,13 @@ public interface IInputService {
      * @return
      */
     ServerResponse inputDel(int id, int flag, int source);
+
+    /**
+     * 添加农资类别
+     * @param type   1 2 分别为一类二类
+     * @param name
+     * @param superiorId
+     * @return
+     */
+    ServerResponse inputCateAdd(int type, String name, int superiorId);
 }

@@ -2,6 +2,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Enterprise;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @Auther: SaikeiLEe
@@ -18,4 +19,9 @@ public interface IEnterpriseService {
 
     ServerResponse enterpriseExamine(int status, int enterpriseId);
 
+    ServerResponse upload(MultipartFile file);
+
+    ServerResponse enterpriseUpdate(Enterprise enterprise);
+
+    ServerResponse enterpriseDel(int enterpriseId);
 }

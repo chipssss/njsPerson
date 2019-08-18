@@ -20,7 +20,7 @@
     delete from input_firstcate
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputFirstCate">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputFirstCate" useGeneratedKeys="true" keyProperty="id">
     insert into input_firstcate (id, name)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
   </insert>

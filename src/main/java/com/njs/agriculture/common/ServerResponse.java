@@ -84,4 +84,20 @@ public class ServerResponse<T> implements Serializable {
         return new ServerResponse<T>(errorCode,errorMessage);
     }
 
+    public static <T> ServerResponse<T> createByResultRow(int resultRow, T data){
+        if(resultRow == 0){
+            return createByErrorMessage("操作失败！");
+        }else{
+            return createBySuccess(data);
+        }
+    }
+
+    public static <T> ServerResponse<T> createByResultRow(int resultRow){
+        if(resultRow == 0){
+            return createByErrorMessage("操作失败！");
+        }else{
+            return createBySuccessMessage("操作成功！");
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.Const;
@@ -97,8 +98,8 @@ public class ProductionRecordController {
     }
 
     @PostMapping("batchAdd.do")
-    public ServerResponse batchInfo(@RequestBody ProductionBatch productionBatch){
-        return iBatchService.batchAdd(productionBatch);
+    public ServerResponse batchInfo(@RequestBody BatchInfoVO batchInfoVO){
+        return iBatchService.batchAdd(batchInfoVO);
     }
 
     @GetMapping("batchDel.do")

@@ -5,11 +5,14 @@ import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.CropInfoMapper;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
+import com.njs.agriculture.mapper.RecoveryRecordMapper;
 import com.njs.agriculture.pojo.ProductionBatch;
+import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -22,32 +25,28 @@ import java.util.List;
 @Service("iBatchService")
 public class BatchServiceImpl implements IBatchService {
 
-    @Autowired
-    private CropInfoMapper cropInfoMapper;
+
 
     @Autowired
     private ProductionBatchMapper productionBatchMapper;
+
+    @Autowired
+    private RecoveryRecordMapper recoveryRecordMapper;
 
 
     @Override
     public ServerResponse batchInfo(int fieldId) {
         List<ProductionBatch> productionBatches = productionBatchMapper.batchInfo(fieldId);
-        List<BatchInfoVO> batchInfoVOS = Lists.newLinkedList();
-        for (ProductionBatch productionBatch : productionBatches) {
-            BatchInfoVO batchInfoVO = new BatchInfoVO();
-            BeanUtils.copyProperties(productionBatch, batchInfoVO);
-            batchInfoVO.setCropName(cropInfoMapper.selectByPrimaryKey(productionBatch.getCropInfoId()).getName());
-            batchInfoVOS.add(batchInfoVO);
-        }
-        return ServerResponse.createBySuccess(batchInfoVOS);
+        return ServerResponse.createBySuccess(productionBatches);
     }
 
     @Override
-    public ServerResponse batchAdd(ProductionBatch productionBatch) {
-        List<ProductionBatch> batchesExisted = productionBatchMapper.selectByFieldId(productionBatch.getFieldId());
-        Date start = productionBatch.getPlantTime();
-        Date end = productionBatch.getCollectTime();
-        if(productionBatch.getPlantTime().after(productionBatch.getCollectTime())){
+    @Transactional
+    public ServerResponse batchAdd(BatchInfoVO batchInfoVO) {
+        List<ProductionBatch> batchesExisted = productionBatchMapper.selectByFieldId(batchInfoVO.getFieldId());
+        Date start = batchInfoVO.getPlantTime();
+        Date end = batchInfoVO.getCollectTime();
+        if(batchInfoVO.getPlantTime().after(batchInfoVO.getCollectTime())){
             return ServerResponse.createByErrorMessage("时间不规范，种植时间比采割时间早!");
         }
         for (ProductionBatch batch : batchesExisted) {
@@ -57,11 +56,19 @@ public class BatchServiceImpl implements IBatchService {
                 return ServerResponse.createByErrorMessage("时间冲突,请重新输入数据!");
             }
         }
-        int resultRow = productionBatchMapper.insert(productionBatch);
+        int recoveryId = batchInfoVO.getRecoveryRecordId();
+        RecoveryRecord recoveryRecord = new RecoveryRecord();
+        recoveryRecord.setId(recoveryId);
+        recoveryRecord.setStatus(1);
+        int resultCount = recoveryRecordMapper.updateByPrimaryKeySelective(recoveryRecord);
+        if(resultCount == 0){
+            return ServerResponse.createByErrorMessage("更新记录失败!");
+        }
+        int resultRow = productionBatchMapper.insert(batchInfoVO);
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("插入记录失败!");
         }
-        return ServerResponse.createBySuccess(productionBatch.getId());
+        return ServerResponse.createBySuccess(batchInfoVO.getId());
     }
 
     @Override

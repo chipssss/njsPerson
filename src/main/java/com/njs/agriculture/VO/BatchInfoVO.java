@@ -10,5 +10,5 @@ import lombok.Data;
  */
 @Data
 public class BatchInfoVO extends ProductionBatch {
-    private String cropName;
+    private int recoveryRecordId;
 }

@@ -111,4 +111,12 @@ public class InputController {
         int source = jsonObject.getIntValue("source");
         return iInputService.inputDel(id, flag, source);
     }
+
+    @PostMapping("inputCateAdd.do")
+    public ServerResponse inputCateAdd(@RequestBody JSONObject jsonObject){
+        int type = jsonObject.getIntValue("type");
+        String name = jsonObject.getString("name");
+        int superiorId = jsonObject.getIntValue("superiorId");
+        return iInputService.inputCateAdd(type, name, superiorId);
+    }
 }

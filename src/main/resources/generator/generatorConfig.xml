@@ -20,11 +20,11 @@
         </jdbcConnection>
 
         <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制-->
-<!--        <javaTypeResolver type="com.njs.agriculture.common.MyJavaTypeResolverImpl">
-        </javaTypeResolver>-->
+        <!--<javaTypeResolver type="com.njs.agriculture.common.MyJavaTypeResolverImpl">-->
+        <!--</javaTypeResolver>-->
 
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.njs.agriculture.dto" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.njs.agriculture.pojo" targetProject="src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="true"/>
             <property name="enableSubPackages" value="true"/>
@@ -65,7 +65,7 @@
         <!--<table tableName="user_concern" domainObjectName="UserConcern" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="user_relationship" domainObjectName="UserRelationship" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="user_type" domainObjectName="UserType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
-        <!--<table tableName="production_batch" domainObjectName="ProductionBatch" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="production_batch" domainObjectName="ProductionBatch" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!--<table tableName="input_used" domainObjectName="InputUsed" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="operation" domainObjectName="Operation" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="product_pool" domainObjectName="ProductPool" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
@@ -81,7 +81,7 @@
         <!--<table tableName="product_out" domainObjectName="ProductOut" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="view_crop" domainObjectName="CropDTO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="view_product" domainObjectName="ProductDTO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>    -->
-        <table tableName="view_input" domainObjectName="InputDTO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <!--<table tableName="view_input" domainObjectName="InputDTO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
     </context>
 
 </generatorConfiguration>

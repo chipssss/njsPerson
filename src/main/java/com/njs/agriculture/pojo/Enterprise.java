@@ -17,7 +17,9 @@ public class Enterprise {
 
     private String address;
 
-    public Enterprise(Integer id, String name, String creditCode, String industry, String mainProduct, String validCertificate, Integer status, String address) {
+    private String image;
+
+    public Enterprise(Integer id, String name, String creditCode, String industry, String mainProduct, String validCertificate, Integer status, String address, String image) {
         this.id = id;
         this.name = name;
         this.creditCode = creditCode;
@@ -26,6 +28,7 @@ public class Enterprise {
         this.validCertificate = validCertificate;
         this.status = status;
         this.address = address;
+        this.image = image;
     }
 
     public Enterprise() {
@@ -94,5 +97,13 @@ public class Enterprise {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image == null ? null : image.trim();
     }
 }

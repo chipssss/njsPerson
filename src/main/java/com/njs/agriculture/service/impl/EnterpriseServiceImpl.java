@@ -14,12 +14,18 @@ import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.pojo.UserRelationship;
 import com.njs.agriculture.service.IEnterpriseService;
+import com.njs.agriculture.service.IFieldService;
+import com.njs.agriculture.service.IFileService;
+import com.njs.agriculture.utils.PropertiesUtil;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -37,6 +43,9 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private IFileService iFileService;
 
     @Override
     public ServerResponse enterpriseAdd(Enterprise enterprise) {
@@ -97,5 +106,27 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
             return ServerResponse.createByErrorMessage("更新失败！");
         }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse upload(MultipartFile file) {
+        String path = PropertiesUtil.getProperty("uploadDir") + "enterprise";
+        String fileName = iFileService.upload(file, path);
+        Map map = new HashMap();
+        map.put("uri", Const.ENTERPRISEPREFIX + fileName);
+        map.put("url", PropertiesUtil.getProperty("server") + Const.ENTERPRISEPREFIX + fileName);
+        return ServerResponse.createBySuccess(map);
+    }
+
+    @Override
+    public ServerResponse enterpriseUpdate(Enterprise enterprise) {
+        int resultRow = enterpriseMapper.updateByPrimaryKeySelective(enterprise);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
+    @Override
+    public ServerResponse enterpriseDel(int enterpriseId) {
+        int resultRow = enterpriseMapper.deleteByPrimaryKey(enterpriseId);
+        return ServerResponse.createByResultRow(resultRow);
     }
 }
