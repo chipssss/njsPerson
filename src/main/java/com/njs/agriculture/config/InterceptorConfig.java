@@ -39,22 +39,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-
-        //跨域设置
-        registry.addInterceptor(new HandlerInterceptor() {
-            @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                String origin = request.getHeader("Origin");
-                response.setHeader("Access-Control-Allow-Origin", origin);
-                response.setHeader("Access-Control-Allow-Methods", "*");
-                response.setHeader("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,token,X-Requested-With");
-                response.setHeader("Access-Control-Allow-Credentials", "true");
-
-                return true;
-
-            }
-        });
-
         //日志
         registry.addInterceptor(new HandlerInterceptor() {
             @Override
