@@ -163,7 +163,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 recoveryRecord.setUserName(userName);
                 recoveryRecord.setStatus(0);
                 ServerResponse serverResponse = insertRecoveryRecord(recoveryRecord);
-                return serverResponse;
+                if(!serverResponse.isSuccess()){
+                    return serverResponse;
+                }
             }
         }
 
