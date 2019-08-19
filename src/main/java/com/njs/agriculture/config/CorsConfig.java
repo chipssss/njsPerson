@@ -9,9 +9,9 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * @Auther: SaikeiLEe
  * @Date: 2019/7/28
- * @Description:
+ * @Description:停用
  */
-@Configuration
+/*@Configuration
 public class CorsConfig {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -27,4 +27,4 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", buildConfig()); // 4
         return new CorsFilter(source);
     }
-}
+}*/

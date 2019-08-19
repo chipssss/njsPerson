@@ -225,7 +225,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         for (String image : processRecordInfoVO.getImages()) {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
         }
-        return ServerResponse.createBySuccess(processRecord.getId());
+        return ServerResponse.createBySuccess(processRecord);
     }
 
     @Override
