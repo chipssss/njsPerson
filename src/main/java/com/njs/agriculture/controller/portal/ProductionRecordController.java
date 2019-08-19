@@ -85,11 +85,11 @@ public class ProductionRecordController {
 
     @PostMapping("processRecordAdd.do")
     public ServerResponse processRecordAdd(@RequestBody ProcessRecordInfoVO processRecordInfoVO, HttpSession session){
-        if(session == null){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
             return ServerResponse.createByErrorMessage("sorry,请登录！");
         }
-        String userName = ((User)session.getAttribute(Const.CURRENT_USER)).getUsername();
-        return iProcessRecordService.addProcess(processRecordInfoVO, userName);
+        return iProcessRecordService.addProcess(processRecordInfoVO, user.getUsername());
     }
 
     @PostMapping("processImgUpload.do")
