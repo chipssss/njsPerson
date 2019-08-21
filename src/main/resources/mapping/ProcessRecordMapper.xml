@@ -194,9 +194,11 @@
     <include refid="Base_Column_List"/>
     from process_record
     where id in
-    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+    <foreach collection="recordIds" item="item" index="index" open="(" separator="," close=")">
       #{item}
     </foreach>
+    AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+    AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{endTime}, '%Y-%m-%d')
   </select>
   <select id="selectCropIdBySource" parameterType="map" resultType="int">
     select

@@ -3,23 +3,23 @@ package com.njs.agriculture.pojo;
 public class ProcessQrcode {
     private Integer id;
 
-    private Integer qrcodeId;
+    private Integer batchId;
 
     private Integer recordId;
 
-    public ProcessQrcode(Integer id, Integer qrcodeId, Integer recordId) {
+    public ProcessQrcode(Integer id, Integer batchId, Integer recordId) {
         this.id = id;
-        this.qrcodeId = qrcodeId;
-        this.recordId = recordId;
-    }
-
-    public ProcessQrcode(Integer qrcodeId, Integer recordId) {
-        this.qrcodeId = qrcodeId;
+        this.batchId = batchId;
         this.recordId = recordId;
     }
 
     public ProcessQrcode() {
         super();
+    }
+
+    public ProcessQrcode(Integer batchId, Integer recordId) {
+        this.batchId = batchId;
+        this.recordId = recordId;
     }
 
     public Integer getId() {
@@ -30,12 +30,12 @@ public class ProcessQrcode {
         this.id = id;
     }
 
-    public Integer getQrcodeId() {
-        return qrcodeId;
+    public Integer getBatchId() {
+        return batchId;
     }
 
-    public void setQrcodeId(Integer qrcodeId) {
-        this.qrcodeId = qrcodeId;
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 
     public Integer getRecordId() {

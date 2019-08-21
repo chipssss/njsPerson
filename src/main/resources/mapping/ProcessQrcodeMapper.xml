@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.ProcessQrcode">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="qrcode_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="batch_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="record_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, qrcode_id, record_id
+    id, batch_id, record_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -22,9 +22,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessQrcode">
-    insert into process_qrcode (id, qrcode_id, record_id
+    insert into process_qrcode (id, batch_id, record_id
       )
-    values (#{id,jdbcType=INTEGER}, #{qrcodeId,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{batchId,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProcessQrcode">
@@ -33,8 +33,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="qrcodeId != null">
-        qrcode_id,
+      <if test="batchId != null">
+        batch_id,
       </if>
       <if test="recordId != null">
         record_id,
@@ -44,8 +44,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="qrcodeId != null">
-        #{qrcodeId,jdbcType=INTEGER},
+      <if test="batchId != null">
+        #{batchId,jdbcType=INTEGER},
       </if>
       <if test="recordId != null">
         #{recordId,jdbcType=INTEGER},
@@ -55,8 +55,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.ProcessQrcode">
     update process_qrcode
     <set>
-      <if test="qrcodeId != null">
-        qrcode_id = #{qrcodeId,jdbcType=INTEGER},
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=INTEGER},
       </if>
       <if test="recordId != null">
         record_id = #{recordId,jdbcType=INTEGER},
@@ -66,14 +66,14 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.ProcessQrcode">
     update process_qrcode
-    set qrcode_id = #{qrcodeId,jdbcType=INTEGER},
+    set batch_id = #{batchId,jdbcType=INTEGER},
       record_id = #{recordId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByQrcodeId" parameterType="int" resultType="Integer">
+  <select id="selectByBatchId" parameterType="int" resultType="int">
     select
     record_id
     from process_qrcode
-    where qrcode_id = #{qrcodeId}
+    where batch_id = #{batchId}
   </select>
 </mapper>

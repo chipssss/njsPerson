@@ -5,6 +5,7 @@ import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,17 +34,17 @@ public interface IProcessRecordService {
 
     /**
      * 溯源，通过二维码查询对应的记录
-     * @param qrcodeId
+     * @param batchId
      * @return
      */
-    ServerResponse trace(int qrcodeId);
+    ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId);
 
     /**
      * 生产溯源二维码的id
      * @param recordIds
      * @return
      */
-    ServerResponse generateTrace(List<Integer> recordIds);
+    ServerResponse generateTrace(int batchId, List<Integer> recordIds);
 
     /**
      * 添加生产记录

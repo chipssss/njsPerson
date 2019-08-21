@@ -17,5 +17,5 @@ public interface ProcessQrcodeMapper {
 
     int updateByPrimaryKey(ProcessQrcode record);
 
-    List<Integer> selectByQrcodeId(int qrcodeId);
+    List<Integer> selectByBatchId(int batchId);
 }

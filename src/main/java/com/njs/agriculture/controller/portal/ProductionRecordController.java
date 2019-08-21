@@ -7,6 +7,7 @@ import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.ServicePool;
@@ -14,7 +15,9 @@ import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IFieldService;
 import com.njs.agriculture.service.IProcessRecordService;
+import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,7 +43,9 @@ public class ProductionRecordController {
 
     @Autowired
     private IBatchService iBatchService;
-    
+
+    @Autowired
+    private ProductionBatchMapper productionBatchMapper;
     
 
     @PostMapping("batchInfo.do")
@@ -75,12 +81,28 @@ public class ProductionRecordController {
 
     @PostMapping("trace.do")
     public ServerResponse trace(@RequestBody JSONObject jsonObject){
-        return iProcessRecordService.trace(jsonObject.getIntValue("qrcodeId"));
+        Date startTime = DateUtil.strToDate(jsonObject.getString("startTime"), DateUtil.SHORT_FORMAT);
+        Date endTime = DateUtil.strToDate(jsonObject.getString("endTime"), DateUtil.SHORT_FORMAT);
+        if(startTime == null){
+            startTime = DateUtil.strToDate("2000-01-01", DateUtil.SHORT_FORMAT);
+        }
+        if(endTime == null){
+            endTime = new Date();
+        }
+        int pageNum = (int)jsonObject.getOrDefault("pageNum", 1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize", 10);
+        return iProcessRecordService.trace(pageNum, pageSize, startTime, endTime, jsonObject.getIntValue("batchId"));
     }
 
     @PostMapping("traceGenerate.do")
     public ServerResponse generateTrace(@RequestBody JSONObject jsonObject){
-        return iProcessRecordService.generateTrace(jsonObject.getJSONArray("recordIds").toJavaList(Integer.class));
+        int batchId = jsonObject.getIntValue("batchId");
+        ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(batchId);
+        if(productionBatch == null){
+            return ServerResponse.createByErrorMessage("找不到批次");
+        }
+        List<Integer> recordIds = jsonObject.getJSONArray("recordIds").toJavaList(Integer.class);
+        return iProcessRecordService.generateTrace(batchId, recordIds);
     }
 
     @PostMapping("processRecordAdd.do")

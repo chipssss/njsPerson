@@ -66,8 +66,6 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private ProcessImageMapper processImageMapper;
 
-    @Autowired
-    private QrcodeMapper qrcodeMapper;
 
     @Autowired
     private ProcessQrcodeMapper processQrcodeMapper;
@@ -117,29 +115,22 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     }
 
     @Override
-    public ServerResponse trace(int qrcodeId) {
+    public ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId) {
         //1.先查List<int> 生产记录的id
-        List<Integer> recordIds = processQrcodeMapper.selectByQrcodeId(qrcodeId);
-        List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(recordIds);
+        List<Integer> recordIds = processQrcodeMapper.selectByBatchId(batchId);
+        PageHelper.startPage(pageNum, pageSize);
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(startTime, endTime, recordIds);
 
         return ServerResponse.createBySuccess(records2recordVO(processRecordList));
     }
 
     @Override
-    public ServerResponse generateTrace(List<Integer> recordIds) {
-        Qrcode qrcode = new Qrcode();
-        int resultRow = qrcodeMapper.insert(qrcode);
-        if(resultRow == 0){
-            return ServerResponse.createByErrorMessage("插入新的二维码记录失败！");
-        }
-        int qrcodeId = qrcode.getId();
+    public ServerResponse generateTrace(int batchId, List<Integer> recordIds) {
         for (Integer recordId : recordIds) {
-            ProcessQrcode processQrcode = new ProcessQrcode(qrcodeId, recordId);
+            ProcessQrcode processQrcode = new ProcessQrcode(batchId, recordId);
             processQrcodeMapper.insert(processQrcode);
         }
-        Map map = Maps.newHashMap();
-        map.put("qrcodeId",qrcodeId);
-        return ServerResponse.createBySuccess(map);
+        return ServerResponse.createBySuccess();
     }
 
     @Override
