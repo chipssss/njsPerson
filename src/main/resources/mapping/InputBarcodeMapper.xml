@@ -26,7 +26,7 @@
     where id = #{id,jdbcType=INTEGER}
       and barcode = #{barcode,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputBarcode">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputBarcode"  useGeneratedKeys="true" keyProperty="id">
     insert into input_barcode (id, barcode, name, 
       specification, price, manufacturer
       )

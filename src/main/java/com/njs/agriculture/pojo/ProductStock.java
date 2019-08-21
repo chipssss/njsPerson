@@ -15,7 +15,7 @@ public class ProductStock {
 
     private Integer shelfLife;
 
-    private Integer batchId;
+    private String batchId;
 
     private Date createTime;
 
@@ -27,7 +27,7 @@ public class ProductStock {
 
     private String barcode;
 
-    public ProductStock(Integer id, Integer productId, Integer quantity, Date productionTime, String productionMessage, Integer shelfLife, Integer batchId, Date createTime, String secureImage, Integer source, Integer sourceId, String barcode) {
+    public ProductStock(Integer id, Integer productId, Integer quantity, Date productionTime, String productionMessage, Integer shelfLife, String batchId, Date createTime, String secureImage, Integer source, Integer sourceId, String barcode) {
         this.id = id;
         this.productId = productId;
         this.quantity = quantity;
@@ -94,12 +94,12 @@ public class ProductStock {
         this.shelfLife = shelfLife;
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
-        this.batchId = batchId;
+    public void setBatchId(String batchId) {
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
     public Date getCreateTime() {
