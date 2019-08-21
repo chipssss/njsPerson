@@ -229,6 +229,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     }
 
     @Override
+    @Transactional
     public ServerResponse processImgUpload(List<MultipartFile> files) {
         String path = PropertiesUtil.getProperty("uploadDir") + "process";
         List<String> images = Lists.newLinkedList();

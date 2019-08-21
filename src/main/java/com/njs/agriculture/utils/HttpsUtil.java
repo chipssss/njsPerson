@@ -112,6 +112,9 @@ public class HttpsUtil {
         inputBarcode.setName(result.getString("name"));
         String price = result.getString("price");
         if (StringUtils.isNotBlank(price)) {
+            if(price.contains("￥")){
+                price = price.replace("￥","");
+            }
             inputBarcode.setPrice(BigDecimal.valueOf(Double.valueOf(price)));
         }
         inputBarcode.setSpecification(result.getString("type"));
