@@ -23,7 +23,7 @@
     delete from input_consume
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputConsume">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputConsume" useGeneratedKeys="true" keyProperty="id">
     insert into input_consume (id, userinput_id, enterpriseinput_id, 
       quantity, create_time)
     values (#{id,jdbcType=INTEGER}, #{userinputId,jdbcType=INTEGER}, #{enterpriseinputId,jdbcType=INTEGER}, 

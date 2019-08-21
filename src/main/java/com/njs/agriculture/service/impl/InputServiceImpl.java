@@ -19,7 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -487,6 +489,34 @@ public class InputServiceImpl<T> implements IInputService {
         }
         return ServerResponse.createByErrorMessage("插入失败！");
 
+    }
+
+    @Override
+    @Transactional
+    public ServerResponse inputConsume(InputConsume inputConsume, int userId) {
+        //1.判断企业库够不够扣，够就直接扣
+        InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputConsume.getEnterpriseinputId());
+        if(inputEnterprise == null){
+            return ServerResponse.createByErrorMessage("没有该行企业库存记录");
+        }
+        double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), inputConsume.getQuantity().toString());
+        if(result > 0){
+            inputEnterprise.setQuantity(Float.valueOf(String.valueOf(result)));
+            inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
+        }
+        //2.加入到个人库
+        InputUser inputUser = new InputUser();
+        BeanUtils.copyProperties(inputEnterprise, inputUser);
+        inputUser.setCreateTime(new Date());
+        inputUser.setUserId(userId);
+        inputUser.setSourceId(inputConsume.getEnterpriseinputId());
+        inputUser.setSource(1);
+        inputUser.setId(0);
+        inputUserMapper.insert(inputUser);
+        //3.插入信息.
+        inputConsume.setUserinputId(inputUser.getId());
+        inputConsumeMapper.insert(inputConsume);
+        return ServerResponse.createBySuccess(inputConsume);
     }
 
 }

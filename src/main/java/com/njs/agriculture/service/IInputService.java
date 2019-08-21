@@ -3,7 +3,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.ServerResponse;
-
+import com.njs.agriculture.pojo.InputConsume;
 
 
 /**
@@ -94,4 +94,6 @@ public interface IInputService {
      * @return
      */
     ServerResponse inputCateAdd(int type, String name, int superiorId);
+
+    ServerResponse inputConsume(InputConsume inputConsume, int userId);
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.pojo.InputConsume;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,5 +119,11 @@ public class InputController {
         String name = jsonObject.getString("name");
         int superiorId = jsonObject.getIntValue("superiorId");
         return iInputService.inputCateAdd(type, name, superiorId);
+    }
+
+    @PostMapping("inputConsume.do")
+    public ServerResponse inputConsume(@RequestBody InputConsume inputConsume, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iInputService.inputConsume(inputConsume, user.getUserId());
     }
 }

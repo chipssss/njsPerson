@@ -31,7 +31,7 @@
     delete from product_stock
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProductStock">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProductStock" useGeneratedKeys="true" keyProperty="id">
     insert into product_stock (id, product_id, quantity, 
       production_time, production_message, shelf_life, 
       batch_id, create_time, secure_image, 
