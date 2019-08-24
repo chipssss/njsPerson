@@ -83,17 +83,8 @@ public class CropServiceImpl implements ICropService {
                 CropSecondCateVO cropSecondCateVO = new CropSecondCateVO();
                 BeanUtils.copyProperties(cropSecondCate, cropSecondCateVO);
 
-                List<CropThirdCateVO> cropThirdCateVOS = Lists.newLinkedList();
                 List<CropThirdCate> thirdCateList = cropThirdCateMapper.selectBySecondCateId(cropSecondCate.getId());
-                for (CropThirdCate cropThirdCate : thirdCateList) {
-                    CropThirdCateVO cropThirdCateVO = new CropThirdCateVO();
-                    BeanUtils.copyProperties(cropThirdCate, cropThirdCateVO);
-
-                    List<CropInfo> cropInfoList = cropInfoMapper.selectByCateId(cropThirdCate.getId());
-                    cropThirdCateVO.setCropInfoList(cropInfoList);
-                    cropThirdCateVOS.add(cropThirdCateVO);
-                }
-                cropSecondCateVO.setThirdCateList(cropThirdCateVOS);
+                cropSecondCateVO.setThirdCateList(thirdCateList2cropThirdCateVOList(thirdCateList));
                 cropSecondCateVOS.add(cropSecondCateVO);
 
             }
@@ -167,6 +158,20 @@ public class CropServiceImpl implements ICropService {
 
     @Override
     public ServerResponse getTea() {
-        return ServerResponse.createBySuccess(cropThirdCateMapper.selectBySecondCateId(2));
+        List<CropThirdCate> thirdCateList = cropThirdCateMapper.selectBySecondCateId(2);
+        return ServerResponse.createBySuccess(thirdCateList2cropThirdCateVOList(thirdCateList));
+    }
+
+    public List<CropThirdCateVO> thirdCateList2cropThirdCateVOList(List<CropThirdCate> thirdCateList){
+        List<CropThirdCateVO> cropThirdCateVOS = Lists.newLinkedList();
+        for (CropThirdCate cropThirdCate : thirdCateList) {
+            CropThirdCateVO cropThirdCateVO = new CropThirdCateVO();
+            BeanUtils.copyProperties(cropThirdCate, cropThirdCateVO);
+
+            List<CropInfo> cropInfoList = cropInfoMapper.selectByCateId(cropThirdCate.getId());
+            cropThirdCateVO.setCropInfoList(cropInfoList);
+            cropThirdCateVOS.add(cropThirdCateVO);
+        }
+        return cropThirdCateVOS;
     }
 }
