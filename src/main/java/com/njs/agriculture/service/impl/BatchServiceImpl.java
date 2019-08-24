@@ -50,12 +50,19 @@ public class BatchServiceImpl implements IBatchService {
             return ServerResponse.createByErrorMessage("时间不规范，种植时间比采割时间早!");
         }
         for (ProductionBatch batch : batchesExisted) {
-            if(!((start.after(batch.getCollectTime()) ||start.equals(batch.getCollectTime()))
+            /*if(!((start.after(batch.getCollectTime()) ||start.equals(batch.getCollectTime()))
                     ||
                     (end.before(batch.getPlantTime()) || end.equals(batch.getPlantTime())))){
                 return ServerResponse.createByErrorMessage("时间冲突,请重新输入数据!");
+            }*/
+            if(end.before(batch.getCollectTime())){
+                return ServerResponse.createByErrorMessage("时间冲突，收割时间早于上一批收割时间！");
+            }
+            if(start.before(batch.getCollectTime())){
+                start = batch.getCollectTime();
             }
         }
+        batchInfoVO.setPlantTime(start);
         int recoveryId = batchInfoVO.getRecoveryRecordId();
         RecoveryRecord recoveryRecord = new RecoveryRecord();
         recoveryRecord.setId(recoveryId);

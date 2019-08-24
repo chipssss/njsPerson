@@ -1,7 +1,5 @@
 package com.njs.agriculture.pojo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
 
 public class ProcessRecord {
@@ -17,7 +15,6 @@ public class ProcessRecord {
 
     private String inputRecord;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm",timezone = "GMT+8")
     private Date createTime;
 
     private String remark;
@@ -28,7 +25,9 @@ public class ProcessRecord {
 
     private Integer sourceId;
 
-    public ProcessRecord(Integer id, Integer fieldId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId) {
+    private Integer status;
+
+    public ProcessRecord(Integer id, Integer fieldId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId, Integer status) {
         this.id = id;
         this.fieldId = fieldId;
         this.location = location;
@@ -40,6 +39,7 @@ public class ProcessRecord {
         this.weather = weather;
         this.source = source;
         this.sourceId = sourceId;
+        this.status = status;
     }
 
     public ProcessRecord() {
@@ -132,5 +132,13 @@ public class ProcessRecord {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

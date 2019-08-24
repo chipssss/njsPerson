@@ -5,6 +5,7 @@ import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.pojo.User;
+import com.njs.agriculture.pojo.UserRelationship;
 import com.njs.agriculture.service.IEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,14 @@ public class EnterpriseController {
     public ServerResponse enterpriseDel(int enterpriseId, HttpSession httpSession){
         User user = (User)httpSession.getAttribute(Const.CURRENT_USER);//TODO 不安全，纵向越权
         return iEnterpriseService.enterpriseDel(enterpriseId);
+    }
+
+    @PostMapping("enterpriseJoin.do")
+    public ServerResponse enterpriseJoin(@RequestBody UserRelationship userRelationship, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        userRelationship.setUserId(user.getUserId());
+        userRelationship.setStatus(0);
+        return iEnterpriseService.enterpriseJoin(userRelationship);
     }
 
 

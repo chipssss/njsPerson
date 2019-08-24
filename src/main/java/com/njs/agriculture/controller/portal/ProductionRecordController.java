@@ -151,5 +151,11 @@ public class ProductionRecordController {
         return iProcessRecordService.getRecoveryRecord(source, sourceId);
     }
 
+    @GetMapping("getRecordUngenerated.do")
+    public ServerResponse getRecordUngenerated(int fieldId, HttpSession httpSession){
+        User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
+        return iProcessRecordService.getRecordsUngenrated(fieldId, user.getUserId());
+    }
+
 
 }

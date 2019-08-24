@@ -164,4 +164,9 @@ public class CropServiceImpl implements ICropService {
         }
         return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), "入参错误");
     }
+
+    @Override
+    public ServerResponse getTea() {
+        return ServerResponse.createBySuccess(cropThirdCateMapper.selectBySecondCateId(2));
+    }
 }

@@ -12,13 +12,14 @@
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="weather" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="source" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
     id, field_id, location, crop_id, operation, input_record, create_time, remark, weather, 
-    source, source_id
+    source, source_id, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -30,15 +31,17 @@
     delete from process_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessRecord" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessRecord" keyProperty="id" useGeneratedKeys="true">
     insert into process_record (id, field_id, location, 
       crop_id, operation, input_record, 
       create_time, remark, weather, 
-      source, source_id)
+      source, source_id, status
+      )
     values (#{id,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, #{location,jdbcType=VARCHAR}, 
       #{cropId,jdbcType=INTEGER}, #{operation,jdbcType=VARCHAR}, #{inputRecord,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{weather,jdbcType=VARCHAR}, 
-      #{source,jdbcType=TINYINT}, #{sourceId,jdbcType=INTEGER})
+      #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProcessRecord">
     insert into process_record
@@ -76,6 +79,9 @@
       <if test="sourceId != null">
         source_id,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -106,10 +112,13 @@
         #{weather,jdbcType=VARCHAR},
       </if>
       <if test="source != null">
-        #{source,jdbcType=TINYINT},
+        #{source,jdbcType=INTEGER},
       </if>
       <if test="sourceId != null">
         #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -141,10 +150,13 @@
         weather = #{weather,jdbcType=VARCHAR},
       </if>
       <if test="source != null">
-        source = #{source,jdbcType=TINYINT},
+        source = #{source,jdbcType=INTEGER},
       </if>
       <if test="sourceId != null">
         source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -159,8 +171,9 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
       weather = #{weather,jdbcType=VARCHAR},
-      source = #{source,jdbcType=TINYINT},
-      source_id = #{sourceId,jdbcType=INTEGER}
+      source = #{source,jdbcType=INTEGER},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByCondition" parameterType="map" resultMap="BaseResultMap">
@@ -201,10 +214,19 @@
     AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{endTime}, '%Y-%m-%d')
   </select>
   <select id="selectCropIdBySource" parameterType="map" resultType="int">
+  select
+  DISTINCT crop_id
+  from process_record
+  where source = #{source}
+  and source_id = #{sourceId}
+</select>
+  <select id="selectByStatusAndSource" parameterType="map" resultMap="BaseResultMap">
     select
-    DISTINCT crop_id
+    <include refid="Base_Column_List"/>
     from process_record
     where source = #{source}
     and source_id = #{sourceId}
+    and status = #{status}
+    and field_id = #{fieldId}
   </select>
 </mapper>

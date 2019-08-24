@@ -100,7 +100,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse getRecordCrop(int userId) {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<Integer> cropIdList = processRecordMapper
-                .selectCropIdBySource((int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
+                .selectCropIdBySource((int)serverResponse.getData().get("source"), (int)serverResponse.getData().get("sourceId"));
 
         List<SimpleVO> simpleVOS = Lists.newLinkedList();
         for (Integer integer : cropIdList) {
@@ -305,6 +305,13 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(map);
     }
 
+    @Override
+    public ServerResponse getRecordsUngenrated(int fieldId, int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSource(fieldId, (int)map.get("source"),
+                (int)map.get("sourceId"), 0);
+        return ServerResponse.createBySuccess(records2recordVO(processRecordList));
+    }
 
 
     public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){

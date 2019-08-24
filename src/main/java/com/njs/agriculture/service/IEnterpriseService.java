@@ -2,6 +2,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Enterprise;
+import com.njs.agriculture.pojo.UserRelationship;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -24,4 +25,6 @@ public interface IEnterpriseService {
     ServerResponse enterpriseUpdate(Enterprise enterprise);
 
     ServerResponse enterpriseDel(int enterpriseId);
+
+    ServerResponse enterpriseJoin(UserRelationship userRelationship);
 }

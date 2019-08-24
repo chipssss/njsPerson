@@ -37,4 +37,6 @@ public interface ICropService {
      * @return
      */
     ServerResponse cropCateAdd(int type, String name, int superiorId);
+
+    ServerResponse getTea();
 }

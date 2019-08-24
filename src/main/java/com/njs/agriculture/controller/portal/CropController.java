@@ -69,5 +69,9 @@ public class CropController {
         return iCropService.cropCateAdd(type, name, superiorId);
     }
 
+    @GetMapping("getTea.do")
+    public ServerResponse getTea(){
+        return iCropService.getTea();
+    }
 
 }

@@ -27,4 +27,7 @@ public interface ProcessRecordMapper {
                                           @Param("recordIds") List<Integer> recordIds);
 
     List<Integer> selectCropIdBySource(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    List<ProcessRecord> selectByStatusAndSource(@Param("fieldId") int fieldId,@Param("source") int source,
+                                                @Param("sourceId") int sourceId, @Param("status") int status);
 }

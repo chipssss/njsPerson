@@ -6,11 +6,12 @@
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="enterprise_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="position" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="position" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, enterprise_id, position
+    id, user_id, enterprise_id, position, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -22,11 +23,11 @@
     delete from user_relationship
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.UserRelationship">
+  <insert id="insert" keyProperty="id" parameterType="com.njs.agriculture.pojo.UserRelationship" useGeneratedKeys="true">
     insert into user_relationship (id, user_id, enterprise_id, 
-      position)
+      position, status)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{enterpriseId,jdbcType=INTEGER}, 
-      #{position,jdbcType=TINYINT})
+      #{position,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.UserRelationship">
     insert into user_relationship
@@ -43,6 +44,9 @@
       <if test="position != null">
         position,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -55,7 +59,10 @@
         #{enterpriseId,jdbcType=INTEGER},
       </if>
       <if test="position != null">
-        #{position,jdbcType=TINYINT},
+        #{position,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -69,7 +76,10 @@
         enterprise_id = #{enterpriseId,jdbcType=INTEGER},
       </if>
       <if test="position != null">
-        position = #{position,jdbcType=TINYINT},
+        position = #{position,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -78,25 +88,27 @@
     update user_relationship
     set user_id = #{userId,jdbcType=INTEGER},
       enterprise_id = #{enterpriseId,jdbcType=INTEGER},
-      position = #{position,jdbcType=TINYINT}
+      position = #{position,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectAdminByUserId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from user_relationship
     where user_id = #{userId}
     and position in (1, 2)
+    and status = 1
   </select>
   <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from user_relationship
     where user_id = #{userId}
   </select>
   <select id="selectByEnterpriseId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from user_relationship
     where enterprise_id = #{enterpriseId}
   </select>

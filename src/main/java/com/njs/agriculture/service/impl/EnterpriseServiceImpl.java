@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,12 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
     @Override
     public ServerResponse enterpriseDel(int enterpriseId) {
         int resultRow = enterpriseMapper.deleteByPrimaryKey(enterpriseId);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
+    @Override
+    public ServerResponse enterpriseJoin(UserRelationship userRelationship) {
+        int resultRow = userRelationshipMapper.insert(userRelationship);
         return ServerResponse.createByResultRow(resultRow);
     }
 }

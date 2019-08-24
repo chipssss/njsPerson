@@ -30,4 +30,6 @@ public interface IUserService {
 
     ServerResponse positionUpdate(int id, int position);
 
+    ServerResponse userDel(int userId);
+
 }

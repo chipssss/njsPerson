@@ -68,5 +68,7 @@ public interface IProcessRecordService {
 
     ServerResponse getRecoveryRecord(int source, int sourceId);
 
+    ServerResponse getRecordsUngenrated(int fieldId, int userId);
+
 
 }

@@ -9,11 +9,14 @@ public class UserRelationship {
 
     private Integer position;
 
-    public UserRelationship(Integer id, Integer userId, Integer enterpriseId, Integer position) {
+    private Integer status;
+
+    public UserRelationship(Integer id, Integer userId, Integer enterpriseId, Integer position, Integer status) {
         this.id = id;
         this.userId = userId;
         this.enterpriseId = enterpriseId;
         this.position = position;
+        this.status = status;
     }
 
     public UserRelationship() {
@@ -50,5 +53,13 @@ public class UserRelationship {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

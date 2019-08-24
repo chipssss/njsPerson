@@ -228,6 +228,12 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccess();
     }
 
+    @Override
+    public ServerResponse userDel(int userId) {
+        int resultRow = userMapper.deleteByPrimaryKey(userId);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
     public ServerResponse<String> checkValid(String str, String type) {
         if (org.apache.commons.lang3.StringUtils.isNotBlank(type)) {
             //开始校验

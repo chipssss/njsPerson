@@ -3,7 +3,9 @@ package com.njs.agriculture.controller.backend;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,15 @@ public class AdminController {
          int id = jsonObject.getIntValue("id");
          int position = jsonObject.getIntValue("position");
          return iUserSerivce.positionUpdate(id, position);
+    }
+
+    @GetMapping("userDel.do")
+    public ServerResponse userDel(int userId, HttpSession httpSession){
+        User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
+        if(user.getType() == 1 || user.getType() == 2){
+            return ServerResponse.createByErrorMessage("非管理部门!");
+        }
+        return iUserSerivce.userDel(userId);
     }
 
 
