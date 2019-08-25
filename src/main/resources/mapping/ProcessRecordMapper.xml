@@ -35,12 +35,12 @@
     insert into process_record (id, field_id, location, 
       crop_id, operation, input_record, 
       create_time, remark, weather, 
-      source, source_id, status
+      source, source_id
       )
     values (#{id,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, #{location,jdbcType=VARCHAR}, 
       #{cropId,jdbcType=INTEGER}, #{operation,jdbcType=VARCHAR}, #{inputRecord,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{weather,jdbcType=VARCHAR}, 
-      #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}
+      #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProcessRecord">

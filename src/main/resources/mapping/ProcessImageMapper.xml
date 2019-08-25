@@ -21,7 +21,7 @@
     delete from process_image
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessImage">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProcessImage" keyProperty="id" useGeneratedKeys="true">
     insert into process_image (id, record_id, image
       )
     values (#{id,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR}
