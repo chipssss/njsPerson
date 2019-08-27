@@ -96,4 +96,8 @@ public interface IInputService {
     ServerResponse inputCateAdd(int type, String name, int superiorId);
 
     ServerResponse inputConsume(InputConsume inputConsume, int userId);
+
+    ServerResponse inputConsumeList(int userId);
+
+    ServerResponse inputConsumeReview(int id, int status, int userId);
 }

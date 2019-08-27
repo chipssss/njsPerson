@@ -11,6 +11,7 @@ import com.njs.agriculture.dto.InputDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IInputService;
+import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import com.njs.agriculture.utils.HttpsUtil;
 import com.njs.agriculture.utils.MathUtil;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -33,6 +35,12 @@ import java.util.List;
  */
 @Service("iInputservice")
 public class InputServiceImpl<T> implements IInputService {
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    private IUserService iUserService;
 
     @Autowired
     private InputReturnMapper inputReturnMapper;
@@ -492,31 +500,76 @@ public class InputServiceImpl<T> implements IInputService {
     }
 
     @Override
-    @Transactional
     public ServerResponse inputConsume(InputConsume inputConsume, int userId) {
-        //1.判断企业库够不够扣，够就直接扣
-        InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputConsume.getEnterpriseinputId());
-        if(inputEnterprise == null){
-            return ServerResponse.createByErrorMessage("没有该行企业库存记录");
-        }
-        double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), inputConsume.getQuantity().toString());
-        if(result > 0){
-            inputEnterprise.setQuantity(Float.valueOf(String.valueOf(result)));
-            inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
-        }
-        //2.加入到个人库
-        InputUser inputUser = new InputUser();
-        BeanUtils.copyProperties(inputEnterprise, inputUser);
-        inputUser.setCreateTime(new Date());
-        inputUser.setUserId(userId);
-        inputUser.setSourceId(inputConsume.getEnterpriseinputId());
-        inputUser.setSource(1);
-        inputUser.setId(0);
-        inputUserMapper.insert(inputUser);
+        inputConsume.setStatus(0);
+        inputConsume.setUserId(userId);
         //3.插入信息.
-        inputConsume.setUserinputId(inputUser.getId());
-        inputConsumeMapper.insert(inputConsume);
-        return ServerResponse.createBySuccess(inputConsume);
+        int resultRow = inputConsumeMapper.insert(inputConsume);
+        return ServerResponse.createByResultRow(resultRow, inputConsume);
+    }
+
+    @Override
+    public ServerResponse inputConsumeList(int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        if(map.isEmpty() || (int)map.get("source") == 0){
+            return ServerResponse.createByErrorMessage("没有权限！");
+        }
+        List<InputConsume> inputConsumeList = inputConsumeMapper.selectByStatus(0, (int)map.get("sourceId"));
+        return ServerResponse.createBySuccess(consume2ConsumeVO(inputConsumeList));
+    }
+
+    @Override
+    @Transactional
+    public ServerResponse inputConsumeReview(int id, int status, int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        if(map.isEmpty() || (int)map.get("source") == 0){
+            return ServerResponse.createByErrorMessage("没有权限！");
+        }
+        InputConsume inputConsume = inputConsumeMapper.selectByPrimaryKey(id);
+        if(status == 1){
+            //1.判断企业库够不够扣，够就直接扣
+            InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputConsume.getEnterpriseinputId());
+            if(inputEnterprise == null){
+                return ServerResponse.createByErrorMessage("没有该行企业库存记录");
+            }
+            double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), inputConsume.getQuantity().toString());
+            if(result >= 0){
+                inputEnterprise.setQuantity(Float.valueOf(String.valueOf(result)));
+                inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
+                if(result == 0){
+                    inputEnterpriseMapper.deleteByPrimaryKey(inputEnterprise.getId());
+                }
+                //2.加入到个人库
+                InputUser inputUser = new InputUser();
+                BeanUtils.copyProperties(inputEnterprise, inputUser);
+                inputUser.setCreateTime(new Date());
+                inputUser.setUserId(userId);
+                inputUser.setSourceId(inputConsume.getEnterpriseinputId());
+                inputUser.setSource(1);
+                inputUser.setId(0);
+                inputUserMapper.insert(inputUser);
+                inputConsume.setUserinputId(inputUser.getId());
+            }else{
+                return ServerResponse.createByErrorMessage("企业库存不够！");
+            }
+        }
+        inputConsume.setStatus(status);
+        int resultRow = inputConsumeMapper.updateByPrimaryKeySelective(inputConsume);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
+    private List<InputConsumeVO> consume2ConsumeVO(List<InputConsume> inputConsumeList){
+        List<InputConsumeVO> inputConsumeVOList = Lists.newLinkedList();
+        for (InputConsume inputConsume : inputConsumeList) {
+            InputConsumeVO inputConsumeVO = new InputConsumeVO();
+            BeanUtils.copyProperties(inputConsume, inputConsumeVO);
+            User user = userMapper.selectByPrimaryKey(inputConsume.getUserId());
+            inputConsumeVO.setUserName(user.getUsername());
+            InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(inputConsume.getEnterpriseinputId());
+            inputConsumeVO.setInputName(inputEnterprise.getName());
+            inputConsumeVOList.add(inputConsumeVO);
+        }
+        return inputConsumeVOList;
     }
 
 }

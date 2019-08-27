@@ -21,4 +21,6 @@ public interface InputConsumeMapper {
     List<InputConsume> selectByEnterpriseId(int enterpriseId);
 
     List<InputConsume> selectByUserId(int userId);
+
+    List<InputConsume> selectByStatus(@Param("status") int status, @Param("enterpriseId")int enterpriseId);
 }

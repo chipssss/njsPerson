@@ -306,11 +306,26 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     }
 
     @Override
-    public ServerResponse getRecordsUngenrated(int fieldId, int userId) {
+    public ServerResponse getRecordsUngenratedByBatch(int batchId, int userId, int pageNum, int pageSize) {
         Map map = iUserService.isManager(userId).getData();
-        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSource(fieldId, (int)map.get("source"),
-                (int)map.get("sourceId"), 0);
-        return ServerResponse.createBySuccess(records2recordVO(processRecordList));
+        ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(batchId);
+        PageHelper.startPage(pageNum, pageSize);
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceByBatch(productionBatch.getPlantTime(), productionBatch.getCollectTime(),
+                (int)map.get("source"), (int)map.get("sourceId"), 0);
+        PageInfo pageInfo = new PageInfo(processRecordList);
+        pageInfo.setList(records2recordVO(processRecordList));
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse getRecordsUngenratedByField(int fieldId, int userId, int pageNum, int pageSize) {
+        Map map = iUserService.isManager(userId).getData();
+        PageHelper.startPage(pageNum, pageSize);
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceByField(fieldId,
+                (int)map.get("source"), (int)map.get("sourceId"), 0);
+        PageInfo pageInfo = new PageInfo(processRecordList);
+        pageInfo.setList(records2recordVO(processRecordList));
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
 

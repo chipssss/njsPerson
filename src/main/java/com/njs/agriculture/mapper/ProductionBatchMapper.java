@@ -19,7 +19,9 @@ public interface ProductionBatchMapper {
 
     int updateByPrimaryKey(ProductionBatch record);
 
-    List<ProductionBatch> batchInfo(int fieldId);
+    List<ProductionBatch> batchInfoByFinished(@Param("fieldId") int fieldId, @Param("finished") int finished);
+
+    List<ProductionBatch> batchInfoByGenerated(@Param("fieldId") int fieldId, @Param("generated") int generated);
 
     ProductionBatch onlyBatch(@Param("fieldId") int fieldId, @Param("today") Date today);
 

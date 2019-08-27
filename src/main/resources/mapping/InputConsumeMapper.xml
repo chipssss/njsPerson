@@ -8,10 +8,14 @@
       <arg column="enterpriseinput_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="quantity" javaType="java.lang.Float" jdbcType="REAL" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="enterprise_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, userinput_id, enterpriseinput_id, quantity, create_time
+    id, userinput_id, enterpriseinput_id, quantity, create_time, status, enterprise_id, 
+    user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,11 +27,13 @@
     delete from input_consume
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputConsume" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputConsume" keyProperty="id" useGeneratedKeys="true">
     insert into input_consume (id, userinput_id, enterpriseinput_id, 
-      quantity, create_time)
+      quantity, create_time, status, 
+      enterprise_id, user_id)
     values (#{id,jdbcType=INTEGER}, #{userinputId,jdbcType=INTEGER}, #{enterpriseinputId,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP})
+      #{quantity,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{enterpriseId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.InputConsume">
     insert into input_consume
@@ -47,6 +53,15 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -63,6 +78,15 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="enterpriseId != null">
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -81,6 +105,15 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -89,19 +122,29 @@
     set userinput_id = #{userinputId,jdbcType=INTEGER},
       enterpriseinput_id = #{enterpriseinputId,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=REAL},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectByEnterpriseId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from input_consume
     where enterpriseinput_id = #{enterpriseId}
   </select>
   <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from input_consume
     where userinput_id = #{userinputId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStatus" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from input_consume
+    where status = #{status}
+    and enterprise_id = #{enterpriseId}
   </select>
 </mapper>

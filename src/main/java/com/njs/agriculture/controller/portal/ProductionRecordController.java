@@ -1,29 +1,21 @@
 package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.njs.agriculture.VO.BatchInfoVO;
-import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
-import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.ProductionBatch;
-import com.njs.agriculture.pojo.ServicePool;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IBatchService;
-import com.njs.agriculture.service.IFieldService;
 import com.njs.agriculture.service.IProcessRecordService;
 import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
@@ -48,9 +40,18 @@ public class ProductionRecordController {
     private ProductionBatchMapper productionBatchMapper;
     
 
-    @PostMapping("batchInfo.do")
-    public ServerResponse batchInfo(@RequestBody JSONObject jsonObject){
-        return iBatchService.batchInfo(jsonObject.getIntValue("fieldId"));
+    @PostMapping("batchInfoByFinished.do")
+    public ServerResponse batchInfoByFinished(@RequestBody JSONObject jsonObject){
+        int fieldId = jsonObject.getIntValue("fieldId");
+        int finished = jsonObject.getIntValue("finished");
+        return iBatchService.batchInfoByFinished(fieldId, finished);
+    }
+
+    @PostMapping("batchInfoByGenerated.do")
+    public ServerResponse batchInfoByGenerated(@RequestBody JSONObject jsonObject){
+        int fieldId = jsonObject.getIntValue("fieldId");
+        int generated = jsonObject.getIntValue("generated");
+        return iBatchService.batchInfoByGenerated(fieldId, generated);
     }
 
     @PostMapping("processRecord.do")
@@ -151,10 +152,22 @@ public class ProductionRecordController {
         return iProcessRecordService.getRecoveryRecord(source, sourceId);
     }
 
-    @GetMapping("getRecordUngenerated.do")
-    public ServerResponse getRecordUngenerated(int fieldId, HttpSession httpSession){
+    @PostMapping("getRecordsUngenratedByBatch.do")
+    public ServerResponse getRecordUngenerated(@RequestBody JSONObject jsonObject, HttpSession httpSession){
         User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
-        return iProcessRecordService.getRecordsUngenrated(fieldId, user.getUserId());
+        int batchId = jsonObject.getIntValue("batchId");
+        int pageNum = (int)jsonObject.getOrDefault("pageNum", 1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize", 10);
+        return iProcessRecordService.getRecordsUngenratedByBatch(batchId, user.getUserId(), pageNum, pageSize);
+    }
+
+    @GetMapping("getRecordsUngenratedByField.do")
+    public ServerResponse getRecordsUngenratedByField(@RequestBody JSONObject jsonObject, HttpSession httpSession){
+        User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
+        int fieldId = jsonObject.getIntValue("fieldId");
+        int pageNum = (int)jsonObject.getOrDefault("pageNum", 1);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize", 10);
+        return iProcessRecordService.getRecordsUngenratedByField(fieldId, user.getUserId(), pageNum, pageSize);
     }
 
 

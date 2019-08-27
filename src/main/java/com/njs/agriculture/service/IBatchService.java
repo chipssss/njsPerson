@@ -13,9 +13,18 @@ public interface IBatchService {
     /**
      * 获取田块批次
      * @param fieldId
+     * @param finished 是否已加工
      * @return
      */
-    ServerResponse batchInfo(int fieldId);
+    ServerResponse batchInfoByFinished(int fieldId, int finished);
+
+    /**
+     * 获取田块批次
+     * @param fieldId
+     * @param generated 溯源与否
+     * @return
+     */
+    ServerResponse batchInfoByGenerated(int fieldId, int generated);
 
     ServerResponse batchAdd(BatchInfoVO batchInfoVO);
 

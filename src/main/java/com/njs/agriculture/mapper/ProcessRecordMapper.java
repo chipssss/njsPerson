@@ -28,6 +28,11 @@ public interface ProcessRecordMapper {
 
     List<Integer> selectCropIdBySource(@Param("source") int source, @Param("sourceId") int sourceId);
 
-    List<ProcessRecord> selectByStatusAndSource(@Param("fieldId") int fieldId,@Param("source") int source,
-                                                @Param("sourceId") int sourceId, @Param("status") int status);
+    List<ProcessRecord> selectByStatusAndSourceByBatch(@Param("startTime") Date startTime,@Param("endTime") Date endTime,
+                                                @Param("source") int source, @Param("sourceId") int sourceId,
+                                                @Param("status") int status);
+
+    List<ProcessRecord> selectByStatusAndSourceByField(@Param("fieldId") int fieldId,
+                                                       @Param("source") int source, @Param("sourceId") int sourceId,
+                                                       @Param("status") int status);
 }

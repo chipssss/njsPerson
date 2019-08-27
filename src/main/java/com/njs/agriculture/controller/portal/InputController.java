@@ -9,6 +9,7 @@ import com.njs.agriculture.pojo.InputConsume;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IInputService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -125,5 +126,19 @@ public class InputController {
     public ServerResponse inputConsume(@RequestBody InputConsume inputConsume, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iInputService.inputConsume(inputConsume, user.getUserId());
+    }
+
+    @GetMapping("inputConsumeList.do")
+    public ServerResponse inputConsumeList(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iInputService.inputConsumeList(user.getUserId());
+    }
+
+    @PostMapping("inputConsumeReview.do")
+    public ServerResponse inputConsumeReview(@RequestBody JSONObject jsonObject, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        int id = jsonObject.getIntValue("id");
+        int status = jsonObject.getIntValue("status");
+        return iInputService.inputConsumeReview(id, status, user.getUserId());
     }
 }

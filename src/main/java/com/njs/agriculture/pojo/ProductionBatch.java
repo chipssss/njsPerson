@@ -13,12 +13,18 @@ public class ProductionBatch {
 
     private Date collectTime;
 
-    public ProductionBatch(Integer id, String name, Integer fieldId, Date plantTime, Date collectTime) {
+    private Integer finish;
+
+    private Integer generated;
+
+    public ProductionBatch(Integer id, String name, Integer fieldId, Date plantTime, Date collectTime, Integer finish, Integer generated) {
         this.id = id;
         this.name = name;
         this.fieldId = fieldId;
         this.plantTime = plantTime;
         this.collectTime = collectTime;
+        this.finish = finish;
+        this.generated = generated;
     }
 
     public ProductionBatch() {
@@ -63,5 +69,21 @@ public class ProductionBatch {
 
     public void setCollectTime(Date collectTime) {
         this.collectTime = collectTime;
+    }
+
+    public Integer getFinish() {
+        return finish;
+    }
+
+    public void setFinish(Integer finish) {
+        this.finish = finish;
+    }
+
+    public Integer getGenerated() {
+        return generated;
+    }
+
+    public void setGenerated(Integer generated) {
+        this.generated = generated;
     }
 }

@@ -1,15 +1,12 @@
 package com.njs.agriculture.service.impl;
 
-import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.mapper.CropInfoMapper;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.mapper.RecoveryRecordMapper;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +31,15 @@ public class BatchServiceImpl implements IBatchService {
     private RecoveryRecordMapper recoveryRecordMapper;
 
 
+
     @Override
-    public ServerResponse batchInfo(int fieldId) {
-        List<ProductionBatch> productionBatches = productionBatchMapper.batchInfo(fieldId);
-        return ServerResponse.createBySuccess(productionBatches);
+    public ServerResponse batchInfoByFinished(int fieldId, int finished) {
+        return ServerResponse.createBySuccess(productionBatchMapper.batchInfoByFinished(fieldId, finished));
+    }
+
+    @Override
+    public ServerResponse batchInfoByGenerated(int fieldId, int generated) {
+        return ServerResponse.createBySuccess(productionBatchMapper.batchInfoByGenerated(fieldId, generated));
     }
 
     @Override
