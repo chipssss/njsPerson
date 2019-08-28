@@ -161,7 +161,7 @@ public class ProductionRecordController {
         return iProcessRecordService.getRecordsUngenratedByBatch(batchId, user.getUserId(), pageNum, pageSize);
     }
 
-    @GetMapping("getRecordsUngenratedByField.do")
+    @PostMapping("getRecordsUngenratedByField.do")
     public ServerResponse getRecordsUngenratedByField(@RequestBody JSONObject jsonObject, HttpSession httpSession){
         User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
         int fieldId = jsonObject.getIntValue("fieldId");

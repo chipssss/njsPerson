@@ -57,7 +57,7 @@ public class MD5Util {
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
     public static void main(String[] args) {
-        MD5Util.MD5EncodeUtf8("q8732094");
+        System.out.println(MD5Util.MD5EncodeUtf8("1234567"));
     }
 
 }
