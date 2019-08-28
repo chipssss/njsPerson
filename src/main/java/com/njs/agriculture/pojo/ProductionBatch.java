@@ -1,5 +1,7 @@
 package com.njs.agriculture.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ProductionBatch {
@@ -9,8 +11,10 @@ public class ProductionBatch {
 
     private Integer fieldId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date plantTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date collectTime;
 
     private Integer finish;

@@ -170,5 +170,17 @@ public class ProductionRecordController {
         return iProcessRecordService.getRecordsUngenratedByField(fieldId, user.getUserId(), pageNum, pageSize);
     }
 
+    @GetMapping("getBatchesFinished.do")
+    public ServerResponse getBatchesFinished(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iBatchService.getBatchesFinishedOrGenerated(user.getUserId(), 0);
+    }
+
+    @GetMapping("getBatchesGenerated.do")
+    public ServerResponse getBatchesGenerated(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iBatchService.getBatchesFinishedOrGenerated(user.getUserId(), 1);
+    }
+
 
 }

@@ -6,6 +6,6 @@ server:
 
 
 #showSql
-logging:
-  level:
-    com.njs.agriculture.controller: DEBUG
+#logging:
+#  level:
+#    com.njs.agriculture.controller: DEBUG

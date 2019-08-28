@@ -29,4 +29,7 @@ public interface IBatchService {
     ServerResponse batchAdd(BatchInfoVO batchInfoVO);
 
     ServerResponse batchDel(int id);
+
+    ServerResponse getBatchesFinishedOrGenerated(int userId, int flag);
+
 }

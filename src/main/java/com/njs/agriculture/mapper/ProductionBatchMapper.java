@@ -1,5 +1,6 @@
 package com.njs.agriculture.mapper;
 
+import com.njs.agriculture.VO.FieldListVO;
 import com.njs.agriculture.pojo.ProductionBatch;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,4 +31,6 @@ public interface ProductionBatchMapper {
     List<ProductionBatch> selectByExistProcessRecord(int userId);
 
     List<ProductionBatch> selectByFieldId(int fieldId);
+
+    List<ProductionBatch> selectByFieldList(List<FieldListVO> fieldListVOList);
 }

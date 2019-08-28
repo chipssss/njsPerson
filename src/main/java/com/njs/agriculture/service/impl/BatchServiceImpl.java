@@ -1,18 +1,25 @@
 package com.njs.agriculture.service.impl;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.BatchInfoVO;
+import com.njs.agriculture.VO.FieldListVO;
+import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.mapper.FieldMapper;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.mapper.RecoveryRecordMapper;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
+import com.njs.agriculture.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: SaikeiLEe
@@ -22,7 +29,11 @@ import java.util.List;
 @Service("iBatchService")
 public class BatchServiceImpl implements IBatchService {
 
+    @Autowired
+    private IUserService iUserService;
 
+    @Autowired
+    private FieldMapper fieldMapper;
 
     @Autowired
     private ProductionBatchMapper productionBatchMapper;
@@ -87,5 +98,40 @@ public class BatchServiceImpl implements IBatchService {
             return ServerResponse.createByErrorMessage("删除记录失败!");
         }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse getBatchesFinishedOrGenerated(int userId, int flag) {
+        Map map = iUserService.isManager(userId).getData();
+        List<FieldListVO> fieldVOList = fieldMapper.selectAllBySourceId((int)map.get("source"), (int)map.get("sourceId"));
+        List<ProductionBatch> productionBatchList = productionBatchMapper.selectByFieldList(fieldVOList);
+        Map result = Maps.newHashMap();
+        if (flag == 0) {
+            List<ProductionBatch> finished = Lists.newLinkedList();
+            List<ProductionBatch> unfinished = Lists.newLinkedList();
+            for (ProductionBatch productionBatch : productionBatchList) {
+                if(productionBatch.getFinish() == 1){
+                    finished.add(productionBatch);
+                }else{
+                    unfinished.add(productionBatch);
+                }
+            }
+            result.put("finished", finished);
+            result.put("unfinished", unfinished);
+        }else{
+            List<ProductionBatch> generated = Lists.newLinkedList();
+            List<ProductionBatch> unGenerated = Lists.newLinkedList();
+            for (ProductionBatch productionBatch : productionBatchList) {
+                if(productionBatch.getGenerated() == 1){
+                    generated.add(productionBatch);
+                }else{
+                    unGenerated.add(productionBatch);
+                }
+            }
+            result.put("generated", generated);
+            result.put("unGenerated", unGenerated);
+        }
+
+        return ServerResponse.createBySuccess(result);
     }
 }

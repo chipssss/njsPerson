@@ -157,4 +157,13 @@ on a.id = b.batch_id;
         from production_batch
         where field_id = #{fieldId}
     </select>
+    <select id="selectByFieldList" parameterType="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from production_batch
+        where field_id in
+        <foreach collection="list" separator="," item="item" index="index" open="(" close=")">
+            #{item.id}
+        </foreach>
+    </select>
 </mapper>
