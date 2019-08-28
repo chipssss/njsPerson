@@ -11,21 +11,18 @@ public class Enterprise {
 
     private String mainProduct;
 
-    private String validCertificate;
-
     private Integer status;
 
     private String address;
 
     private String image;
 
-    public Enterprise(Integer id, String name, String creditCode, String industry, String mainProduct, String validCertificate, Integer status, String address, String image) {
+    public Enterprise(Integer id, String name, String creditCode, String industry, String mainProduct, Integer status, String address, String image) {
         this.id = id;
         this.name = name;
         this.creditCode = creditCode;
         this.industry = industry;
         this.mainProduct = mainProduct;
-        this.validCertificate = validCertificate;
         this.status = status;
         this.address = address;
         this.image = image;
@@ -73,14 +70,6 @@ public class Enterprise {
 
     public void setMainProduct(String mainProduct) {
         this.mainProduct = mainProduct == null ? null : mainProduct.trim();
-    }
-
-    public String getValidCertificate() {
-        return validCertificate;
-    }
-
-    public void setValidCertificate(String validCertificate) {
-        this.validCertificate = validCertificate == null ? null : validCertificate.trim();
     }
 
     public Integer getStatus() {
