@@ -75,6 +75,9 @@ public class InputServiceImpl<T> implements IInputService {
     @Autowired
     InputDTOMapper inputDTOMapper;
 
+    @Autowired
+    InputStreamMapper inputStreamMapper;
+
 
     @Override
     public ServerResponse purchase(InputVO inputVO) {
@@ -556,6 +559,28 @@ public class InputServiceImpl<T> implements IInputService {
         inputConsume.setStatus(status);
         int resultRow = inputConsumeMapper.updateByPrimaryKeySelective(inputConsume);
         return ServerResponse.createByResultRow(resultRow);
+    }
+
+    @Override
+    public ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList) {
+        InputStream inputStream = new InputStream();
+        inputStream.setFieldId(fieldId);
+        inputStream.setCropId(cropId);
+        for (ProcessRecordInfoVO.Input input : inputList) {
+            if(input.getSource() == 0){
+                InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
+                inputStream.setInputName(inputUser.getName());
+            }else{
+                InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
+                inputStream.setInputName(inputEnterprise.getName());
+            }
+            inputStream.setQuantity(Float.valueOf(input.getQuantity()).intValue());
+            int resultRow = inputStreamMapper.insert(inputStream);
+            if(resultRow == 0){
+                return ServerResponse.createByError();
+            }
+        }
+        return ServerResponse.createBySuccess();
     }
 
     private List<InputConsumeVO> consume2ConsumeVO(List<InputConsume> inputConsumeList){

@@ -13,6 +13,7 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IFileService;
+import com.njs.agriculture.service.IInputService;
 import com.njs.agriculture.service.IProcessRecordService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
@@ -53,6 +54,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    IInputService iInputService;
 
     @Autowired
     private FieldMapper fieldMapper;
@@ -215,6 +219,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         //2.批量插入
         for (String image : processRecordInfoVO.getImages()) {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
+        }
+        //3.插入流水表
+        ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList());
+        if(!response.isSuccess()){
+            throw new RuntimeException("插入流水表失败！");
         }
         return ServerResponse.createBySuccess(processRecord);
     }

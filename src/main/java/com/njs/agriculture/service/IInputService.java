@@ -2,8 +2,11 @@ package com.njs.agriculture.service;
 
 
 import com.njs.agriculture.VO.InputVO;
+import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.InputConsume;
+
+import java.util.List;
 
 
 /**
@@ -100,4 +103,6 @@ public interface IInputService {
     ServerResponse inputConsumeList(int userId);
 
     ServerResponse inputConsumeReview(int id, int status, int userId);
+
+    ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList);
 }

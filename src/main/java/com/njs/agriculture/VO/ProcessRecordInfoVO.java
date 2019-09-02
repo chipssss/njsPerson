@@ -15,12 +15,21 @@ import java.util.List;
 @Data
 public class ProcessRecordInfoVO {
 
+    /**
+     * 田块id
+     */
     private int fieldId;
 
     private String location;
 
+    /**
+     * 操作列表
+     */
     private List<String> operationList;
 
+    /**
+     * 农资列表
+     */
     private List<Input> inputList;
 
     private String weather;
