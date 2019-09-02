@@ -48,12 +48,12 @@ public class InputController {
         return iInputService.categoryInfoForAndroid();
     }
 
-   @GetMapping("firstCateGet")
+   @GetMapping("firstCateGet.do")
    public ServerResponse firstCateGet(){
        return iInputService.firstCateGet();
    }
 
-    @GetMapping("secondCateGet")
+    @GetMapping("secondCateGet.do")
     public ServerResponse secondCateGet(){
         return iInputService.secondCateGet();
     }
