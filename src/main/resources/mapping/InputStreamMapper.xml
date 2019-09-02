@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.InputStreamMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.InputStream">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="crop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="input_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, field_id, crop_id, input_name, quantity, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from input_stream
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from input_stream
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.InputStream">
+    insert into input_stream (id, field_id, crop_id, 
+      input_name, quantity, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, #{cropId,jdbcType=INTEGER}, 
+      #{inputName,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.InputStream">
+    insert into input_stream
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fieldId != null">
+        field_id,
+      </if>
+      <if test="cropId != null">
+        crop_id,
+      </if>
+      <if test="inputName != null">
+        input_name,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fieldId != null">
+        #{fieldId,jdbcType=INTEGER},
+      </if>
+      <if test="cropId != null">
+        #{cropId,jdbcType=INTEGER},
+      </if>
+      <if test="inputName != null">
+        #{inputName,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.InputStream">
+    update input_stream
+    <set>
+      <if test="fieldId != null">
+        field_id = #{fieldId,jdbcType=INTEGER},
+      </if>
+      <if test="cropId != null">
+        crop_id = #{cropId,jdbcType=INTEGER},
+      </if>
+      <if test="inputName != null">
+        input_name = #{inputName,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.InputStream">
+    update input_stream
+    set field_id = #{fieldId,jdbcType=INTEGER},
+      crop_id = #{cropId,jdbcType=INTEGER},
+      input_name = #{inputName,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
