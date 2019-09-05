@@ -233,6 +233,16 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public ServerResponse productStockGetByProductId(int userId, int productId) {
+        ServerResponse<Map> serverResponse = iUserService.isManager(userId);
+        List<ProductStock> productStockList;
+
+        productStockList = productStockMapper.selectBySourceAndProductId((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"), productId);
+
+        return ServerResponse.createBySuccess(productStockList);
+    }
+
+    @Override
     @Transactional
     public ServerResponse productOut(ProductOut productOut, int userId) {
         ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());

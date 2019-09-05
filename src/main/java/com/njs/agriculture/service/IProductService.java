@@ -47,6 +47,8 @@ public interface IProductService {
 
     ServerResponse productStockGet(int userId);
 
+    ServerResponse productStockGetByProductId(int userId, int productId);
+
     ServerResponse productOut(ProductOut productOut, int userId);
 
     ServerResponse productOutGetBySource(int userId);

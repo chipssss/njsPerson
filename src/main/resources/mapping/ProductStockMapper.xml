@@ -183,4 +183,12 @@
     where source = #{source,jdbcType=INTEGER}
     and source_id = #{sourceId,jdbcType=INTEGER}
   </select>
+  <select id="selectBySourceAndProductId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from product_stock
+    where source = #{source,jdbcType=INTEGER}
+    and source_id = #{sourceId,jdbcType=INTEGER}
+    and product_id = #{productId}
+  </select>
 </mapper>

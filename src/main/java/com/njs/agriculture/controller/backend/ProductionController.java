@@ -97,9 +97,15 @@ public class ProductionController {
     }
 
     @RequestMapping("productStockGet.do")
-    public ServerResponse productStockGet( HttpSession session){
+    public ServerResponse productStockGet(HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iProductService.productStockGet(user.getUserId());
+    }
+
+    @RequestMapping("productStockGetByProductId.do")
+    public ServerResponse productStockGetByProductId(int productId, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.productStockGetByProductId(user.getUserId(), productId);
     }
 
     @RequestMapping("productOut.do")

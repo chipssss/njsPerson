@@ -122,8 +122,5 @@ public class HttpsUtil {
         return inputBarcode;
     }
 
-    public static void main(String[] args) {
-        InputBarcode inputBarcode = Get("6917878036526");
-        System.out.println();
-    }
+
 }

@@ -9,14 +9,17 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.FieldMapper;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.mapper.RecoveryRecordMapper;
+import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IUserService;
+import com.njs.agriculture.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileDescriptor;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +58,7 @@ public class BatchServiceImpl implements IBatchService {
 
     @Override
     @Transactional
-    public ServerResponse batchAdd(BatchInfoVO batchInfoVO) {
+    public ServerResponse batchAdd(BatchInfoVO batchInfoVO, int userId) {
         List<ProductionBatch> batchesExisted = productionBatchMapper.selectByFieldId(batchInfoVO.getFieldId());
         Date start = batchInfoVO.getPlantTime();
         Date end = batchInfoVO.getCollectTime();
@@ -75,7 +78,11 @@ public class BatchServiceImpl implements IBatchService {
                 start = batch.getCollectTime();
             }
         }
+        Field field = fieldMapper.selectByPrimaryKey(batchInfoVO.getFieldId());
+        Map map = iUserService.isManager(userId).getData();
+        batchInfoVO.setName(batchNameGenerate(end, (int)map.get("source"), (int)map.get("sourceId"), batchInfoVO.getFieldId(), field.getCropId()));
         batchInfoVO.setPlantTime(start);
+        batchInfoVO.setGenerated(0);
         int recoveryId = batchInfoVO.getRecoveryRecordId();
         RecoveryRecord recoveryRecord = new RecoveryRecord();
         recoveryRecord.setId(recoveryId);
@@ -133,5 +140,12 @@ public class BatchServiceImpl implements IBatchService {
         }
 
         return ServerResponse.createBySuccess(result);
+    }
+
+    public String batchNameGenerate(Date collectTime, int source, int sourceId, int fieldId, int cropId){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(DateUtil.dateToStr(collectTime, "yyyyMMdd")).append(source).append(sourceId)
+                .append(fieldId).append(cropId);
+        return stringBuffer.toString();
     }
 }

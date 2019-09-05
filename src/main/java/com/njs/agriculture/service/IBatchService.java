@@ -26,7 +26,7 @@ public interface IBatchService {
      */
     ServerResponse batchInfoByGenerated(int fieldId, int generated);
 
-    ServerResponse batchAdd(BatchInfoVO batchInfoVO);
+    ServerResponse batchAdd(BatchInfoVO batchInfoVO, int userId);
 
     ServerResponse batchDel(int id);
 
