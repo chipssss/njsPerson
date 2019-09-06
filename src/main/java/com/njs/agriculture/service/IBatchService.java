@@ -32,4 +32,6 @@ public interface IBatchService {
 
     ServerResponse getBatchesFinishedOrGenerated(int userId, int flag);
 
+    ServerResponse getBatchesStream(int userId);
+
 }

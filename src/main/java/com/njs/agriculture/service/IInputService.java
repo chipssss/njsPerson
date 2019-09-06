@@ -105,4 +105,6 @@ public interface IInputService {
     ServerResponse inputConsumeReview(int id, int status, int userId);
 
     ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList);
+
+    ServerResponse inputStreamGet(int userId);
 }

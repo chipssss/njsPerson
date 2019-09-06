@@ -17,6 +17,7 @@ import com.njs.agriculture.utils.HttpsUtil;
 import com.njs.agriculture.utils.MathUtil;
 import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,12 @@ public class InputServiceImpl<T> implements IInputService {
 
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    FieldMapper fieldMapper;
+
+    @Autowired
+    CropInfoMapper cropInfoMapper;
 
     @Autowired
     private InputReturnMapper inputReturnMapper;
@@ -581,6 +588,26 @@ public class InputServiceImpl<T> implements IInputService {
             }
         }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse inputStreamGet(int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        List<InputStream> inputStreamList = inputStreamMapper.selectBySource((int)map.get("source"), (int)map.get("sourceId"));
+        return ServerResponse.createBySuccess(stream2streamVO(inputStreamList));
+    }
+
+    private List<InputStreamVO> stream2streamVO(List<InputStream> inputStreamList){
+        List<InputStreamVO> inputStreamVOList = Lists.newLinkedList();
+        for (InputStream inputStream : inputStreamList) {
+            InputStreamVO inputStreamVO = new InputStreamVO();
+            BeanUtils.copyProperties(inputStream, inputStreamVO);
+            Field field = fieldMapper.selectByPrimaryKey(inputStream.getFieldId());
+            inputStreamVO.setFieldName(field.getName());
+            inputStreamVO.setCropName(field.getCropName());
+            inputStreamVOList.add(inputStreamVO);
+        }
+        return inputStreamVOList;
     }
 
     private List<InputConsumeVO> consume2ConsumeVO(List<InputConsume> inputConsumeList){

@@ -141,4 +141,12 @@ public class InputController {
         int status = jsonObject.getIntValue("status");
         return iInputService.inputConsumeReview(id, status, user.getUserId());
     }
+
+    @GetMapping("inputStreamGet.do")
+    public ServerResponse inputStreamGet(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iInputService.inputStreamGet(user.getUserId());
+    }
+
+
 }

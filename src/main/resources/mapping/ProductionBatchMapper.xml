@@ -13,6 +13,16 @@
       <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
+  <resultMap id="SimpleBaseResultMap" type="com.njs.agriculture.pojo.ProductionBatch">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="plant_time" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="collect_time" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
     id, name, field_id, plant_time, collect_time, finish, `generated` , quantity
   </sql>
@@ -176,5 +186,12 @@ on a.id = b.batch_id;
     <foreach collection="list" separator="," item="item" index="index" open="(" close=")">
       #{item.id}
     </foreach>
+  </select>
+  <select id="selectBySource" parameterType="map" resultMap="SimpleBaseResultMap">
+    select a.id, a.name, a.field_id, a.plant_time, a.collect_time , a.quantity
+    from production_batch a inner join field b
+    on a.field_id = b.id
+    where b.source = #{source}
+    and b.source_id = #{sourceId};
   </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.njs.agriculture.service.impl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.BatchInfoVO;
+import com.njs.agriculture.VO.BatchStreamVO;
 import com.njs.agriculture.VO.FieldListVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
@@ -15,6 +16,8 @@ import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
+import net.sf.jsqlparser.schema.Server;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,6 +143,26 @@ public class BatchServiceImpl implements IBatchService {
         }
 
         return ServerResponse.createBySuccess(result);
+    }
+
+    @Override
+    public ServerResponse getBatchesStream(int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        List<ProductionBatch> productionBatchList = productionBatchMapper.selectBySource((int)map.get("source"), (int)map.get("sourceId"));
+        return ServerResponse.createBySuccess(batch2batchStreamVO(productionBatchList));
+    }
+
+    private List<BatchStreamVO> batch2batchStreamVO(List<ProductionBatch> productionBatchList){
+        List<BatchStreamVO> batchStreamVOList = Lists.newLinkedList();
+        for (ProductionBatch productionBatch : productionBatchList) {
+            BatchStreamVO batchStreamVO = new BatchStreamVO();
+            BeanUtils.copyProperties(productionBatch, batchStreamVO);
+            Field field = fieldMapper.selectByPrimaryKey(productionBatch.getFieldId());
+            batchStreamVO.setCropName(field.getCropName());
+            batchStreamVO.setFieldName(field.getName());
+            batchStreamVOList.add(batchStreamVO);
+        }
+        return batchStreamVOList;
     }
 
     public String batchNameGenerate(Date collectTime, int source, int sourceId, int fieldId, int cropId){

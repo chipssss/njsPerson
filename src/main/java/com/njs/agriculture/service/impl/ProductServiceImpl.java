@@ -183,6 +183,8 @@ public class ProductServiceImpl implements IProductService {
 
         productBasic.setSource((int) serverResponse.getData().get("source"));
         productBasic.setSourceId((int) serverResponse.getData().get("sourceId"));
+        productBasic.setTotalSale(0);
+        productBasic.setTotalStock(0);
 
         int resultRow = productBasicMapper.insert(productBasic);
         if (resultRow == 0) {
@@ -214,11 +216,13 @@ public class ProductServiceImpl implements IProductService {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         productStock.setSource((int) serverResponse.getData().get("source"));
         productStock.setSourceId((int) serverResponse.getData().get("sourceId"));
-
         int resultRow = productStockMapper.insert(productStock);
         if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("插入新数据失败！");
         }
+
+        //更新基础表
+        updateBasicTotal(productStock.getProductId(), productStock.getQuantity(), 0);
         return ServerResponse.createBySuccess(productStock);
     }
 
@@ -265,6 +269,9 @@ public class ProductServiceImpl implements IProductService {
 
         productOutMapper.insert(productOut);
 
+        //更新基础表
+        updateBasicTotal(productStock.getProductId(), productOut.getQuantity(), 1);
+
         return ServerResponse.createBySuccess(productOut);
     }
 
@@ -295,6 +302,31 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         return productOutVOList;
+    }
+
+    /**
+     * 加了锁的对基本表的操作，防止并发
+     * @param
+     * @param type 0的时候为加库存，1的时候为减库存，加销售
+     */
+    public synchronized void updateBasicTotal(int basicId, int quantity, int type){
+        ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(basicId);
+        if(productBasic == null){
+            throw new RuntimeException("查不到基本表数据！");
+        }
+        ProductBasic productBasicNew  = new ProductBasic();
+        productBasicNew.setId(productBasic.getId());
+        if(type == 0){
+            int totalStock = productBasic.getTotalStock() + quantity;
+            productBasicNew.setTotalStock(totalStock);
+        }else{
+            int totalStock = productBasic.getTotalStock() - quantity;
+            productBasicNew.setTotalStock(totalStock);
+            int totalSale = productBasic.getTotalSale() + quantity;
+            productBasicNew.setTotalSale(totalSale);
+        }
+
+        productBasicMapper.updateByPrimaryKeySelective(productBasicNew);
     }
 
 }

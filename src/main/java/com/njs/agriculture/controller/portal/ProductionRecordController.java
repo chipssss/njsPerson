@@ -183,5 +183,12 @@ public class ProductionRecordController {
         return iBatchService.getBatchesFinishedOrGenerated(user.getUserId(), 1);
     }
 
+    @GetMapping("getBatchesStream.do")
+    public ServerResponse getBatchesStream(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iBatchService.getBatchesStream(user.getUserId());
+    }
+
+
 
 }

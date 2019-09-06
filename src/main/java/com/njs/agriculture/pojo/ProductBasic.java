@@ -21,7 +21,13 @@ public class ProductBasic {
 
     private Integer sourceId;
 
-    public ProductBasic(Integer id, String name, Integer typeId, String process, String feature, String packing, String level, String image, Integer source, Integer sourceId) {
+    private String producttype;
+
+    private Integer totalStock;
+
+    private Integer totalSale;
+
+    public ProductBasic(Integer id, String name, Integer typeId, String process, String feature, String packing, String level, String image, Integer source, Integer sourceId, String producttype, Integer totalStock, Integer totalSale) {
         this.id = id;
         this.name = name;
         this.typeId = typeId;
@@ -32,6 +38,9 @@ public class ProductBasic {
         this.image = image;
         this.source = source;
         this.sourceId = sourceId;
+        this.producttype = producttype;
+        this.totalStock = totalStock;
+        this.totalSale = totalSale;
     }
 
     public ProductBasic() {
@@ -116,5 +125,29 @@ public class ProductBasic {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getProducttype() {
+        return producttype;
+    }
+
+    public void setProducttype(String producttype) {
+        this.producttype = producttype == null ? null : producttype.trim();
+    }
+
+    public Integer getTotalStock() {
+        return totalStock;
+    }
+
+    public void setTotalStock(Integer totalStock) {
+        this.totalStock = totalStock;
+    }
+
+    public Integer getTotalSale() {
+        return totalSale;
+    }
+
+    public void setTotalSale(Integer totalSale) {
+        this.totalSale = totalSale;
     }
 }

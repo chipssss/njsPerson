@@ -15,13 +15,19 @@ public class InputStream {
 
     private Date createTime;
 
-    public InputStream(Integer id, Integer fieldId, Integer cropId, String inputName, Integer quantity, Date createTime) {
+    private Integer source;
+
+    private Integer sourceId;
+
+    public InputStream(Integer id, Integer fieldId, Integer cropId, String inputName, Integer quantity, Date createTime, Integer source, Integer sourceId) {
         this.id = id;
         this.fieldId = fieldId;
         this.cropId = cropId;
         this.inputName = inputName;
         this.quantity = quantity;
         this.createTime = createTime;
+        this.source = source;
+        this.sourceId = sourceId;
     }
 
     public InputStream() {
@@ -74,5 +80,21 @@ public class InputStream {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 }
