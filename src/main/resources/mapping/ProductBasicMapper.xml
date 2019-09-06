@@ -13,13 +13,13 @@
       <arg column="image" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="productType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="product_type" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="total_stock" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="total_sale" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, type_id, process, feature, packing, level, image, source, source_id, productType, 
+    id, name, type_id, process, feature, packing, level, image, source, source_id, product_type, 
     total_stock, total_sale
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -36,12 +36,12 @@
     insert into product_basic (id, name, type_id, 
       process, feature, packing, 
       level, image, source, 
-      source_id, productType, total_stock, 
+      source_id, product_type, total_stock, 
       total_sale)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
       #{process,jdbcType=VARCHAR}, #{feature,jdbcType=VARCHAR}, #{packing,jdbcType=VARCHAR}, 
       #{level,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER}, 
-      #{sourceId,jdbcType=INTEGER}, #{producttype,jdbcType=VARCHAR}, #{totalStock,jdbcType=INTEGER}, 
+      #{sourceId,jdbcType=INTEGER}, #{productType,jdbcType=VARCHAR}, #{totalStock,jdbcType=INTEGER}, 
       #{totalSale,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.ProductBasic">
@@ -77,8 +77,8 @@
       <if test="sourceId != null">
         source_id,
       </if>
-      <if test="producttype != null">
-        productType,
+      <if test="productType != null">
+        product_type,
       </if>
       <if test="totalStock != null">
         total_stock,
@@ -118,8 +118,8 @@
       <if test="sourceId != null">
         #{sourceId,jdbcType=INTEGER},
       </if>
-      <if test="producttype != null">
-        #{producttype,jdbcType=VARCHAR},
+      <if test="productType != null">
+        #{productType,jdbcType=VARCHAR},
       </if>
       <if test="totalStock != null">
         #{totalStock,jdbcType=INTEGER},
@@ -159,8 +159,8 @@
       <if test="sourceId != null">
         source_id = #{sourceId,jdbcType=INTEGER},
       </if>
-      <if test="producttype != null">
-        productType = #{producttype,jdbcType=VARCHAR},
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=VARCHAR},
       </if>
       <if test="totalStock != null">
         total_stock = #{totalStock,jdbcType=INTEGER},
@@ -182,12 +182,11 @@
       image = #{image,jdbcType=VARCHAR},
       source = #{source,jdbcType=INTEGER},
       source_id = #{sourceId,jdbcType=INTEGER},
-      productType = #{producttype,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
       total_stock = #{totalStock,jdbcType=INTEGER},
       total_sale = #{totalSale,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
   <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
