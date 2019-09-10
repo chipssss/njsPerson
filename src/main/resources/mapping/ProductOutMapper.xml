@@ -6,7 +6,7 @@
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="stock_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="purchaser_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="purchaser" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -15,7 +15,7 @@
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, stock_id, quantity, purchaser_id, remark, create_time, source, source_id, product_id
+    id, stock_id, quantity, purchaser, remark, create_time, source, source_id, product_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,13 +27,13 @@
     delete from product_out
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProductOut" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.ProductOut">
     insert into product_out (id, stock_id, quantity, 
-      purchaser_id, remark, create_time, 
+      purchaser, remark, create_time, 
       source, source_id, product_id
       )
     values (#{id,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, 
-      #{purchaserId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{purchaser,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}
       )
   </insert>
@@ -49,8 +49,8 @@
       <if test="quantity != null">
         quantity,
       </if>
-      <if test="purchaserId != null">
-        purchaser_id,
+      <if test="purchaser != null">
+        purchaser,
       </if>
       <if test="remark != null">
         remark,
@@ -78,8 +78,8 @@
       <if test="quantity != null">
         #{quantity,jdbcType=INTEGER},
       </if>
-      <if test="purchaserId != null">
-        #{purchaserId,jdbcType=INTEGER},
+      <if test="purchaser != null">
+        #{purchaser,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -107,8 +107,8 @@
       <if test="quantity != null">
         quantity = #{quantity,jdbcType=INTEGER},
       </if>
-      <if test="purchaserId != null">
-        purchaser_id = #{purchaserId,jdbcType=INTEGER},
+      <if test="purchaser != null">
+        purchaser = #{purchaser,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
@@ -132,7 +132,7 @@
     update product_out
     set stock_id = #{stockId,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=INTEGER},
-      purchaser_id = #{purchaserId,jdbcType=INTEGER},
+      purchaser = #{purchaser,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       source = #{source,jdbcType=INTEGER},
@@ -153,4 +153,5 @@
     from product_out
     where product_id = #{productId}
   </select>
+
 </mapper>
