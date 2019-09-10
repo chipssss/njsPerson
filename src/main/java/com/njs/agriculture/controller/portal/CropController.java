@@ -74,4 +74,9 @@ public class CropController {
         return iCropService.getTea();
     }
 
+    @GetMapping("getIndustrialParkCrop.do")
+    public ServerResponse getIndustrialParkCrop(){
+        return iCropService.getIndustrialParkCrop();
+    }
+
 }

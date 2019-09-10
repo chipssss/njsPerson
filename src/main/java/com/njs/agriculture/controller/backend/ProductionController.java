@@ -1,7 +1,6 @@
 package com.njs.agriculture.controller.backend;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
@@ -96,6 +95,7 @@ public class ProductionController {
         return iProductService.productStockAdd(productStock, user.getUserId());
     }
 
+    //库存get
     @RequestMapping("productStockGet.do")
     public ServerResponse productStockGet(HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -109,11 +109,12 @@ public class ProductionController {
     }
 
     @RequestMapping("productOut.do")
-    public ServerResponse productOut( @RequestBody ProductOut productOut, HttpSession session){
+    public ServerResponse productOut(@RequestBody ProductOut productOut, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iProductService.productOut(productOut, user.getUserId());
     }
 
+    //出库流水
     @GetMapping("productOutGetBySource.do")
     public ServerResponse productOut( HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);

@@ -162,6 +162,17 @@ public class CropServiceImpl implements ICropService {
         return ServerResponse.createBySuccess(thirdCateList2cropThirdCateVOList(thirdCateList));
     }
 
+    @Override
+    public ServerResponse getIndustrialParkCrop() {
+        return getCropByThirdCate(30);
+    }
+
+    @Override
+    public ServerResponse getCropByThirdCate(int thirdCateId) {
+        List<CropInfo> cropInfoList = cropInfoMapper.selectByCateId(thirdCateId);
+        return ServerResponse.createBySuccess(cropInfoList);
+    }
+
     public List<CropThirdCateVO> thirdCateList2cropThirdCateVOList(List<CropThirdCate> thirdCateList){
         List<CropThirdCateVO> cropThirdCateVOS = Lists.newLinkedList();
         for (CropThirdCate cropThirdCate : thirdCateList) {

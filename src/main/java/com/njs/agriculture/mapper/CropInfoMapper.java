@@ -20,4 +20,5 @@ public interface CropInfoMapper {
     List<CropInfo> selectByCateId(int id);
 
     List<CropInfo> selectAll();
+
 }

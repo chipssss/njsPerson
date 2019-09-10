@@ -39,4 +39,8 @@ public interface ICropService {
     ServerResponse cropCateAdd(int type, String name, int superiorId);
 
     ServerResponse getTea();
+
+    ServerResponse getIndustrialParkCrop();
+
+    ServerResponse getCropByThirdCate(int thirdCateId);
 }

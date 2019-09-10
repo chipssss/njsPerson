@@ -1,5 +1,7 @@
 package com.njs.agriculture.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ResponseCode;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Configuration
 @Slf4j
+@JsonIgnoreProperties
 public class InterceptorConfig implements WebMvcConfigurer {
 
     /*能自动注入到jack2的转换器中*/
@@ -39,6 +42,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
             {
                 setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             }
         };
     }
