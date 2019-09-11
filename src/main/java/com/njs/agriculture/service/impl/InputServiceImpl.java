@@ -569,10 +569,13 @@ public class InputServiceImpl<T> implements IInputService {
     }
 
     @Override
-    public ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList) {
+    public ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList, int userId) {
+        Map map = iUserService.isManager(userId).getData();
         InputStream inputStream = new InputStream();
         inputStream.setFieldId(fieldId);
         inputStream.setCropId(cropId);
+        inputStream.setSource((int)map.get("source"));
+        inputStream.setSourceId((int)map.get("sourceId"));
         for (ProcessRecordInfoVO.Input input : inputList) {
             if(input.getSource() == 0){
                 InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());

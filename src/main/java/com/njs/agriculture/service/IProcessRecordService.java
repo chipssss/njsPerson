@@ -3,6 +3,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.pojo.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -51,7 +52,7 @@ public interface IProcessRecordService {
      * @param processRecordInfoVO
      * @return
      */
-    ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, String userName);
+    ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, User user);
 
     /**
      * 生产记录图片上传

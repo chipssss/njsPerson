@@ -112,7 +112,7 @@ public class ProductionRecordController {
         if(user == null){
             return ServerResponse.createByErrorMessage("sorry,请登录！");
         }
-        return iProcessRecordService.addProcess(processRecordInfoVO, user.getUsername());
+        return iProcessRecordService.addProcess(processRecordInfoVO, user);
     }
 
     @PostMapping("processImgUpload.do")

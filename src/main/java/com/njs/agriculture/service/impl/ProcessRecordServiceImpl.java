@@ -139,7 +139,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     @Transactional //设置事务回滚，保证原子操作
-    public ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, String userName) {
+    public ServerResponse addProcess(ProcessRecordInfoVO processRecordInfoVO, User user) {
 
         //有依赖，如果可以建议重写接口
         Field field = fieldMapper.selectByPrimaryKey(processRecordInfoVO.getFieldId());
@@ -155,7 +155,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 recoveryRecord.setFieldId(field.getId());
                 recoveryRecord.setSource(field.getSource());
                 recoveryRecord.setSourceId(field.getSourceId());
-                recoveryRecord.setUserName(userName);
+                recoveryRecord.setUserName(user.getUsername());
                 recoveryRecord.setStatus(0);
                 ServerResponse serverResponse = insertRecoveryRecord(recoveryRecord);
                 if(!serverResponse.isSuccess()){
@@ -221,7 +221,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
         }
         //3.插入流水表
-        ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList());
+        ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId());
         if(!response.isSuccess()){
             throw new RuntimeException("插入流水表失败！");
         }
