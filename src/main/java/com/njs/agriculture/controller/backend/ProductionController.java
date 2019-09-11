@@ -1,6 +1,7 @@
 package com.njs.agriculture.controller.backend;
 
 import com.alibaba.fastjson.JSONObject;
+import com.njs.agriculture.VO.MachineVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
@@ -124,5 +125,17 @@ public class ProductionController {
     @GetMapping("productOutGetByProductId.do")
     public ServerResponse productOut(int productId){
         return iProductService.productOutGetByProductId(productId);
+    }
+
+    @PostMapping("productMachine.do")
+    public ServerResponse productMachine(@RequestBody MachineVO machineVO, HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.machineAdd(machineVO, user.getUserId());
+    }
+
+    @GetMapping("getAllStream.do")
+    public ServerResponse getAllStream(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.getAllStream(user.getUserId());
     }
 }

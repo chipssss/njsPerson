@@ -4,23 +4,22 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.njs.agriculture.VO.*;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.dto.ProductionDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.service.IUserService;
-import com.njs.agriculture.utils.MathUtil;
 import net.sf.jsqlparser.schema.Server;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @Auther: SaikeiLEe
@@ -53,6 +52,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductDTOMapper productDTOMapper;
+
+    @Autowired
+    MachiningMapper machiningMapper;
 
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
@@ -230,9 +232,7 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse productStockGet(int userId) {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<ProductStock> productStockList;
-
         productStockList = productStockMapper.selectBySource((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
-
         return ServerResponse.createBySuccess(productStockList);
     }
 
@@ -289,6 +289,96 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse productOutGetByProductId(int productId) {
         return ServerResponse.createBySuccess(productOut2productOutVO(productOutMapper.selectByProductId(productId)));
     }
+
+    @Override
+    public ServerResponse machineAdd(MachineVO machineVO, int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        machineVO.setSource((int)map.get("source"));
+        machineVO.setSourceId((int)map.get("sourceId"));
+        Machining machining = machineVO.converTOMachining();
+        int resultRow = machiningMapper.insert(machining);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
+    @Override
+    public ServerResponse machineGet(int userId) {
+        Map map = iUserService.isManager(userId).getData();
+        List<Machining> machiningList = machiningMapper.selectBySource((int)map.get("source"), (int)map.get("sourceId"));
+        List<MachineVO> machineVOList = Lists.newLinkedList();
+        for (Machining machining : machiningList) {
+            MachineVO machineVO = new MachineVO();
+            machineVO.convertFor(machining);
+            machineVOList.add(machineVO);
+        }
+        return ServerResponse.createBySuccess(machineVOList);
+    }
+
+    @Override
+    public ServerResponse getAllStream(int userId) {
+        // TODO 使用缓存优化，多线程获取结果
+        List<StreamVO> streamVOList = Lists.newLinkedList();
+        List<ProductStock> stockList = (List)productStockGet(userId).getData();
+        for (ProductStock productStock : stockList) {
+            StreamVO streamVO = new StreamVO();
+            streamVO.setOperation(Const.StreamOperation.INSTOCK);
+            /*streamVO.setProductId(productStock.getProductId());
+            streamVO.setBatchId(productStock.getBatchId());
+            streamVO.setQuantity(productStock.getQuantity());
+            streamVO.setCreateTime(productStock.getCreateTime());*/
+            BeanUtils.copyProperties(productStock, streamVO);
+            ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
+            if(productBasic == null ){
+                continue;
+            }
+            streamVO.setProductName(productBasic.getName());
+            streamVOList.add(streamVO);
+        }
+        List<MachineVO> machineVOList = (List)machineGet(userId).getData();
+        for (MachineVO machineVO : machineVOList) {
+            StreamVO streamVO = new StreamVO();
+            if(machineVO.getRecord() == null){
+                continue;
+            }
+            if(machineVO.getRecord().contains(Const.MachineOperation.INPUT)){
+                streamVO.setOperation(Const.StreamOperation.INPUT);
+            }else if(machineVO.getRecord().contains(Const.MachineOperation.OUTPUT)){
+                streamVO.setOperation(Const.MachineOperation.OUTPUT);
+            }else {
+                continue;
+            }
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
+            ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
+            if(productBasic == null || productStock == null){
+                continue;
+            }
+            streamVO.setProductName(productBasic.getName());
+            streamVO.setProductId(productStock.getProductId());
+            streamVO.setBatchId(productStock.getBatchId());
+            streamVO.setQuantity(machineVO.getQuantity());
+            streamVO.setCreateTime(machineVO.getCreateTime());
+            streamVOList.add(streamVO);
+        }
+        List<ProductOut> productOutList = (List)productOutGetBySource(userId).getData();
+        for (ProductOut productOut : productOutList) {
+            StreamVO streamVO = new StreamVO();
+            streamVO.setOperation(Const.StreamOperation.SALE);
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());
+            ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
+            if(productBasic == null || productStock == null){
+                continue;
+            }
+            streamVO.setProductName(productBasic.getName());
+            streamVO.setProductId(productStock.getProductId());
+            streamVO.setBatchId(productStock.getBatchId());
+            streamVO.setQuantity(productOut.getQuantity());
+            streamVO.setCreateTime(productOut.getCreateTime());
+            streamVOList.add(streamVO);
+        }
+        return ServerResponse.createBySuccess(streamVOList);
+    }
+
+
+
 
     public List<ProductOutVO> productOut2productOutVO(List<ProductOut> productOutList){
         List<ProductOutVO> productOutVOList = Lists.newLinkedList();

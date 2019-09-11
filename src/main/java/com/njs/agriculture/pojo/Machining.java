@@ -1,5 +1,7 @@
 package com.njs.agriculture.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class Machining {
@@ -17,6 +19,7 @@ public class Machining {
 
     private String inspector;
 
+    @JsonIgnore
     private String imageList;
 
     private Date createTime;

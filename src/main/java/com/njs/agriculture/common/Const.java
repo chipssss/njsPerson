@@ -24,6 +24,18 @@ public class Const {
 
     public static final String RECOVERY = "成熟采收";
 
+    public interface MachineOperation{
+        String INPUT = "投入原料";
+        String OUTPUT = "产出入库";
+    }
+
+    public interface StreamOperation{
+        String INSTOCK = "入库登记";
+        String INPUT = "加工入库登记";
+        String OUTPUT = "加工产出登记";
+        String SALE = "销售登记";
+    }
+
    public enum Position{
         STAFF(0,"员工"),
         MANAGER(1,"经理"),

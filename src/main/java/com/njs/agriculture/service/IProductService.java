@@ -1,5 +1,6 @@
 package com.njs.agriculture.service;
 
+import com.njs.agriculture.VO.MachineVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
@@ -54,4 +55,10 @@ public interface IProductService {
     ServerResponse productOutGetBySource(int userId);
 
     ServerResponse productOutGetByProductId(int productId);
+
+    ServerResponse machineAdd(MachineVO machineVO, int userId);
+
+    ServerResponse machineGet(int userId);
+
+    ServerResponse getAllStream(int userId);
 }

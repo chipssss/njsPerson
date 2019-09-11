@@ -163,4 +163,11 @@
       source_id = #{sourceId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from machining
+    where source = #{source}
+    and source_id = #{sourceId}
+  </select>
 </mapper>
