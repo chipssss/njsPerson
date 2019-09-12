@@ -19,4 +19,6 @@ public interface ProductBasicMapper {
     int updateByPrimaryKey(ProductBasic record);
 
     List<ProductBasic> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    List<ProductBasic> selectByProductType(String productType);
 }

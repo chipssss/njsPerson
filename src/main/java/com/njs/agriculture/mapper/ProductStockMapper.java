@@ -22,5 +22,7 @@ public interface ProductStockMapper {
 
     List<ProductStock> selectBySourceAndProductId(@Param("source") int source, @Param("sourceId") int sourceId, @Param("productId") int productId);
 
+    List<ProductStock> selectByProductId(int productId);
+
 
 }

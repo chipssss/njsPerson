@@ -29,6 +29,10 @@ public class Const {
         String OUTPUT = "产出入库";
     }
 
+    public interface ProductType{
+        String CHAQING = "茶箐";
+    }
+
     public interface StreamOperation{
         String INSTOCK = "入库登记";
         String INPUT = "加工入库登记";

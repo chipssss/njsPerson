@@ -138,4 +138,23 @@ public class ProductionController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iProductService.getAllStream(user.getUserId());
     }
+
+
+    @GetMapping("machineGet.do")
+    public ServerResponse machineGet(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.machineGet(user.getUserId());
+    }
+
+    @GetMapping("getAllMachineOperation.do")
+    public ServerResponse getAllMachineOperation(){
+        return iProductService.getAllMachineOperation();
+    }
+
+    @GetMapping("getTeaStock.do")
+    public ServerResponse getTeaStock(){
+        return iProductService.getTeaStock();
+    }
+
+
 }

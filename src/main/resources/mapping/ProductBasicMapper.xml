@@ -194,4 +194,10 @@
     where source = #{source,jdbcType=INTEGER}
     and source_id = #{sourceId,jdbcType=INTEGER}
   </select>
+  <select id="selectByProductType" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from product_basic
+    where product_type = #{productType}
+  </select>
 </mapper>

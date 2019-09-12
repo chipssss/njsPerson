@@ -1,5 +1,6 @@
 package com.njs.agriculture.VO;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Converter;
 import com.njs.agriculture.pojo.Machining;
 
@@ -13,8 +14,19 @@ import java.util.List;
  * @Date: 2019/9/10
  * @Description:
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MachineVO extends Machining {
+    private String batchId;
+
     private List<String> images;
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
 
     public List<String> getImages() {
         return images;
@@ -30,7 +42,7 @@ public class MachineVO extends Machining {
         return convert;
     }
 
-    public MachineVO convertFor(Machining machining){
+    public static MachineVO convertFor(Machining machining){
         MachineVOConvert machineVOConvert = new MachineVOConvert();
         MachineVO convet = machineVOConvert.reverse().convert(machining);
         return convet;

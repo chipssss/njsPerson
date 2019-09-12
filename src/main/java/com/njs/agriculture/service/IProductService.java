@@ -61,4 +61,8 @@ public interface IProductService {
     ServerResponse machineGet(int userId);
 
     ServerResponse getAllStream(int userId);
+
+    ServerResponse getAllMachineOperation();
+
+    ServerResponse getTeaStock();
 }

@@ -11,4 +11,6 @@ import lombok.Data;
 @Data
 public class ProductOutVO extends ProductOut {
     private String productName;
+
+    private String batchNum;
 }

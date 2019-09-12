@@ -3,6 +3,7 @@ package com.njs.agriculture.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -55,6 +57,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     MachiningMapper machiningMapper;
+
+    @Autowired
+    MachineOperationMapper machineOperationMapper;
 
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
@@ -250,7 +255,7 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     public ServerResponse productOut(ProductOut productOut, int userId) {
         ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());
-        if(productStock == null){
+        if (productStock == null) {
             return ServerResponse.createByErrorMessage("库存不存在");
         }
         int result = productStock.getQuantity() - productOut.getQuantity();
@@ -293,8 +298,8 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse machineAdd(MachineVO machineVO, int userId) {
         Map map = iUserService.isManager(userId).getData();
-        machineVO.setSource((int)map.get("source"));
-        machineVO.setSourceId((int)map.get("sourceId"));
+        machineVO.setSource((int) map.get("source"));
+        machineVO.setSourceId((int) map.get("sourceId"));
         Machining machining = machineVO.converTOMachining();
         int resultRow = machiningMapper.insert(machining);
         return ServerResponse.createByResultRow(resultRow);
@@ -303,12 +308,32 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse machineGet(int userId) {
         Map map = iUserService.isManager(userId).getData();
-        List<Machining> machiningList = machiningMapper.selectBySource((int)map.get("source"), (int)map.get("sourceId"));
+        List<Machining> machiningList = machiningMapper.selectBySource((int) map.get("source"), (int) map.get("sourceId"));
         List<MachineVO> machineVOList = Lists.newLinkedList();
         for (Machining machining : machiningList) {
-            MachineVO machineVO = new MachineVO();
-            machineVO.convertFor(machining);
-            machineVOList.add(machineVO);
+            machineVOList.add(MachineVO.convertFor(machining));
+        }
+        //使用list遍历中删除会出错
+/*        for (MachineVO machineVO : machineVOList) {
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
+            if (productStock == null) {
+                machineVOList.remove(machineVO);
+            } else {
+                machineVO.setBatchId(productStock.getBatchId());
+            }
+        }*/
+        Iterator it = machineVOList.iterator();
+        int index = 0;
+        while (it.hasNext())
+        {
+            Object obj = it.next();
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(((MachineVO)obj).getStockId());
+            if (productStock == null)  {
+                it.remove();
+            }else {
+                ((MachineVO)obj).setBatchId(productStock.getBatchId());
+            }
+            index ++;
         }
         return ServerResponse.createBySuccess(machineVOList);
     }
@@ -317,7 +342,7 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse getAllStream(int userId) {
         // TODO 使用缓存优化，多线程获取结果
         List<StreamVO> streamVOList = Lists.newLinkedList();
-        List<ProductStock> stockList = (List)productStockGet(userId).getData();
+        List<ProductStock> stockList = (List) productStockGet(userId).getData();
         for (ProductStock productStock : stockList) {
             StreamVO streamVO = new StreamVO();
             streamVO.setOperation(Const.StreamOperation.INSTOCK);
@@ -327,28 +352,28 @@ public class ProductServiceImpl implements IProductService {
             streamVO.setCreateTime(productStock.getCreateTime());*/
             BeanUtils.copyProperties(productStock, streamVO);
             ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
-            if(productBasic == null ){
+            if (productBasic == null) {
                 continue;
             }
             streamVO.setProductName(productBasic.getName());
             streamVOList.add(streamVO);
         }
-        List<MachineVO> machineVOList = (List)machineGet(userId).getData();
+        List<MachineVO> machineVOList = (List) machineGet(userId).getData();
         for (MachineVO machineVO : machineVOList) {
             StreamVO streamVO = new StreamVO();
-            if(machineVO.getRecord() == null){
+            if (machineVO.getRecord() == null) {
                 continue;
             }
-            if(machineVO.getRecord().contains(Const.MachineOperation.INPUT)){
+            if (machineVO.getRecord().contains(Const.MachineOperation.INPUT)) {
                 streamVO.setOperation(Const.StreamOperation.INPUT);
-            }else if(machineVO.getRecord().contains(Const.MachineOperation.OUTPUT)){
+            } else if (machineVO.getRecord().contains(Const.MachineOperation.OUTPUT)) {
                 streamVO.setOperation(Const.MachineOperation.OUTPUT);
-            }else {
+            } else {
                 continue;
             }
             ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
             ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
-            if(productBasic == null || productStock == null){
+            if (productBasic == null || productStock == null) {
                 continue;
             }
             streamVO.setProductName(productBasic.getName());
@@ -358,13 +383,13 @@ public class ProductServiceImpl implements IProductService {
             streamVO.setCreateTime(machineVO.getCreateTime());
             streamVOList.add(streamVO);
         }
-        List<ProductOut> productOutList = (List)productOutGetBySource(userId).getData();
+        List<ProductOut> productOutList = (List) productOutGetBySource(userId).getData();
         for (ProductOut productOut : productOutList) {
             StreamVO streamVO = new StreamVO();
             streamVO.setOperation(Const.StreamOperation.SALE);
             ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());
             ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
-            if(productBasic == null || productStock == null){
+            if (productBasic == null || productStock == null) {
                 continue;
             }
             streamVO.setProductName(productBasic.getName());
@@ -377,18 +402,40 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(streamVOList);
     }
 
+    @Override
+    public ServerResponse getAllMachineOperation() {
+        List<String> operations = machineOperationMapper.selectAll();
+        return ServerResponse.createBySuccess(operations);
+    }
+
+    @Override
+    public ServerResponse getTeaStock() {
+        List<ProductBasic> productBasicList = productBasicMapper.selectByProductType(Const.ProductType.CHAQING);
+        List<Map> mapList = Lists.newLinkedList();
+        for (ProductBasic productBasic : productBasicList) {
+            Map map = Maps.newHashMap();
+            map.put("value", productBasic.getName());
+            List<ProductStock> stockList = productStockMapper.selectByProductId(productBasic.getId());
+            map.put("stockList", stockList);
+            mapList.add(map);
+        }
+        return ServerResponse.createBySuccess(mapList);
+    }
 
 
-
-    public List<ProductOutVO> productOut2productOutVO(List<ProductOut> productOutList){
+    public List<ProductOutVO> productOut2productOutVO(List<ProductOut> productOutList) {
         List<ProductOutVO> productOutVOList = Lists.newLinkedList();
         for (ProductOut productOut : productOutList) {
             ProductOutVO productOutVO = new ProductOutVO();
             BeanUtils.copyProperties(productOut, productOutVO);
             productOutVOList.add(productOutVO);
             ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productOut.getProductId());
-            if(productBasic != null){
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());
+            if (productBasic != null) {
                 productOutVO.setProductName(productBasic.getName());
+            }
+            if(productStock != null){
+                productOutVO.setBatchNum(productStock.getBatchId());
             }
         }
         return productOutVOList;
@@ -396,20 +443,21 @@ public class ProductServiceImpl implements IProductService {
 
     /**
      * 加了锁的对基本表的操作，防止并发
+     *
      * @param
      * @param type 0的时候为加库存，1的时候为减库存，加销售
      */
-    public synchronized void updateBasicTotal(int basicId, int quantity, int type){
+    public synchronized void updateBasicTotal(int basicId, int quantity, int type) {
         ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(basicId);
-        if(productBasic == null){
+        if (productBasic == null) {
             throw new RuntimeException("查不到基本表数据！");
         }
-        ProductBasic productBasicNew  = new ProductBasic();
+        ProductBasic productBasicNew = new ProductBasic();
         productBasicNew.setId(productBasic.getId());
-        if(type == 0){
+        if (type == 0) {
             int totalStock = productBasic.getTotalStock() + quantity;
             productBasicNew.setTotalStock(totalStock);
-        }else{
+        } else {
             int totalStock = productBasic.getTotalStock() - quantity;
             productBasicNew.setTotalStock(totalStock);
             int totalSale = productBasic.getTotalSale() + quantity;
