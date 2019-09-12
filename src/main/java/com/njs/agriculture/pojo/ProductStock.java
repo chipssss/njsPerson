@@ -1,8 +1,13 @@
 package com.njs.agriculture.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProductStock {
+public class ProductStock implements Serializable {
+
+
+    private static final long serialVersionUID = 718680644568507041L;
+
     private Integer id;
 
     private Integer productId;

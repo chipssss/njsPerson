@@ -15,6 +15,7 @@ import com.njs.agriculture.service.IUserService;
 import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -324,16 +325,15 @@ public class ProductServiceImpl implements IProductService {
         }*/
         Iterator it = machineVOList.iterator();
         int index = 0;
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             Object obj = it.next();
-            ProductStock productStock = productStockMapper.selectByPrimaryKey(((MachineVO)obj).getStockId());
-            if (productStock == null)  {
+            ProductStock productStock = productStockMapper.selectByPrimaryKey(((MachineVO) obj).getStockId());
+            if (productStock == null) {
                 it.remove();
-            }else {
-                ((MachineVO)obj).setBatchId(productStock.getBatchId());
+            } else {
+                ((MachineVO) obj).setBatchId(productStock.getBatchId());
             }
-            index ++;
+            index++;
         }
         return ServerResponse.createBySuccess(machineVOList);
     }
@@ -434,7 +434,7 @@ public class ProductServiceImpl implements IProductService {
             if (productBasic != null) {
                 productOutVO.setProductName(productBasic.getName());
             }
-            if(productStock != null){
+            if (productStock != null) {
                 productOutVO.setBatchNum(productStock.getBatchId());
             }
         }
