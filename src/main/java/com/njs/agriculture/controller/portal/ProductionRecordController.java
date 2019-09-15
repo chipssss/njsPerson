@@ -121,7 +121,7 @@ public class ProductionRecordController {
     }
 
     @PostMapping("batchAdd.do")
-    public ServerResponse batchInfo(@RequestBody BatchInfoVO batchInfoVO, HttpSession session){
+    public ServerResponse batchAdd(@RequestBody BatchInfoVO batchInfoVO, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iBatchService.batchAdd(batchInfoVO, user.getUserId());
     }

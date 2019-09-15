@@ -21,6 +21,7 @@ import com.njs.agriculture.service.IFileService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.MD5Util;
 import com.njs.agriculture.utils.PropertiesUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
 import org.springframework.beans.BeanUtils;
@@ -75,7 +76,8 @@ public class UserServiceImpl implements IUserService {
         if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("注册失败");
         }
-        return ServerResponse.createBySuccessMessage("注册成功");
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess("注册成功！", user);
     }
 
     @Override

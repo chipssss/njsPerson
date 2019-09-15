@@ -11,10 +11,10 @@ public class ProductionBatch {
 
     private Integer fieldId;
 
-    @JsonFormat(pattern = "yyyy年MM月dd日",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date plantTime;
 
-    @JsonFormat(pattern = "yyyy年MM月dd日",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date collectTime;
 
     private Integer finish;

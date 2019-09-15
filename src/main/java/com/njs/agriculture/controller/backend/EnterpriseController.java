@@ -69,8 +69,7 @@ public class EnterpriseController {
     @PostMapping("enterpriseJoin.do")
     public ServerResponse enterpriseJoin(@RequestBody UserRelationship userRelationship, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
-        userRelationship.setUserId(user.getUserId());
-        userRelationship.setStatus(0);
+        userRelationship.setStatus(1);
         return iEnterpriseService.enterpriseJoin(userRelationship);
     }
 

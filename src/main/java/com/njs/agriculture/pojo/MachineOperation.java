@@ -5,9 +5,12 @@ public class MachineOperation {
 
     private String name;
 
-    public MachineOperation(Integer id, String name) {
+    private String logoImg;
+
+    public MachineOperation(Integer id, String name, String logoImg) {
         this.id = id;
         this.name = name;
+        this.logoImg = logoImg;
     }
 
     public MachineOperation() {
@@ -28,5 +31,13 @@ public class MachineOperation {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getLogoImg() {
+        return logoImg;
+    }
+
+    public void setLogoImg(String logoImg) {
+        this.logoImg = logoImg == null ? null : logoImg.trim();
     }
 }
