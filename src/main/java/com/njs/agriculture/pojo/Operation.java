@@ -5,9 +5,12 @@ public class Operation {
 
     private String name;
 
-    public Operation(Integer id, String name) {
+    private String logoImg;
+
+    public Operation(Integer id, String name, String logoImg) {
         this.id = id;
         this.name = name;
+        this.logoImg = logoImg;
     }
 
     public Operation() {
@@ -28,5 +31,13 @@ public class Operation {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getLogoImg() {
+        return logoImg;
+    }
+
+    public void setLogoImg(String logoImg) {
+        this.logoImg = logoImg == null ? null : logoImg.trim();
     }
 }

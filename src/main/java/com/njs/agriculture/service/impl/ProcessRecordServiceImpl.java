@@ -246,7 +246,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     public ServerResponse getOperation() {
-        List<String> operations = operationMapper.selectAll();
+        List<Operation> operations = operationMapper.selectAll();
         if(operations.isEmpty()){
             return ServerResponse.createByErrorMessage("未知错误！");
         }

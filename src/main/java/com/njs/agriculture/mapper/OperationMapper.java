@@ -17,5 +17,5 @@ public interface OperationMapper {
 
     int updateByPrimaryKey(Operation record);
 
-    List<String> selectAll();
+    List<Operation> selectAll();
 }

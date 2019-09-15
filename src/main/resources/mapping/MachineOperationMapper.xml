@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.njs.agriculture.mapper.OperationMapper">
-  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.Operation">
+<mapper namespace="com.njs.agriculture.mapper.MachineOperationMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.MachineOperation">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -14,21 +14,21 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from operation
+    from machine_operation
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from operation
+    delete from machine_operation
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.Operation">
-    insert into operation (id, name, logo_img
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.MachineOperation">
+    insert into machine_operation (id, name, logo_img
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{logoImg,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.Operation">
-    insert into operation
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.MachineOperation">
+    insert into machine_operation
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -52,8 +52,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.Operation">
-    update operation
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.MachineOperation">
+    update machine_operation
     <set>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -64,11 +64,11 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.Operation">
-    update operation
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.MachineOperation">
+    update machine_operation
     set name = #{name,jdbcType=VARCHAR},
       logo_img = #{logoImg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectAll" resultMap="BaseResultMap">  select  <include refid="Base_Column_List"/>  from operation</select>
+  <select id="selectAll" resultType="string">  select  name  from machine_operation</select>
 </mapper>
