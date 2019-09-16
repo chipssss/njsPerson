@@ -331,7 +331,7 @@ public class ProductServiceImpl implements IProductService {
         if(result < 0){
             return ServerResponse.createByErrorMessage("库存不够！");
         }else if(result == 0){
-            productStockMapper.deleteByPrimaryKey(productStock.getId() -);
+            productStockMapper.deleteByPrimaryKey(productStock.getId());
         }else{
             productStock.setQuantity(result);
             productStockMapper.updateByPrimaryKey(productStock);
