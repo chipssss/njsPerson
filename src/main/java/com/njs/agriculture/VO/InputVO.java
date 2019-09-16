@@ -23,6 +23,7 @@ public class InputVO {
 
     private BigDecimal price;
 
+
     private Date productionTime;
 
     private Integer shelfLife;

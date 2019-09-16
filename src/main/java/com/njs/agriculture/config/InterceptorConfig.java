@@ -1,13 +1,18 @@
 package com.njs.agriculture.config;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,18 +31,27 @@ import java.util.Date;
 @JsonIgnoreProperties
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    /*能自动注入到jack2的转换器中*/
-    @Bean
-    public ObjectMapper o1() {
-        return new ObjectMapper() {
-            private static final long serialVersionUID = 3525547493446290019L;
 
-            {
-                setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            }
-        };
+    @Bean
+    public HttpMessageConverters fastjsonHttpMessageConverter(){
+        //定义一个转换消息的对象
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+
+        //添加fastjson的配置信息 比如 ：是否要格式化返回的json数据
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+
+        //在转换器中添加配置信息
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        HttpMessageConverter<?> converter = fastConverter;
+
+        return new HttpMessageConverters(converter);
+
     }
+
 
 
 

@@ -287,12 +287,16 @@ public class ProductServiceImpl implements IProductService {
         int source = (int) serverResponse.getData().get("source");
         int sourceId = (int) serverResponse.getData().get("sourceId");
 
+        PageHelper pageHelper = new PageHelper();
+        pageHelper.orderBy("create_time desc");
         List<ProductOut> productOutList = productOutMapper.selectBySource(source, sourceId);
         return ServerResponse.createBySuccess(productOut2productOutVO(productOutList));
     }
 
     @Override
     public ServerResponse productOutGetByProductId(int productId) {
+        PageHelper pageHelper = new PageHelper();
+        pageHelper.orderBy("create_time desc");
         return ServerResponse.createBySuccess(productOut2productOutVO(productOutMapper.selectByProductId(productId)));
     }
 
@@ -309,6 +313,8 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse machineGet(int userId) {
         Map map = iUserService.isManager(userId).getData();
+        PageHelper pageHelper = new PageHelper();
+        pageHelper.orderBy("create_time desc");
         List<Machining> machiningList = machiningMapper.selectBySource((int) map.get("source"), (int) map.get("sourceId"));
         List<MachineVO> machineVOList = Lists.newLinkedList();
         for (Machining machining : machiningList) {
