@@ -12,6 +12,7 @@ import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.service.IUserService;
+import com.njs.agriculture.utils.DateUtil;
 import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -222,8 +224,19 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse productStockAdd(ProductStock productStock, int userId) {
 
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
-        productStock.setSource((int) serverResponse.getData().get("source"));
-        productStock.setSourceId((int) serverResponse.getData().get("sourceId"));
+        int source = (int) serverResponse.getData().get("source");
+        int sourceId = (int) serverResponse.getData().get("sourceId");
+        productStock.setSource(source);
+        productStock.setSourceId(sourceId);
+        StringBuilder barcode = new StringBuilder();
+        if(source == 0){
+            barcode.append("GR");
+        }else {
+            barcode.append("DW");
+        }
+        barcode.append(sourceId).append(productStock.getProductId()).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"));
+        productStock.setBarcode(barcode.toString());
+
         int resultRow = productStockMapper.insert(productStock);
         if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("插入新数据失败！");
@@ -301,11 +314,28 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    @Transactional
     public ServerResponse machineAdd(MachineVO machineVO, int userId) {
         Map map = iUserService.isManager(userId).getData();
         machineVO.setSource((int) map.get("source"));
         machineVO.setSourceId((int) map.get("sourceId"));
         Machining machining = machineVO.converTOMachining();
+        ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
+        if(productStock == null){
+            throw new RuntimeException("库存信息为空!");
+        }
+        if(machineVO.getQuantity() < 0){
+            return ServerResponse.createByErrorMessage("数量不能为负数！");
+        }
+        int result = productStock.getQuantity() - machineVO.getQuantity();
+        if(result < 0){
+            return ServerResponse.createByErrorMessage("库存不够！");
+        }else if(result == 0){
+            productStockMapper.deleteByPrimaryKey(productStock.getId() -);
+        }else{
+            productStock.setQuantity(result);
+            productStockMapper.updateByPrimaryKey(productStock);
+        }
         int resultRow = machiningMapper.insert(machining);
         return ServerResponse.createByResultRow(resultRow);
     }

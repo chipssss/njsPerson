@@ -21,7 +21,7 @@ public interface ProductStockMapper {
     @CacheEvict(cacheNames = "productStock", key = "#record.getId()")
     int updateByPrimaryKeySelective(ProductStock record);
 
-
+    @CacheEvict(cacheNames = "productStock", key = "#record.getId()")
     int updateByPrimaryKey(ProductStock record);
 
     List<ProductStock> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
