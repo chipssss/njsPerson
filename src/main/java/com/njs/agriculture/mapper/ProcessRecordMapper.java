@@ -32,6 +32,9 @@ public interface ProcessRecordMapper {
                                                 @Param("source") int source, @Param("sourceId") int sourceId,
                                                 @Param("status") int status);
 
+    List<ProcessRecord> selectByStatusAndSourceAndBatch(@Param("startTime") Date startTime,@Param("endTime") Date endTime,
+                                                       @Param("status") int status, @Param("fieldId") int field);
+
     List<ProcessRecord> selectByStatusAndSourceByField(@Param("fieldId") int fieldId,
                                                        @Param("source") int source, @Param("sourceId") int sourceId,
                                                        @Param("status") int status);

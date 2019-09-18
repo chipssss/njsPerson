@@ -316,11 +316,10 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     public ServerResponse getRecordsUngenratedByBatch(int batchId, int userId, int pageNum, int pageSize) {
-        Map map = iUserService.isManager(userId).getData();
         ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(batchId);
         PageHelper.startPage(pageNum, pageSize);
-        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceByBatch(productionBatch.getPlantTime(), productionBatch.getCollectTime(),
-                (int)map.get("source"), (int)map.get("sourceId"), 0);
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceAndBatch(productionBatch.getPlantTime(), productionBatch.getCollectTime()
+                , 0, productionBatch.getFieldId());
         PageInfo pageInfo = new PageInfo(processRecordList);
         pageInfo.setList(records2recordVO(processRecordList));
         return ServerResponse.createBySuccess(pageInfo);
