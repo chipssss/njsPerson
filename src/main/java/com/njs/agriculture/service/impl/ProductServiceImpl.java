@@ -13,6 +13,7 @@ import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
  * @Date: 2019/8/2
  * @Description:
  */
+@Slf4j
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService {
 
@@ -424,8 +426,11 @@ public class ProductServiceImpl implements IProductService {
             StreamVO streamVO = new StreamVO();
             streamVO.setOperation(Const.StreamOperation.SALE);
             ProductStock productStock = productStockMapper.selectByPrimaryKey(productOut.getStockId());
+            if(productStock == null){
+                continue;
+            }
             ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
-            if (productBasic == null || productStock == null) {
+            if (productBasic == null) {
                 continue;
             }
             streamVO.setProductName(productBasic.getName());
@@ -445,13 +450,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ServerResponse getTeaStock() {
+    public ServerResponse getTeaStock(int userId) {
+        Map user = iUserService.isManager(userId).getData();
         List<ProductBasic> productBasicList = productBasicMapper.selectByProductType(Const.ProductType.CHAQING);
         List<Map> mapList = Lists.newLinkedList();
         for (ProductBasic productBasic : productBasicList) {
             Map map = Maps.newHashMap();
             map.put("value", productBasic.getName());
-            List<ProductStock> stockList = productStockMapper.selectByProductId(productBasic.getId());
+            List<ProductStock> stockList = productStockMapper.selectByProductIdAndSource(productBasic.getId(), (int)user.get("source"), (int)user.get("sourceId"));
             map.put("stockList", stockList);
             mapList.add(map);
         }
@@ -495,6 +501,9 @@ public class ProductServiceImpl implements IProductService {
             productBasicNew.setTotalStock(totalStock);
         } else {
             int totalStock = productBasic.getTotalStock() - quantity;
+            if(totalStock < 0){
+                log.error("总库存不够，帐对不上，basicId={], quantity={}", basicId, quantity);
+            }
             productBasicNew.setTotalStock(totalStock);
             int totalSale = productBasic.getTotalSale() + quantity;
             productBasicNew.setTotalSale(totalSale);

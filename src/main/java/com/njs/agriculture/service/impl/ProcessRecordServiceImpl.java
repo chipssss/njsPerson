@@ -21,6 +21,7 @@ import com.njs.agriculture.utils.MathUtil;
 import com.njs.agriculture.utils.PropertiesUtil;
 import com.sun.scenario.effect.Crop;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -176,41 +177,50 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         String operations = Joiner.on(",").join(processRecordInfoVO.getOperationList());
         processRecord.setOperation(operations);
         StringBuilder s = new StringBuilder();
-        for (ProcessRecordInfoVO.Input input : processRecordInfoVO.getInputList()) {
-            if(input.getSource() == 0){
-                //先进行记录，删减，然后进行拼接
-                InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
-                if(inputUser == null){
-                    return ServerResponse.createByErrorMessage("找不到投入品");
+        if(processRecordInfoVO.getInputList() != null){
+            for (ProcessRecordInfoVO.Input input : processRecordInfoVO.getInputList()) {
+                if(input.getSource() == 0){
+                    //先进行记录，删减，然后进行拼接
+                    InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
+                    if(inputUser == null){
+                        return ServerResponse.createByErrorMessage("找不到投入品");
+                    }
+                    double result = MathUtil.sub(inputUser.getQuantity().toString(), String.valueOf(input.getQuantity()));
+                    if(result < 0){
+                        return ServerResponse.createByErrorMessage("数量超过存在额!");
+                    }
+                    inputUser.setQuantity((float)result);
+                    inputUserMapper.updateByPrimaryKeySelective(inputUser);
+                    InputUsed inputUsed = new InputUsed(0, inputUser.getId(), input.getQuantity());
+                    inputUsedMapper.insert(inputUsed);
+                    s.append(inputUser.getName() + ",");
+                }else {
+                    InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
+                    if(inputEnterprise == null){
+                        return ServerResponse.createByErrorMessage("找不到投入品");
+                    }
+                    double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), String.valueOf(input.getQuantity()));
+                    if(result < 0){
+                        return ServerResponse.createByErrorMessage("数量超过存在额!");
+                    }
+                    inputEnterprise.setQuantity((float)result);
+                    inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
+                    InputUsed inputUsed = new InputUsed(1, inputEnterprise.getId(), input.getQuantity());
+                    inputUsedMapper.insert(inputUsed);
+                    s.append(inputEnterprise.getName() + ",");
                 }
-                double result = MathUtil.sub(inputUser.getQuantity().toString(), String.valueOf(input.getQuantity()));
-                if(result < 0){
-                    return ServerResponse.createByErrorMessage("数量超过存在额!");
-                }
-                inputUser.setQuantity((float)result);
-                inputUserMapper.updateByPrimaryKeySelective(inputUser);
-                InputUsed inputUsed = new InputUsed(0, inputUser.getId(), input.getQuantity());
-                inputUsedMapper.insert(inputUsed);
-                s.append(inputUser.getName() + ",");
-            }else {
-                InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
-                if(inputEnterprise == null){
-                    return ServerResponse.createByErrorMessage("找不到投入品");
-                }
-                double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), String.valueOf(input.getQuantity()));
-                if(result < 0){
-                    return ServerResponse.createByErrorMessage("数量超过存在额!");
-                }
-                inputEnterprise.setQuantity((float)result);
-                inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
-                InputUsed inputUsed = new InputUsed(1, inputEnterprise.getId(), input.getQuantity());
-                inputUsedMapper.insert(inputUsed);
-                s.append(inputEnterprise.getName() + ",");
+            }
+            //3.插入流水表
+            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId());
+            if(!response.isSuccess()){
+                throw new RuntimeException("插入流水表失败！");
             }
         }
-        String inputRecord = s.toString();
-        inputRecord = inputRecord.substring(0, inputRecord.length()-1);
-        processRecord.setInputRecord(inputRecord);
+        if (StringUtils.isNotBlank(s.toString())) {
+            String inputRecord = s.toString();
+            inputRecord = inputRecord.substring(0, inputRecord.length()-1);
+            processRecord.setInputRecord(inputRecord);
+        }
         //1.先上传记录
         int resultRow = processRecordMapper.insert(processRecord);
         if(resultRow == 0){
@@ -219,11 +229,6 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         //2.批量插入
         for (String image : processRecordInfoVO.getImages()) {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
-        }
-        //3.插入流水表
-        ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId());
-        if(!response.isSuccess()){
-            throw new RuntimeException("插入流水表失败！");
         }
         return ServerResponse.createBySuccess(processRecord);
     }

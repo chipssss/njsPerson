@@ -26,7 +26,7 @@ public class Const {
 
     public interface MachineOperation{
         String INPUT = "投入原料";
-        String OUTPUT = "产出入库";
+        String OUTPUT = "包装";
     }
 
     public interface ProductType{

@@ -152,8 +152,9 @@ public class ProductionController {
     }
 
     @GetMapping("getTeaStock.do")
-    public ServerResponse getTeaStock(){
-        return iProductService.getTeaStock();
+    public ServerResponse getTeaStock(HttpSession httpSession){
+        User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
+        return iProductService.getTeaStock(user.getUserId());
     }
 
 
