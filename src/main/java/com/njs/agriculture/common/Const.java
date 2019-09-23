@@ -22,7 +22,7 @@ public class Const {
 
     public static final String PERSONNAL = "个人";
 
-    public static final String RECOVERY = "成熟采收";
+    public static final String RECOVERY = "采收";
 
     public interface MachineOperation{
         String INPUT = "投入原料";

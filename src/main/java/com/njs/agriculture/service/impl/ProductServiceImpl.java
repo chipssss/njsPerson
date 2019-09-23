@@ -217,9 +217,34 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse productBasicGet(int userId) {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
-        List<ProductBasic> productBasicList;
-        productBasicList = productBasicMapper.selectBySource((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
-        return ServerResponse.createBySuccess(productBasicList);
+        List<ProductBasic> productBasicList = productBasicMapper.selectBySource((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
+        return ServerResponse.createBySuccess(productBasic2VO(productBasicList));
+    }
+
+    public List<ProductBasicVO> productBasic2VO(List<ProductBasic> productBasicList){
+        List<ProductBasicVO> productBasicVOList = Lists.newLinkedList();
+        if(productBasicList == null || productBasicList.isEmpty()){
+            return productBasicVOList;
+        }
+        for (ProductBasic productBasic : productBasicList) {
+            ProductBasicVO productBasicVO = new ProductBasicVO();
+            BeanUtils.copyProperties(productBasic, productBasicVO);
+            ProductionThirdCate productionThirdCate = productionThirdCateMapper.selectByPrimaryKey(productBasic.getTypeId());
+            if(productionThirdCate == null){
+                continue;
+            }
+            ProductionSecondCate productionSecondCate = productionSecondCateMapper.selectByPrimaryKey(productionThirdCate.getSecondcateId());
+            if(productionSecondCate == null){
+                continue;
+            }
+            ProductionFirstCate productionFirstCate = productionFirstCateMapper.selectByPrimaryKey(productionSecondCate.getFirstcateId());
+            if(productionFirstCate == null){
+                continue;
+            }
+            productBasicVO.setCateInfo(productionFirstCate.getName() + "|" + productionSecondCate.getName() + "|" + productionThirdCate.getName());
+            productBasicVOList.add(productBasicVO);
+        }
+        return productBasicVOList;
     }
 
     @Override
@@ -230,14 +255,14 @@ public class ProductServiceImpl implements IProductService {
         int sourceId = (int) serverResponse.getData().get("sourceId");
         productStock.setSource(source);
         productStock.setSourceId(sourceId);
-        StringBuilder barcode = new StringBuilder();
+        StringBuilder batchId = new StringBuilder();
         if(source == 0){
-            barcode.append("GR");
+            batchId.append("GR");
         }else {
-            barcode.append("DW");
+            batchId.append("DW");
         }
-        barcode.append(sourceId).append(productStock.getProductId()).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"));
-        productStock.setBarcode(barcode.toString());
+        batchId.append(sourceId).append(productStock.getProductId()).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"));
+        productStock.setBatchId(batchId.toString());
 
         int resultRow = productStockMapper.insert(productStock);
         if (resultRow == 0) {
