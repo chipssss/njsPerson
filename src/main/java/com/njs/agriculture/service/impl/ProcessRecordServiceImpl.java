@@ -130,11 +130,13 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     }
 
     @Override
+    @Transactional
     public ServerResponse generateTrace(int batchId, List<Integer> recordIds) {
         for (Integer recordId : recordIds) {
             ProcessQrcode processQrcode = new ProcessQrcode(batchId, recordId);
             processQrcodeMapper.insert(processQrcode);
         }
+        processRecordMapper.updateStatusByGenerated(recordIds);
         return ServerResponse.createBySuccess();
     }
 

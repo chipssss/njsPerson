@@ -38,4 +38,6 @@ public interface ProcessRecordMapper {
     List<ProcessRecord> selectByStatusAndSourceByField(@Param("fieldId") int fieldId,
                                                        @Param("source") int source, @Param("sourceId") int sourceId,
                                                        @Param("status") int status);
+
+    int updateStatusByGenerated(List<Integer> records);
 }

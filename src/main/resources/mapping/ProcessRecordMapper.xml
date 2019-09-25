@@ -248,4 +248,12 @@
     and status = #{status}
     and field_id = #{fieldId}
   </select>
+  <update id="updateStatusByGenerated" parameterType="list">
+    update process_record
+    set status = 1
+    where id in
+    <foreach collection="list" open="(" close=")" item="item" separator=",">
+      #{item}
+    </foreach>
+  </update>
 </mapper>
