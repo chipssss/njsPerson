@@ -194,4 +194,9 @@ on a.id = b.batch_id;
     where b.source = #{source}
     and b.source_id = #{sourceId};
   </select>
+  <update id="updateGeneratedStatusById" parameterType="int">
+    update production_batch
+    set `generated` = 1
+    where id = #{id}
+  </update>
 </mapper>

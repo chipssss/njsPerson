@@ -136,6 +136,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
             ProcessQrcode processQrcode = new ProcessQrcode(batchId, recordId);
             processQrcodeMapper.insert(processQrcode);
         }
+        productionBatchMapper.updateGeneratedStatusById(batchId);
         processRecordMapper.updateStatusByGenerated(recordIds);
         return ServerResponse.createBySuccess();
     }

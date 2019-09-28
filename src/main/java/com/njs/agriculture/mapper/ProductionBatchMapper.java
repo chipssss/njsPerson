@@ -35,4 +35,6 @@ public interface ProductionBatchMapper {
     List<ProductionBatch> selectByFieldList(List<FieldListVO> fieldListVOList);
 
     List<ProductionBatch> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    int updateGeneratedStatusById(int id);
 }
