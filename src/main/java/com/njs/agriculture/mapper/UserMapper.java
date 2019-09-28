@@ -25,4 +25,6 @@ public interface UserMapper {
     User selectLogin(@Param("phonenum") String phonenum,@Param("password") String password);
 
     List<User> selectAll();
+
+    int updatePasswordByPhoneNum(@Param("phonenum")String phonenum, @Param("password") String password);
 }

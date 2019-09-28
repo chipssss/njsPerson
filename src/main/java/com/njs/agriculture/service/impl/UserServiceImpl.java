@@ -131,6 +131,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ServerResponse passwordChange(String phoneNum, String oldPassword, String newPassword) {
+        if(oldPassword == null || StringUtils.isBlank(oldPassword)){
+            String md5PasswordNew = MD5Util.MD5EncodeUtf8(newPassword);
+            int resultRow = userMapper.updatePasswordByPhoneNum(phoneNum, md5PasswordNew);
+            return ServerResponse.createByResultRow(resultRow);
+        }
         if (oldPassword.equals(newPassword)) {
             return ServerResponse.createByErrorMessage("两次密码相同");
         }

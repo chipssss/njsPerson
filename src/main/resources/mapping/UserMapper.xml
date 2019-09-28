@@ -125,4 +125,9 @@
     <include refid="Base_Column_List"/>
     from user
   </select>
+  <update id="updatePasswordByPhoneNum" parameterType="string">
+    update user
+    set password = #{password}
+    where phonenum = #{phonenum}
+  </update>
 </mapper>
