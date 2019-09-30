@@ -28,6 +28,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (url.indexOf("/portal/user/login") >= 0)
             return true;
 
+        if (url.indexOf("/portal/user/checkNum") >= 0)
+            return true;
+
         if (url.indexOf("/portal/user/apply") >= 0)
             return true;
 

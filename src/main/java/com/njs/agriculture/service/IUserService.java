@@ -14,6 +14,8 @@ import java.util.Map;
  * @Description:
  */
 public interface IUserService {
+    ServerResponse checkNum(String num);
+
     ServerResponse apply(User user);
 
     ServerResponse login(String phonenum, String password);

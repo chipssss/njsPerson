@@ -9,6 +9,7 @@ import com.njs.agriculture.service.IFileService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,11 @@ public class CommonController {
 
     @Autowired
     private IUserService iUserService;
+
+    @GetMapping("checkNum.do")
+    public ServerResponse checkNum(String number){
+        return iUserService.checkNum(number);
+    }
 
 
     @RequestMapping("apply.do")

@@ -130,4 +130,10 @@
     set password = #{password}
     where phonenum = #{phonenum}
   </update>
+  <select id="countByPhoneNum" parameterType="string" resultType="int">
+    select
+    count(*)
+    from user
+    where phonenum = #{phonenum}
+  </select>
 </mapper>

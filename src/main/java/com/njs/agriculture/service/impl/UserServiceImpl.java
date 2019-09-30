@@ -57,6 +57,16 @@ public class UserServiceImpl implements IUserService {
     EnterpriseMapper enterpriseMapper;
 
     @Override
+    public ServerResponse checkNum(String num) {
+        String number = num.trim();
+        if(!isMobile(number)){
+            return ServerResponse.createByErrorMessage("电话号码格式错误！");
+        }
+        int resultRow = userMapper.countByPhoneNum(number);
+        return ServerResponse.createByResultRow(resultRow);
+    }
+
+    @Override
     public ServerResponse apply(User user) {
         if (!isMobile(user.getPhonenum())) {
             return ServerResponse.createByErrorMessage("电话号码格式错误！");

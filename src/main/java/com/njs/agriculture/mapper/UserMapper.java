@@ -27,4 +27,6 @@ public interface UserMapper {
     List<User> selectAll();
 
     int updatePasswordByPhoneNum(@Param("phonenum")String phonenum, @Param("password") String password);
+
+    int countByPhoneNum(String phoneNum);
 }
