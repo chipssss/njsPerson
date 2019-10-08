@@ -476,8 +476,18 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ServerResponse getTeaStock(int userId) {
-        Map user = iUserService.isManager(userId).getData();
         List<ProductBasic> productBasicList = productBasicMapper.selectByProductType(Const.ProductType.CHAQING);
+        return getStock(productBasicList, userId);
+    }
+
+    @Override
+    public ServerResponse getAllBatchInfo(int userId) {
+        List<ProductBasic> productBasicList = productBasicMapper.selectAll();
+        return getStock(productBasicList, userId);
+    }
+
+    private ServerResponse getStock(List<ProductBasic> productBasicList, int userId){
+        Map user = iUserService.isManager(userId).getData();
         List<Map> mapList = Lists.newLinkedList();
         for (ProductBasic productBasic : productBasicList) {
             Map map = Maps.newHashMap();

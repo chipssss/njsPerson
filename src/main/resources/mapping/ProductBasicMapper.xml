@@ -200,4 +200,9 @@
     from product_basic
     where product_type = #{productType}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from product_basic
+  </select>
 </mapper>

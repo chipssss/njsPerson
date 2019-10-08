@@ -21,4 +21,10 @@ public interface ProductBasicMapper {
     List<ProductBasic> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
 
     List<ProductBasic> selectByProductType(String productType);
+
+    /**
+     * 慎用
+     * @return
+     */
+    List<ProductBasic> selectAll();
 }

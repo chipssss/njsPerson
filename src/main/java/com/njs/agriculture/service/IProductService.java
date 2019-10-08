@@ -65,4 +65,10 @@ public interface IProductService {
     ServerResponse getAllMachineOperation();
 
     ServerResponse getTeaStock(int userId);
+
+    /**
+     * 获取全部农产品批次信息
+     * @return
+     */
+    ServerResponse getAllBatchInfo(int userId);
 }

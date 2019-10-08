@@ -8,8 +8,10 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.User;
+import com.njs.agriculture.service.IActivationService;
 import com.njs.agriculture.service.IBatchService;
 import com.njs.agriculture.service.IProcessRecordService;
+import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ import java.util.List;
 public class ProductionRecordController {
 
     @Autowired
+    private IActivationService iActivationService;
+
+    @Autowired
     private IProcessRecordService iProcessRecordService;
 
     @Autowired
@@ -38,6 +43,9 @@ public class ProductionRecordController {
 
     @Autowired
     private ProductionBatchMapper productionBatchMapper;
+
+    @Autowired
+    IProductService iProductService;
     
 
     @PostMapping("batchInfoByFinished.do")
@@ -187,6 +195,31 @@ public class ProductionRecordController {
     public ServerResponse getBatchesStream(HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iBatchService.getBatchesStream(user.getUserId());
+    }
+
+    @GetMapping("path")
+    public JSONObject checkActivation(String id){
+        return iActivationService.checkActivation(id);
+    }
+
+    @GetMapping("getActivationStream.do")
+    public ServerResponse getActivationStream(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iActivationService.getActivationStream(user.getUserId());
+    }
+
+    @PostMapping("bindProduct.do")
+    public ServerResponse bindProduct(@RequestBody JSONObject jsonObject, HttpSession session){
+        String code = jsonObject.getString("code");
+        int batchId = jsonObject.getIntValue("batchId");
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iActivationService.bindProduct(code, batchId, user.getUserId());
+    }
+
+    @GetMapping("getAllBatchInfo.do")
+    public ServerResponse getAllBatchInfo(HttpSession session){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        return iProductService.getAllBatchInfo(user.getUserId());
     }
 
 
