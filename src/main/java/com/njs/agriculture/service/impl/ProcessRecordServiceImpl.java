@@ -131,7 +131,12 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     @Transactional
-    public ServerResponse generateTrace(int batchId, List<Integer> recordIds) {
+    public ServerResponse generateTrace(int batchId, List<Integer> recordIds, int quantity) {
+        if(quantity == 0){
+            return ServerResponse.createByErrorMessage("采收数量为0");
+        }
+        //更新数量
+        productionBatchMapper.updateQuantityById(quantity, batchId);
         for (Integer recordId : recordIds) {
             ProcessQrcode processQrcode = new ProcessQrcode(batchId, recordId);
             processQrcodeMapper.insert(processQrcode);

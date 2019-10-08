@@ -46,6 +46,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (url.indexOf("/portal/user/upload") >= 0)
             return true;
 
+        if (url.indexOf("passwordChang") >= 0)
+            return true;
+
         //判断是否已登录
         HttpSession seesion = request.getSession();
         if (seesion.getAttribute(Const.CURRENT_ADMIN) != null)

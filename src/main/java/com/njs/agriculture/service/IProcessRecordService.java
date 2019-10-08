@@ -45,7 +45,7 @@ public interface IProcessRecordService {
      * @param recordIds
      * @return
      */
-    ServerResponse generateTrace(int batchId, List<Integer> recordIds);
+    ServerResponse generateTrace(int batchId, List<Integer> recordIds, int quantity);
 
     /**
      * 添加生产记录

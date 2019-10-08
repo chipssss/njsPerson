@@ -8,12 +8,16 @@ import com.njs.agriculture.VO.FieldListVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.FieldMapper;
+import com.njs.agriculture.mapper.ProcessRecordMapper;
 import com.njs.agriculture.mapper.ProductionBatchMapper;
 import com.njs.agriculture.mapper.RecoveryRecordMapper;
 import com.njs.agriculture.pojo.Field;
+import com.njs.agriculture.pojo.ProcessRecord;
 import com.njs.agriculture.pojo.ProductionBatch;
 import com.njs.agriculture.pojo.RecoveryRecord;
 import com.njs.agriculture.service.IBatchService;
+import com.njs.agriculture.service.IProcessRecordService;
+import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import net.sf.jsqlparser.schema.Server;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileDescriptor;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +39,9 @@ import java.util.Map;
  */
 @Service("iBatchService")
 public class BatchServiceImpl implements IBatchService {
+
+    @Autowired
+    private ProcessRecordMapper processRecordMapper;
 
     @Autowired
     private IUserService iUserService;
@@ -82,6 +90,9 @@ public class BatchServiceImpl implements IBatchService {
             }
         }
         Field field = fieldMapper.selectByPrimaryKey(batchInfoVO.getFieldId());
+        if(field == null){
+            return ServerResponse.createByErrorMessage("出错了，找不到该田块！");
+        }
         Map map = iUserService.isManager(userId).getData();
         batchInfoVO.setName(batchNameGenerate(end, (int)map.get("source"), (int)map.get("sourceId"), batchInfoVO.getFieldId(), field.getCropId()));
         batchInfoVO.setPlantTime(start);
@@ -98,7 +109,12 @@ public class BatchServiceImpl implements IBatchService {
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("插入记录失败!");
         }
-        return ServerResponse.createBySuccess(batchInfoVO.getId());
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceAndBatch(batchInfoVO.getPlantTime(), batchInfoVO.getCollectTime()
+                , 0, batchInfoVO.getFieldId());
+        HashMap hashMap = Maps.newHashMap();
+        hashMap.put("batchId", batchInfoVO.getId());
+        hashMap.put("processRecordList",processRecordList);
+        return ServerResponse.createBySuccess(hashMap);
     }
 
     @Override
@@ -107,6 +123,7 @@ public class BatchServiceImpl implements IBatchService {
         if(resultRow == 0){
             return ServerResponse.createByErrorMessage("删除记录失败!");
         }
+
         return ServerResponse.createBySuccess();
     }
 

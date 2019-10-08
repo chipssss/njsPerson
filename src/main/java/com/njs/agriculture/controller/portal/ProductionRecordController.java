@@ -103,7 +103,7 @@ public class ProductionRecordController {
             return ServerResponse.createByErrorMessage("找不到批次");
         }
         List<Integer> recordIds = jsonObject.getJSONArray("recordIds").toJavaList(Integer.class);
-        return iProcessRecordService.generateTrace(batchId, recordIds);
+        return iProcessRecordService.generateTrace(batchId, recordIds, jsonObject.getIntValue("quantity"));
     }
 
     @PostMapping("processRecordAdd.do")
