@@ -47,21 +47,21 @@ public class ActivationServiceImpl implements IActivationService {
     }
 
     @Override
-    public ServerResponse bindProduct(String code, String batchId, int userId) {
-        ProductStock productStock = productStockMapper.selectByBatchId(batchId);
-        if(productStock == null){
-            return ServerResponse.createByErrorMessage("批次不存在");
-        }
-        ProductionBatch productionBatch = productionBatchMapper.selectByBarcode(productStock.getBarcode());
-        if(productionBatch == null){
-            return ServerResponse.createByErrorMessage("批次不存在");
-        }
-        Field field = fieldMapper.selectByPrimaryKey(productionBatch.getFieldId());
-        if(field == null){
-            return ServerResponse.createByErrorMessage("批次的田块不存在");
-        }
+    public ServerResponse bindProduct(String code, String batchId, int userId, String productName) {
+//        ProductStock productStock = productStockMapper.selectByBatchId(batchId);
+//        if(productStock == null){
+//            return ServerResponse.createByErrorMessage("批次不存在");
+//        }
+//        ProductionBatch productionBatch = productionBatchMapper.selectByBarcode(productStock.getBarcode());
+//        if(productionBatch == null){
+//            return ServerResponse.createByErrorMessage("批次不存在");
+//        }
+//        Field field = fieldMapper.selectByPrimaryKey(productionBatch.getFieldId());
         ProductActivation productActivation = new ProductActivation();
-        productActivation.setProductName(field.getCropName());
+//        if(field != null){
+//            productActivation.setProductName(field.getCropName());
+//        }
+        productActivation.setProductName(productName);
         productActivation.setCode(code);
         productActivation.setBatchId(batchId);
         productActivation.setUserId(userId);

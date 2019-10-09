@@ -24,7 +24,7 @@ public interface IActivationService {
      * @param userId
      * @return
      */
-    ServerResponse bindProduct(String code, String batchId, int userId);
+    ServerResponse bindProduct(String code, String batchId, int userId,String productName);
 
 
     /**
