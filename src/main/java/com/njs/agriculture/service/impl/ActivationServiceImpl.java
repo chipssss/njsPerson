@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.mapper.FieldMapper;
-import com.njs.agriculture.mapper.ProductActivationMapper;
-import com.njs.agriculture.mapper.ProductBasicMapper;
-import com.njs.agriculture.mapper.ProductionBatchMapper;
+import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IActivationService;
 import org.checkerframework.checker.units.qual.A;
@@ -24,6 +21,9 @@ import java.util.Map;
  */
 @Service("iActivationService")
 public class ActivationServiceImpl implements IActivationService {
+
+    @Autowired
+    ProductStockMapper productStockMapper;
 
     @Autowired
     ProductBasicMapper productBasicMapper;
@@ -47,8 +47,12 @@ public class ActivationServiceImpl implements IActivationService {
     }
 
     @Override
-    public ServerResponse bindProduct(String code, int batchId, int userId) {
-        ProductionBatch productionBatch = productionBatchMapper.selectByPrimaryKey(batchId);
+    public ServerResponse bindProduct(String code, String batchId, int userId) {
+        ProductStock productStock = productStockMapper.selectByBatchId(batchId);
+        if(productStock == null){
+            return ServerResponse.createByErrorMessage("批次不存在");
+        }
+        ProductionBatch productionBatch = productionBatchMapper.selectByBarcode(productStock.getBarcode());
         if(productionBatch == null){
             return ServerResponse.createByErrorMessage("批次不存在");
         }

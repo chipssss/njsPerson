@@ -26,6 +26,8 @@ public interface ProductStockMapper {
 
     List<ProductStock> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
 
+    ProductStock selectByBatchId(String batchId);
+
     List<ProductStock> selectBySourceAndProductId(@Param("source") int source, @Param("sourceId") int sourceId, @Param("productId") int productId);
 
     List<ProductStock> selectByProductId(int productId);

@@ -194,6 +194,12 @@ on a.id = b.batch_id;
     where b.source = #{source}
     and b.source_id = #{sourceId};
   </select>
+  <select id="selectByBarcode" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from production_batch
+    where barcode = #{barcode}
+  </select>
   <update id="updateQuantityById" parameterType="map">
     update production_batch
     set quantity = #{quantity}

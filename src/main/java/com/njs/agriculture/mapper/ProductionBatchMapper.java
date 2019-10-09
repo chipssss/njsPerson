@@ -36,6 +36,8 @@ public interface ProductionBatchMapper {
 
     List<ProductionBatch> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
 
+    ProductionBatch selectByBarcode(String barcode);
+
     int updateQuantityById(@Param("quantity")int quantity, @Param("id")int id);
 
     int updateGeneratedStatusById(int id);

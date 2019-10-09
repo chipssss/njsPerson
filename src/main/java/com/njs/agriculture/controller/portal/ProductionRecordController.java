@@ -211,7 +211,7 @@ public class ProductionRecordController {
     @PostMapping("bindProduct.do")
     public ServerResponse bindProduct(@RequestBody JSONObject jsonObject, HttpSession session){
         String code = jsonObject.getString("code");
-        int batchId = jsonObject.getIntValue("batchId");
+        String batchId = jsonObject.getString("batchId");
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         return iActivationService.bindProduct(code, batchId, user.getUserId());
     }

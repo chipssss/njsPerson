@@ -5,7 +5,7 @@
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="code" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="batch_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="batch_id" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="product_name" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -28,7 +28,7 @@
     insert into product_activation (id, code, batch_id, 
       user_id, create_time, product_name
       )
-    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{batchId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, 
       #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{productName,jdbcType=VARCHAR}
       )
   </insert>
@@ -62,7 +62,7 @@
         #{code,jdbcType=VARCHAR},
       </if>
       <if test="batchId != null">
-        #{batchId,jdbcType=INTEGER},
+        #{batchId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
@@ -82,7 +82,7 @@
         code = #{code,jdbcType=VARCHAR},
       </if>
       <if test="batchId != null">
-        batch_id = #{batchId,jdbcType=INTEGER},
+        batch_id = #{batchId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
@@ -99,7 +99,7 @@
   <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.ProductActivation">
     update product_activation
     set code = #{code,jdbcType=VARCHAR},
-      batch_id = #{batchId,jdbcType=INTEGER},
+      batch_id = #{batchId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       product_name = #{productName,jdbcType=VARCHAR}
@@ -112,9 +112,9 @@
     where user_id = #{userId}
   </select>
   <select id="checkByCode" parameterType="string" resultType="int">
-  select
-  count(*)
-  from product_activation
-  where code = #{code}
+    select
+    count(*)
+    from product_activation
+    where code = #{code}
 </select>
 </mapper>

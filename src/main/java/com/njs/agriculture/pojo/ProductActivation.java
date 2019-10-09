@@ -7,7 +7,7 @@ public class ProductActivation {
 
     private String code;
 
-    private Integer batchId;
+    private String batchId;
 
     private Integer userId;
 
@@ -15,7 +15,7 @@ public class ProductActivation {
 
     private String productName;
 
-    public ProductActivation(Integer id, String code, Integer batchId, Integer userId, Date createTime, String productName) {
+    public ProductActivation(Integer id, String code, String batchId, Integer userId, Date createTime, String productName) {
         this.id = id;
         this.code = code;
         this.batchId = batchId;
@@ -44,12 +44,12 @@ public class ProductActivation {
         this.code = code == null ? null : code.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
-        this.batchId = batchId;
+    public void setBatchId(String batchId) {
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
     public Integer getUserId() {
