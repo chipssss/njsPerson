@@ -1,13 +1,13 @@
 package com.njs.agriculture.config;
 
 
-import com.alibaba.druid.support.json.JSONUtils;
+
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ResponseCode;
 import com.njs.agriculture.common.ServerResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +47,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
 
         if (url.indexOf("passwordChang") >= 0)
+            return true;
+
+        if(url.indexOf("portal/input/scanBarcode") >= 0)
             return true;
 
         //判断是否已登录
