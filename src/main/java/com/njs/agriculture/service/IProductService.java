@@ -6,6 +6,7 @@ import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther: SaikeiLEe
@@ -59,6 +60,8 @@ public interface IProductService {
     ServerResponse machineAdd(MachineVO machineVO, int userId);
 
     ServerResponse machineGet(int userId);
+
+    List<MachineVO> machine2MachineVO(List<Machining> machiningList);
 
     ServerResponse getAllStream(int userId);
 

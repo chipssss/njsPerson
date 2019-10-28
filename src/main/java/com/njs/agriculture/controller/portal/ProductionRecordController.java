@@ -223,6 +223,12 @@ public class ProductionRecordController {
         return iProductService.getAllBatchInfo(user.getUserId());
     }
 
+    @PostMapping("scanGetRecords.do")
+    public ServerResponse scanGetRecords(@RequestBody JSONObject jsonObject){
+        String id = jsonObject.getString("id");
+        return iActivationService.scanGetRecords(id);
+    }
+
 
 
 }

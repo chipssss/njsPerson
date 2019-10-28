@@ -123,7 +123,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId) {
         //1.先查List<int> 生产记录的id
         List<Integer> recordIds = processQrcodeMapper.selectByBatchId(batchId);
-        PageHelper.startPage(pageNum, pageSize);
+        if(pageNum != 0 && pageSize != 0){
+            PageHelper.startPage(pageNum, pageSize);
+        }
         List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(startTime, endTime, recordIds);
 
         return ServerResponse.createBySuccess(records2recordVO(processRecordList));

@@ -117,4 +117,10 @@
     from product_activation
     where code = #{code}
 </select>
+  <select id="getByCode" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from product_activation
+    where code = #{code}
+  </select>
 </mapper>

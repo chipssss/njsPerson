@@ -170,4 +170,10 @@
     where source = #{source}
     and source_id = #{sourceId}
   </select>
+  <select id="selectByStockId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from machining
+    where stock_id = #{stockId}
+  </select>
 </mapper>

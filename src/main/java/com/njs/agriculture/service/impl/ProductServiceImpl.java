@@ -373,19 +373,14 @@ public class ProductServiceImpl implements IProductService {
         PageHelper pageHelper = new PageHelper();
         pageHelper.orderBy("create_time desc");
         List<Machining> machiningList = machiningMapper.selectBySource((int) map.get("source"), (int) map.get("sourceId"));
+        return ServerResponse.createBySuccess(machine2MachineVO(machiningList));
+    }
+
+    public List<MachineVO> machine2MachineVO(List<Machining> machiningList){
         List<MachineVO> machineVOList = Lists.newLinkedList();
         for (Machining machining : machiningList) {
             machineVOList.add(MachineVO.convertFor(machining));
         }
-        //使用list遍历中删除会出错
-/*        for (MachineVO machineVO : machineVOList) {
-            ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
-            if (productStock == null) {
-                machineVOList.remove(machineVO);
-            } else {
-                machineVO.setBatchId(productStock.getBatchId());
-            }
-        }*/
         Iterator it = machineVOList.iterator();
         int index = 0;
         while (it.hasNext()) {
@@ -398,12 +393,12 @@ public class ProductServiceImpl implements IProductService {
             }
             index++;
         }
-        return ServerResponse.createBySuccess(machineVOList);
+        return machineVOList;
     }
 
     @Override
     public ServerResponse getAllStream(int userId) {
-        // TODO 使用缓存优化，多线程获取结果
+        // TODO 多线程获取结果
         List<StreamVO> streamVOList = Lists.newLinkedList();
         List<ProductStock> stockList = (List) productStockGet(userId).getData();
         for (ProductStock productStock : stockList) {

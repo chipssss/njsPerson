@@ -19,4 +19,6 @@ public interface MachiningMapper {
     int updateByPrimaryKey(Machining record);
 
     List<Machining> selectBySource(@Param("source")int source, @Param("sourceId")int sourceId);
+
+    List<Machining> selectByStockId(int stockId);
 }

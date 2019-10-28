@@ -32,4 +32,11 @@ public interface IActivationService {
      * @return
      */
     ServerResponse getActivationStream(int userId);
+
+    /**
+     * 扫描二维码获取记录，包括企业信息，加工记录，种植记录
+     * @param code
+     * @return
+     */
+    ServerResponse scanGetRecords(String code);
 }

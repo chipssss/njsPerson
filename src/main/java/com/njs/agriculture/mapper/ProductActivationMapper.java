@@ -20,4 +20,6 @@ public interface ProductActivationMapper {
     List<ProductActivation> getByUserId(int userId);
 
     int checkByCode(String  code);
+
+    ProductActivation getByCode(String code);
 }
