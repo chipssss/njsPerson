@@ -1,7 +1,10 @@
 package com.njs.agriculture.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.njs.agriculture.pojo.InputStream;
 import lombok.Data;
+
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +28,11 @@ public class ProcessRecordVO {
 
     private String operation;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String inputRecord;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<InputStream> inputStreamList;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;

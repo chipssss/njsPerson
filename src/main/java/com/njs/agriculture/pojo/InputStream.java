@@ -19,7 +19,14 @@ public class InputStream {
 
     private Integer sourceId;
 
-    public InputStream(Integer id, Integer fieldId, Integer cropId, String inputName, Integer quantity, Date createTime, Integer source, Integer sourceId) {
+    private Integer recordId;
+
+    public InputStream(Integer id, Integer recordId) {
+        this.id = id;
+        this.recordId = recordId;
+    }
+
+    public InputStream(Integer id, Integer fieldId, Integer cropId, String inputName, Integer quantity, Date createTime, Integer source, Integer sourceId, Integer recordId) {
         this.id = id;
         this.fieldId = fieldId;
         this.cropId = cropId;
@@ -28,6 +35,7 @@ public class InputStream {
         this.createTime = createTime;
         this.source = source;
         this.sourceId = sourceId;
+        this.recordId = recordId;
     }
 
     public InputStream() {
@@ -96,5 +104,13 @@ public class InputStream {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
 }

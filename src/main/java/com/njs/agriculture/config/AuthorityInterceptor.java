@@ -25,6 +25,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         // 获取访问的url
         String url = request.getRequestURI();
 
+        // TODO 可以改用其他动态数据结构进行比对
         if (url.indexOf("/portal/user/login") >= 0)
             return true;
 
@@ -53,6 +54,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
 
         if(url.indexOf("portal/processRecord/scanGetRecords") >= 0)
+            return true;
+
+        if(url.indexOf("portal/processRecord/openProcessRecord") >= 0)
             return true;
 
 

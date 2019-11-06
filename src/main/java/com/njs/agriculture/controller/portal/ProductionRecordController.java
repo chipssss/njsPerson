@@ -1,5 +1,6 @@
 package com.njs.agriculture.controller.portal;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.VO.BatchInfoVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
@@ -14,6 +15,7 @@ import com.njs.agriculture.service.IProcessRecordService;
 import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -227,6 +229,30 @@ public class ProductionRecordController {
     public ServerResponse scanGetRecords(@RequestBody JSONObject jsonObject){
         String id = jsonObject.getString("id");
         return iActivationService.scanGetRecords(id);
+    }
+
+    @PostMapping("openProcessRecord.do")
+    public ServerResponse openProcessRecord(@RequestBody JSONObject jsonObject){
+        String authCode = jsonObject.getString("authCode");
+        List<Integer> companyIdList = ((JSONArray) jsonObject.getOrDefault("companyId", new JSONArray())).toJavaList(Integer.class);
+        int pageSize = (int)jsonObject.getOrDefault("pageSize", 10);
+        int pageNum = (int)jsonObject.getOrDefault("pageNum", 0);
+        String startTime = jsonObject.getString("startTime");
+        Date start;
+        if(StringUtils.isBlank(startTime)){
+            //默认推前3个月
+            start = DateUtil.backMonth(new Date(), 3);
+        }else {
+            start = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
+        }
+        String endTime = jsonObject.getString("endTime");
+        Date end;
+        if(StringUtils.isBlank(startTime)){
+            end = new Date();
+        }else {
+            end = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
+        }
+        return iProcessRecordService.openProcessRecord(authCode, companyIdList, start, end, pageNum, pageSize);
     }
 
 

@@ -10,6 +10,9 @@ import java.util.Set;
  * @Description:
  */
 public class Const {
+
+    public static final String AUTH_CODE = "zijing";
+
     public static final String CURRENT_ADMIN = "currentAdmin";
 
     public static final String CURRENT_USER = "currentUser";

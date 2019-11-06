@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -19,6 +20,7 @@ public class DateUtil {
     public static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String SHORT_FORMAT = "yyyy-MM-dd";
+
 
     private DateUtil(){}
 
@@ -76,6 +78,13 @@ public class DateUtil {
         }
         DateTime dateTime = new DateTime(date);
         return dateTime.toString(STANDARD_FORMAT);
+    }
+
+    public static Date backMonth(Date date, int i){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH)-i);
+        return calendar.getTime();
     }
 
 

@@ -27,6 +27,11 @@ public class ProcessRecord {
 
     private Integer status;
 
+    public ProcessRecord(Integer id, String inputRecord) {
+        this.id = id;
+        this.inputRecord = inputRecord;
+    }
+
     public ProcessRecord(Integer id, Integer fieldId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId, Integer status) {
         this.id = id;
         this.fieldId = fieldId;

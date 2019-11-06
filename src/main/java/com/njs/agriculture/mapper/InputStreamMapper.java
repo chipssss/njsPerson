@@ -19,4 +19,6 @@ public interface InputStreamMapper {
     int updateByPrimaryKey(InputStream record);
 
     List<InputStream> selectBySource(@Param("source") int source, @Param("sourceId") int sourceId);
+
+    List<InputStream> selectByRecordId(int recordId);
 }

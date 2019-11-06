@@ -87,6 +87,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Autowired
     private RecoveryRecordMapper recoveryRecordMapper;
 
+    @Autowired
+    InputStreamMapper inputStreamMapper;
+
     @Override
     public ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize){
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
@@ -97,7 +100,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         PageHelper.orderBy("source_id, create_time desc");
         processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, (int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
         PageInfo pageInfo = new PageInfo(processRecordList);
-        pageInfo.setList(records2recordVO(processRecordList));
+        pageInfo.setList(records2recordVO(processRecordList, 0));
         return ServerResponse.createBySuccess(pageInfo);
     }
 
@@ -128,7 +131,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         }
         List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(startTime, endTime, recordIds);
 
-        return ServerResponse.createBySuccess(records2recordVO(processRecordList));
+        return ServerResponse.createBySuccess(records2recordVO(processRecordList, 0));
     }
 
     @Override
@@ -186,6 +189,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         processRecord.setSourceId(field.getSourceId());
         String operations = Joiner.on(",").join(processRecordInfoVO.getOperationList());
         processRecord.setOperation(operations);
+        //1.先上传记录
+        int resultRow = processRecordMapper.insert(processRecord);
+        if(resultRow == 0){
+            return ServerResponse.createByErrorMessage("上传记录失败！");
+        }
         StringBuilder s = new StringBuilder();
         if(processRecordInfoVO.getInputList() != null){
             for (ProcessRecordInfoVO.Input input : processRecordInfoVO.getInputList()) {
@@ -221,22 +229,18 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 }
             }
             //3.插入流水表
-            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId());
+            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId(), processRecord.getId());
             if(!response.isSuccess()){
                 throw new RuntimeException("插入流水表失败！");
             }
         }
+        //更新记录
         if (StringUtils.isNotBlank(s.toString())) {
             String inputRecord = s.toString();
             inputRecord = inputRecord.substring(0, inputRecord.length()-1);
-            processRecord.setInputRecord(inputRecord);
+            processRecordMapper.updateByPrimaryKeySelective(new ProcessRecord(processRecord.getId(), inputRecord));
         }
-        //1.先上传记录
-        int resultRow = processRecordMapper.insert(processRecord);
-        if(resultRow == 0){
-            return ServerResponse.createByErrorMessage("上传记录失败！");
-        }
-        //2.批量插入
+        //2.批量插入图片
         for (String image : processRecordInfoVO.getImages()) {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
         }
@@ -336,7 +340,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceAndBatch(productionBatch.getPlantTime(), productionBatch.getCollectTime()
                 , 0, productionBatch.getFieldId());
         PageInfo pageInfo = new PageInfo(processRecordList);
-        pageInfo.setList(records2recordVO(processRecordList));
+        pageInfo.setList(records2recordVO(processRecordList, 0));
         return ServerResponse.createBySuccess(pageInfo);
     }
 
@@ -347,17 +351,40 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceByField(fieldId,
                 (int)map.get("source"), (int)map.get("sourceId"), 0);
         PageInfo pageInfo = new PageInfo(processRecordList);
-        pageInfo.setList(records2recordVO(processRecordList));
+        pageInfo.setList(records2recordVO(processRecordList, 0));
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse openProcessRecord(String authCode, List<Integer> companyId, Date start, Date end, int pageNum, int pageSize) {
+        if(!authCode.equals(Const.AUTH_CODE)) return ServerResponse.createByErrorMessage("授权码错误！");
+        List<ProcessRecord> processRecordList;
+        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.orderBy("source_id, create_time desc");
+        processRecordList = processRecordMapper.selectByConditionOpen(start, end, companyId);
+        PageInfo pageInfo = new PageInfo(processRecordList);
+        pageInfo.setList(records2recordVO(processRecordList, 1));
         return ServerResponse.createBySuccess(pageInfo);
     }
 
 
-    public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList){
+    /**
+     * 生产记录转为可传输的对象
+     * flag为0时候投入品记录只为string
+     * @param processRecordList
+     * @param flag
+     * @return
+     */
+    public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList, int flag){
         List<ProcessRecordVO> processRecords = Lists.newArrayList();
         if(!processRecordList.isEmpty()){
             for (ProcessRecord processRecord : processRecordList) {
                 ProcessRecordVO processRecordVO = new ProcessRecordVO();
                 BeanUtils.copyProperties(processRecord, processRecordVO);
+                if(flag == 1){
+                    List<InputStream> inputStreamList = inputStreamMapper.selectByRecordId(processRecord.getId());
+                    processRecordVO.setInputStreamList(inputStreamList);
+                }
                 List<String> images = processImageMapper.selectByRecordId(processRecord.getId());
                 if(!images.isEmpty()){
                     processRecordVO.setImages(images);

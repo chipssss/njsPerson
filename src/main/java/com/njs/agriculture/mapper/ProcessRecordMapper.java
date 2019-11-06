@@ -40,4 +40,7 @@ public interface ProcessRecordMapper {
                                                        @Param("status") int status);
 
     int updateStatusByGenerated(List<Integer> records);
+
+    List<ProcessRecord> selectByConditionOpen(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
+                                              @Param("companyId") List<Integer> companyId);
 }

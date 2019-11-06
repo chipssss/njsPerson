@@ -73,6 +73,7 @@ public interface IProcessRecordService {
 
     ServerResponse getRecordsUngenratedByField(int fieldId, int userId, int pageNum, int pageSize);
 
+    ServerResponse openProcessRecord(String authCode, List<Integer> companyId, Date start, Date end, int pageNum, int pageSize);
 
 
 }

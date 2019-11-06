@@ -98,22 +98,24 @@ public class ActivationServiceImpl implements IActivationService {
     @Override
     public ServerResponse scanGetRecords(String code) {
         ProductActivation productActivation = productActivationMapper.getByCode(code);
-        if(code == null){
+        if (code == null) {
             return ServerResponse.createByErrorMessage("没有该条二维码记录!");
         }
         ProductStock productStock = productStockMapper.selectByBatchId(productActivation.getBatchId());
-        if(productStock == null){
+        if (productStock == null) {
             return ServerResponse.createByErrorMessage("库存表没有该记录！");
         }
+        ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
         Map result = Maps.newHashMap();
-        if(productStock.getSource() == 0){
+        result.put("productBasic",productBasic);
+        if (productStock.getSource() == 0) {
             User user = userMapper.selectByPrimaryKey(productStock.getSourceId());
-            if(user != null){
+            if (user != null) {
                 result.put("companyTitle", user.getUsername());
             }
-        }else{
+        } else {
             Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(productStock.getSourceId());
-            if(enterprise != null){
+            if (enterprise != null) {
                 result.put("companyTitle", enterprise.getName());
             }
         }
@@ -121,10 +123,10 @@ public class ActivationServiceImpl implements IActivationService {
         List<MachineVO> machineVOList = iProductService.machine2MachineVO(machiningList);
         result.put("machineRecord", machineVOList);
         ProductionBatch productionBatch = productionBatchMapper.selectByBarcode(productStock.getBarcode());
-        if(productionBatch == null){
+        if (productionBatch == null) {
             return ServerResponse.createByErrorMessage("批次为空！");
         }
-        ServerResponse<List> listServerResponse = iProcessRecordService.trace(0,0,null,null,productionBatch.getId());
+        ServerResponse<List> listServerResponse = iProcessRecordService.trace(0, 0, null, null, productionBatch.getId());
         result.put("processRecord", listServerResponse.getData());
         return ServerResponse.createBySuccess(result);
     }
