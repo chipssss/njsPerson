@@ -267,7 +267,7 @@
     <where>
       <if test="companyId != null and companyId.size() > 0">
         source_id in
-        <foreach collection="list" open="(" close=")" item="item" separator=",">
+        <foreach collection="companyId" open="(" close=")" item="item" separator=",">
           #{item}
         </foreach>
       </if>
