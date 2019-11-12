@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class Const {
 
-    public static final String AUTH_CODE = "zijing";
+    public static final String AUTH_CODE = "zijin";
 
     public static final String CURRENT_ADMIN = "currentAdmin";
 
