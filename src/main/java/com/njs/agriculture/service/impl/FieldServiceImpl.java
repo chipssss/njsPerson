@@ -10,16 +10,12 @@ import com.njs.agriculture.mapper.FieldMapper;
 import com.njs.agriculture.pojo.CropInfo;
 import com.njs.agriculture.pojo.Enterprise;
 import com.njs.agriculture.pojo.Field;
-import com.njs.agriculture.pojo.UserRelationship;
 import com.njs.agriculture.service.IFieldService;
-import com.njs.agriculture.service.IFileService;
 import com.njs.agriculture.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.dc.pr.PRError;
 
 import java.util.List;
 import java.util.Map;

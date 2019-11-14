@@ -10,6 +10,7 @@ import java.util.Set;
  * @Description:
  */
 public class Const {
+    public static final String SERVER_URL = "http://120.79.185.173:8080/agriculture/";
 
     public static final String AUTH_CODE = "zijin";
 

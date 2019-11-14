@@ -51,6 +51,19 @@ public class ProcessRecord {
         super();
     }
 
+    /**
+     * 开放接口：隐藏非必要字段
+     */
+    public void hideUnnecessary() {
+        id = null;
+        fieldId = null;
+        cropId = null;
+        inputRecord = null;
+        source = null;
+        sourceId = null;
+        status = null;
+    }
+
     public Integer getId() {
         return id;
     }

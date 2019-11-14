@@ -2,6 +2,7 @@ package com.njs.agriculture.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.njs.agriculture.common.Const;
 import com.njs.agriculture.pojo.InputStream;
 import lombok.Data;
 
@@ -42,4 +43,16 @@ public class ProcessRecordVO {
     private String weather;
 
     private List<String> images;
+
+    /**
+     * 拼接成完整路径
+     */
+    public void convertImageUrl() {
+        if (images == null) {
+            return;
+        }
+        for (int i = 0; i < images.size(); i++) {
+            images.set(i, Const.SERVER_URL + images.get(i));
+        }
+    }
 }

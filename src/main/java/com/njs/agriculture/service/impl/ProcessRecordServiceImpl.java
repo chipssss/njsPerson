@@ -6,7 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
@@ -19,7 +18,6 @@ import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import com.njs.agriculture.utils.MathUtil;
 import com.njs.agriculture.utils.PropertiesUtil;
-import com.sun.scenario.effect.Crop;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -28,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -355,6 +355,8 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+
+    private static final int FLAG_OPEN = 0x0011;
     @Override
     public ServerResponse openProcessRecord(String authCode, List<Integer> companyId, Date start, Date end, int pageNum, int pageSize) {
         if(!authCode.equals(Const.AUTH_CODE)) return ServerResponse.createByErrorMessage("授权码错误！");
@@ -363,7 +365,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         PageHelper.orderBy("source_id, create_time desc");
         processRecordList = processRecordMapper.selectByConditionOpen(start, end, companyId);
         PageInfo pageInfo = new PageInfo(processRecordList);
-        pageInfo.setList(records2recordVO(processRecordList, 1));
+        pageInfo.setList(records2recordVO(processRecordList, FLAG_OPEN));
         return ServerResponse.createBySuccess(pageInfo);
     }
 
@@ -380,11 +382,6 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         if(!processRecordList.isEmpty()){
             for (ProcessRecord processRecord : processRecordList) {
                 ProcessRecordVO processRecordVO = new ProcessRecordVO();
-                BeanUtils.copyProperties(processRecord, processRecordVO);
-                if(flag == 1){
-                    List<InputStream> inputStreamList = inputStreamMapper.selectByRecordId(processRecord.getId());
-                    processRecordVO.setInputStreamList(inputStreamList);
-                }
                 List<String> images = processImageMapper.selectByRecordId(processRecord.getId());
                 if(!images.isEmpty()){
                     processRecordVO.setImages(images);
@@ -397,6 +394,13 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 if(cropInfo != null){
                     processRecordVO.setCropName(cropInfo.getName());
                 }
+                if (flag == FLAG_OPEN) { // 规范请求，隐藏一些不必要的字段，拼接图片链接
+                    List<InputStream> inputStreamList = inputStreamMapper.selectByRecordId(processRecord.getId());
+                    processRecordVO.setInputStreamList(inputStreamList);
+                    processRecord.hideUnnecessary();
+                    processRecordVO.convertImageUrl();
+                }
+                BeanUtils.copyProperties(processRecord, processRecordVO);
                 processRecords.add(processRecordVO);
             }
         }

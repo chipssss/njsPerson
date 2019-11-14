@@ -38,6 +38,12 @@ public class InputStream {
         this.recordId = recordId;
     }
 
+    public InputStream(String inputName, Integer quantity, Date createTime) {
+        this.inputName = inputName;
+        this.quantity = quantity;
+        this.createTime = createTime;
+    }
+
     public InputStream() {
         super();
     }

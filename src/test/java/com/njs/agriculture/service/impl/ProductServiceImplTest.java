@@ -29,10 +29,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void getAllStreamThread() {
-        for (int i = 0;i < 10;i++){
-            ServerResponse response = iProductService.getAllStream(1);
-            System.out.println();
 
-        }
     }
 }
