@@ -47,10 +47,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if(url.indexOf("/img/") >= 0)
             return true;
 
-        if(url.indexOf("/portal/user/app")>=0)
-            return true;
+        
 
-       
+        if (url.indexOf("/portal/user/upload") >= 0)
+            return true;
 
 
 
