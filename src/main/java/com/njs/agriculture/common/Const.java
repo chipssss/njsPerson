@@ -20,6 +20,7 @@ public class Const {
 
     public static final String USERIMGPREFIX = "img/user/";
 
+    public static  final  String USERAPKREEFIX="apk/user/";
     public static final String PROCESSIMGPREFIX ="img/process/";
 
     public static final String ENTERPRISEPREFIX ="img/enterprise/";

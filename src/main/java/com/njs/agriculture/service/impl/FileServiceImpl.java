@@ -17,6 +17,7 @@ import java.util.UUID;
 @Service("iFileService")
 @Slf4j
 public class FileServiceImpl implements IFileService {
+
     @Override
     public String upload(MultipartFile file, String path) {
         //拿原始名

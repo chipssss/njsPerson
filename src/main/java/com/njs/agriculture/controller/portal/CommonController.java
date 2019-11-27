@@ -4,22 +4,21 @@ import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 
+import com.njs.agriculture.VO.ApkVO;
+import com.njs.agriculture.pojo.App;
 import com.njs.agriculture.pojo.User;
+import com.njs.agriculture.service.IAppService;
 import com.njs.agriculture.service.IFileService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.PropertiesUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @Auther: SaikeiLEe
@@ -30,6 +29,10 @@ import java.util.Properties;
 @RequestMapping("/portal/user/")
 public class CommonController {
 
+    @Autowired
+    private IFileService iFileService;
+    @Autowired
+    private IAppService iAppService;
     @Autowired
     private IUserService iUserService;
 
@@ -44,7 +47,7 @@ public class CommonController {
         return iUserService.apply(user);
     }
 
-    @RequestMapping("login.do")
+    @RequestMapping(value = "login.do")
     public ServerResponse<Map> login(@RequestBody JSONObject jsonObject, HttpSession session){
         String phonenum = jsonObject.getString("phonenum");
         String password = jsonObject.getString("password");
@@ -63,8 +66,15 @@ public class CommonController {
 
     @RequestMapping("upload.do")
     public ServerResponse upload(MultipartFile file){
+
         return iUserService.upload(file);
     }
+    @RequestMapping("app.do")
+    public ServerResponse uploadApp( ApkVO apkVO){
+    return iAppService.updateApk(apkVO);
+    }
+
+
 
     @RequestMapping("passwordChang.do")
     public ServerResponse passwordChang(@RequestBody JSONObject jsonObject){
@@ -81,6 +91,14 @@ public class CommonController {
         int userId = jsonObject.getIntValue("userId");
         return iUserService.updateInfo(key, value, userId);
     }
+@GetMapping("getLatestApk.do")
+    public ServerResponse getApk(@RequestBody JSONObject jsonObject){
+Integer versionCode=jsonObject.getInteger("versionCode");
+    return iAppService.getLatestApk(versionCode);
+}
+
+
+
 
 
 

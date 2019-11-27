@@ -4,8 +4,6 @@ server:
     context-path: /agriculture
 
 
-
-#showSql
 #logging:
 #  level:
 #    com.njs.agriculture.controller: DEBUG

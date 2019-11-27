@@ -41,11 +41,18 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (url.indexOf("/backend/user/login") >= 0)
             return true;
 
+        if(url.indexOf("/apk/") >= 0)
+            return true;
+
         if(url.indexOf("/img/") >= 0)
             return true;
 
+
+
         if (url.indexOf("/portal/user/upload") >= 0)
             return true;
+
+
 
         if (url.indexOf("passwordChang") >= 0)
             return true;

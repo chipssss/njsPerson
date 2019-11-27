@@ -8,10 +8,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -88,6 +90,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
          * * 如果需要映射的文件夹是在项目中的，比如resource/static,
          *   可以使用.addResourceLocations("classpath:/static/")
          */
+
 
         String os = System.getProperty("os.name");
         final String windowsFlag = "win";
