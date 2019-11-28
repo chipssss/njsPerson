@@ -31,8 +31,7 @@ public class CommonController {
 
     @Autowired
     private IFileService iFileService;
-    @Autowired
-    private IAppService iAppService;
+
     @Autowired
     private IUserService iUserService;
 
@@ -69,10 +68,7 @@ public class CommonController {
 
         return iUserService.upload(file);
     }
-    @RequestMapping("app.do")
-    public ServerResponse uploadApp( @RequestParam("versionCode")Integer versionCode,@RequestParam("declare")String declare,MultipartFile file){
-        return iAppService.updateApk(versionCode,declare,file);
-    }
+
 
 
 
@@ -91,11 +87,6 @@ public class CommonController {
         int userId = jsonObject.getIntValue("userId");
         return iUserService.updateInfo(key, value, userId);
     }
-@GetMapping("getLatestApk.do")
-    public ServerResponse getApk(@RequestBody JSONObject jsonObject){
-Integer versionCode=jsonObject.getInteger("versionCode");
-    return iAppService.getLatestApk(versionCode);
-}
 
 
 

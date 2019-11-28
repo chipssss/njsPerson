@@ -6,9 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.User;
+import com.njs.agriculture.service.IAppService;
 import com.njs.agriculture.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpSession;
@@ -22,7 +24,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/backend/user")
 public class AdminController {
-
+    @Autowired
+    private IAppService iAppService;
     @Autowired
     private IUserService iUserSerivce;
 
@@ -47,6 +50,15 @@ public class AdminController {
             return ServerResponse.createByErrorMessage("非管理部门!");
         }
         return iUserSerivce.userDel(userId);
+    }
+    @GetMapping("getLatestApk.do")
+    public ServerResponse getApk(@RequestBody JSONObject jsonObject){
+        Integer versionCode=jsonObject.getInteger("versionCode");
+        return iAppService.getLatestApk(versionCode);
+    }
+    @RequestMapping("app.do")
+    public ServerResponse uploadApp(@RequestParam("versionCode")Integer versionCode, @RequestParam("declare")String declare, MultipartFile file){
+        return iAppService.updateApk(versionCode,declare,file);
     }
 
 
