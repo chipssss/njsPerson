@@ -112,7 +112,7 @@ public App selectByversionCode(Integer versionCode){
       }
       Map map=new HashMap();
       map.put("versionCode",latestApk.getVersionCode());
-      map.put("url",PropertiesUtil.getProperty("server-test")+(latestApk.getFile()));
+      map.put("url",PropertiesUtil.getProperty("server")+(latestApk.getFile()));
       map.put("createTime",latestApk.getCreateTime());
       map.put("declare",latestApk.getDeclare());
         return ServerResponse.createBySuccess(map);
