@@ -22,5 +22,5 @@ public interface IAppService {
 
    App selectByversionCode(Integer versionCode);
 
-   ServerResponse updateApk(ApkVO apkVO);
+    ServerResponse updateApk(Integer versionCode,String declare,MultipartFile file);
 }

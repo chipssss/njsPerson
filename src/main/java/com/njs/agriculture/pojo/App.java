@@ -1,24 +1,22 @@
 package com.njs.agriculture.pojo;
 
-import lombok.Data;
-
 import java.util.Date;
-@Data
+
 public class App {
     private Integer appId;
 
     private Integer versionCode;
 
-    private String delcare;
+    private String declare;
 
     private String file;
 
     private Date createTime;
 
-    public App(Integer appId, Integer versionCode, String delcare, String file, Date createTime) {
+    public App(Integer appId, Integer versionCode, String declare, String file, Date createTime) {
         this.appId = appId;
         this.versionCode = versionCode;
-        this.delcare = delcare;
+        this.declare = declare;
         this.file = file;
         this.createTime = createTime;
     }
@@ -43,12 +41,12 @@ public class App {
         this.versionCode = versionCode;
     }
 
-    public String getDelcare() {
-        return delcare;
+    public String getDeclare() {
+        return declare;
     }
 
-    public void setDelcare(String delcare) {
-        this.delcare = delcare == null ? null : delcare.trim();
+    public void setDeclare(String declare) {
+        this.declare = declare == null ? null : declare.trim();
     }
 
     public String getFile() {

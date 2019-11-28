@@ -70,8 +70,8 @@ public class CommonController {
         return iUserService.upload(file);
     }
     @RequestMapping("app.do")
-    public ServerResponse uploadApp( ApkVO apkVO){
-    return iAppService.updateApk(apkVO);
+    public ServerResponse uploadApp( @RequestParam("versionCode")Integer versionCode,@RequestParam("declare")String declare,MultipartFile file){
+        return iAppService.updateApk(versionCode,declare,file);
     }
 
 

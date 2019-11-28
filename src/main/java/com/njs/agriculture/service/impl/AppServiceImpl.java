@@ -32,9 +32,7 @@ public class AppServiceImpl implements IAppService {
     IFileService iFileService;
     @Autowired
     AppMapper appMapper;
-    public int insertintoapp(App app){
-        return appMapper.inserttoapp(app);
-    }
+
     @Override
     public int deleteByPrimaryKey(Integer appId) {
         return appMapper.deleteByPrimaryKey(appId);
@@ -71,21 +69,22 @@ public App selectByversionCode(Integer versionCode){
     return appMapper.selectByversionCode(versionCode);
 }
 @Override
-   public ServerResponse updateApk(ApkVO apkVO)  {
+   public ServerResponse updateApk(Integer versionCode,String declare,MultipartFile file)  {
         boolean flag=true;
         try {
-            if (null != appMapper.selectByversionCode(apkVO.getVersionCode())) {
+            if (null != appMapper.selectByversionCode(versionCode)) {
                 flag=false;
             }
-        else{    App app = new App();
+        else{
+            App app = new App();
             String path = PropertiesUtil.getProperty("appuploadDir-test") + "user";
-            String fileName = iFileService.upload(apkVO.getFile(), path);
+            String fileName = iFileService.upload(file, path);
             app.setFile(Const.USERAPKREEFIX + fileName);
             app.setCreateTime((new Date()));
-            app.setDelcare(apkVO.getDelcare());
-            app.setVersionCode(apkVO.getVersionCode());
+            app.setDeclare(declare);
+            app.setVersionCode(versionCode);
 
-            appMapper.insert(app);
+            appMapper.insertSelective(app);
             flag=true;
         }
 
@@ -108,12 +107,14 @@ public App selectByversionCode(Integer versionCode){
             }
 
       }catch (Exception e)
-      {e.printStackTrace();}
+      {
+          e.printStackTrace();
+      }
       Map map=new HashMap();
       map.put("versionCode",latestApk.getVersionCode());
       map.put("url",PropertiesUtil.getProperty("server")+(latestApk.getFile()));
       map.put("createTime",latestApk.getCreateTime());
-      map.put("declare",latestApk.getDelcare());
+      map.put("declare",latestApk.getDeclare());
         return ServerResponse.createBySuccess(map);
     }
 

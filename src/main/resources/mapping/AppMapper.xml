@@ -5,13 +5,13 @@
     <constructor>
       <idArg column="app_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="version_code" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="delcare" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="declare" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="file" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    app_id, version_code, delcare, file, create_time
+    app_id, version_code, `declare`, file, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,9 +24,9 @@
     where app_id = #{appId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.njs.agriculture.pojo.App">
-    insert into app (app_id, version_code, delcare, 
+    insert into app (app_id, version_code, declare,
       file, create_time)
-    values (#{appId,jdbcType=INTEGER}, #{versionCode,jdbcType=INTEGER}, #{delcare,jdbcType=VARCHAR}, 
+    values (#{appId,jdbcType=INTEGER}, #{versionCode,jdbcType=INTEGER}, #{declare,jdbcType=VARCHAR},
       #{file,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.App">
@@ -38,8 +38,8 @@
       <if test="versionCode != null">
         version_code,
       </if>
-      <if test="delcare != null">
-        delcare,
+      <if test="declare != null">
+        `declare`,
       </if>
       <if test="file != null">
         file,
@@ -55,8 +55,8 @@
       <if test="versionCode != null">
         #{versionCode,jdbcType=INTEGER},
       </if>
-      <if test="delcare != null">
-        #{delcare,jdbcType=VARCHAR},
+      <if test="declare != null">
+        #{declare,jdbcType=VARCHAR},
       </if>
       <if test="file != null">
         #{file,jdbcType=VARCHAR},
@@ -72,8 +72,8 @@
       <if test="versionCode != null">
         version_code = #{versionCode,jdbcType=INTEGER},
       </if>
-      <if test="delcare != null">
-        delcare = #{delcare,jdbcType=VARCHAR},
+      <if test="declare != null">
+        `declare` = #{declare,jdbcType=VARCHAR},
       </if>
       <if test="file != null">
         file = #{file,jdbcType=VARCHAR},
@@ -87,25 +87,23 @@
   <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.App">
     update app
     set version_code = #{versionCode,jdbcType=INTEGER},
-      delcare = #{delcare,jdbcType=VARCHAR},
+      `declare` = #{declare,jdbcType=VARCHAR},
       file = #{file,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where app_id = #{appId,jdbcType=INTEGER}
   </update>
-
-  <select id="selectByversionCode" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByversionCode" parameterType="java.lang.Integer" resultType="com.njs.agriculture.pojo.App">
     select
-    <include refid="Base_Column_List" />
+    *
     from app
-    where version_code = #{versionCode,jdbcType=INTEGER}
+    where version_code = #{versionCode}
   </select>
-  <insert id="inserttoapp" useGeneratedKeys="true" keyProperty="app_id" parameterType="com.njs.agriculture.pojo.App">
-    insert into app ('version_code','delcare','file')values (#{app.versionCode},#{app.declare},#{app.file})
-  </insert>
+
   <select id="getLatestApk"  resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List"/>
     from app order by create_time desc
 
   </select>
+
 </mapper>

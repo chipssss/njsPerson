@@ -1,7 +1,5 @@
 package com.njs.agriculture.mapper;
 
-import com.njs.agriculture.VO.ApkVO;
-import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.App;
 
 import java.util.List;
@@ -16,14 +14,7 @@ public interface AppMapper {
     App selectByPrimaryKey(Integer appId);
 
     int updateByPrimaryKeySelective(App record);
-
-    int updateByPrimaryKey(App record);
-
-    ServerResponse updateApk(ApkVO apkVO);
-
-     int inserttoapp(App app);
-
+     List<App> getLatestApk();
     App selectByversionCode(Integer versionCode);
-
-    List<App> getLatestApk();
+    int updateByPrimaryKey(App record);
 }

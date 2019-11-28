@@ -13,7 +13,7 @@ public class ApkVO {
 
     private Integer versionCode;
 
-    private String delcare;
+    private String declare;
 
     private MultipartFile file;
     @JsonInclude(JsonInclude.Include.NON_NULL)

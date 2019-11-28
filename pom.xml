@@ -12,7 +12,7 @@
     <groupId>com.njs</groupId>
     <artifactId>agriculture</artifactId>
     <name>agriculture</name>
-    <description>Demo project for Spring Boot</description>
+    <declare>Demo project for Spring Boot</declare>
     <!--修改打包形式-->
     <packaging>war</packaging>
 
