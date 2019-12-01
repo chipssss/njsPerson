@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.SecureImageMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.SecureImage">
+    <constructor>
+      <arg column="secure_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.SecureImage">
+    insert into stock_image (secure_image, id)
+    values (#{secureImage,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.SecureImage">
+    insert into stock_image
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="secureImage != null">
+        secure_image,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="secureImage != null">
+        #{secureImage,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

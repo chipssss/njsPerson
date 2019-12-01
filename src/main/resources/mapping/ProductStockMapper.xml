@@ -211,4 +211,11 @@
     and source = #{source,jdbcType=INTEGER}
     and source_id = #{sourceId,jdbcType=INTEGER}
   </select>
+  <select id="selectByQuantityAndBatchId" parameterType="map" resultType="com.njs.agriculture.pojo.ProductStock">
+select
+<include refid="Base_Column_List"/>
+    from product_stock
+    where quantity=#{quantity,jdbcType=INTEGER}
+    and batch_id = #{batchId,jdbcType=VARCHAR}
+  </select>
 </mapper>

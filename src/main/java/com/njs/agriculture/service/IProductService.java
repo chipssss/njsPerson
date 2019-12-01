@@ -2,6 +2,7 @@ package com.njs.agriculture.service;
 
 import com.njs.agriculture.VO.MachineVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
+import com.njs.agriculture.VO.ProductStockVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
 
@@ -45,7 +46,7 @@ public interface IProductService {
 
     ServerResponse productBasicGet(int userId);
 
-    ServerResponse productStockAdd(ProductStock productStock, int userId);
+    ServerResponse productStockAdd(ProductStockVO productStockVO, int userId);
 
     ServerResponse productStockGet(int userId);
 

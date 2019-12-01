@@ -2,6 +2,7 @@ package com.njs.agriculture.controller.backend;
 
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.VO.MachineVO;
+import com.njs.agriculture.VO.ProductStockVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
@@ -91,9 +92,9 @@ public class ProductionController {
     }
 
     @RequestMapping("productStockAdd.do")
-    public ServerResponse productStockAdd(@RequestBody ProductStock productStock, HttpSession session){
+    public ServerResponse productStockAdd(@RequestBody ProductStockVO productStockVO, HttpSession session){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
-        return iProductService.productStockAdd(productStock, user.getUserId());
+        return iProductService.productStockAdd(productStockVO, user.getUserId());
     }
 
     //库存get

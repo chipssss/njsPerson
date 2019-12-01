@@ -1,5 +1,9 @@
 package com.njs.agriculture.pojo;
 
+
+import lombok.Data;
+
+@Data
 public class User {
     private Integer userId;
 
@@ -13,18 +17,42 @@ public class User {
 
     private String image;
 
-    public User(Integer userId, String username, String password, String phonenum, Integer type, String image) {
+    public String licenseUrl;
+
+    public String licenseCode;
+
+    public String location;
+
+
+    public User(Integer userId, String username, String password, String phonenum, Integer type, String image,String location,String licenseCode,String licenseUrl) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.phonenum = phonenum;
         this.type = type;
         this.image = image;
+        this.location=location;
+        this.licenseCode=licenseCode;
+        this.licenseUrl=licenseUrl;
     }
 
     public User() {
         super();
     }
+
+    public String getLicenseUrl() {
+        return licenseUrl;
+    }
+
+    public void setLicenseCode(String licenseCode) { this.licenseCode = licenseCode; }
+
+    public void setLicenseUrl(String licenseUrl) { this.licenseUrl = licenseUrl; }
+
+   public String getLicenseCode(){return licenseCode;}
+
+    public String getLocation(){return location;}
+
+    public void setLocation(String location){this.location=location;}
 
     public Integer getUserId() {
         return userId;

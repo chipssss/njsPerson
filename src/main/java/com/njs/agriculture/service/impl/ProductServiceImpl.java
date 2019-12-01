@@ -37,6 +37,8 @@ import java.util.stream.Stream;
 public class ProductServiceImpl implements IProductService {
 
     @Autowired
+    private SecureImageMapper secureImageMapper;
+    @Autowired
     private ProductBasicMapper productBasicMapper;
 
     @Autowired
@@ -248,30 +250,39 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ServerResponse productStockAdd(ProductStock productStock, int userId) {
+    public ServerResponse productStockAdd(ProductStockVO productStockVO, int userId) {
 
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         int source = (int) serverResponse.getData().get("source");
         int sourceId = (int) serverResponse.getData().get("sourceId");
-        productStock.setSource(source);
-        productStock.setSourceId(sourceId);
+        productStockVO.setSource(source);
+        productStockVO.setSourceId(sourceId);
         StringBuilder batchId = new StringBuilder();
         if(source == 0){
             batchId.append("GR");
         }else {
             batchId.append("DW");
         }
-        batchId.append(sourceId).append(productStock.getProductId()).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"));
-        productStock.setBatchId(batchId.toString());
-
+        batchId.append(sourceId).append(productStockVO.getProductId()).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"));
+        productStockVO.setBatchId(batchId.toString());
+        ProductStock productStock=new ProductStock();
+       BeanUtils.copyProperties(productStockVO,productStock);
         int resultRow = productStockMapper.insert(productStock);
+        Integer id=productStock.getId();
+
+      SecureImage secureImage=new SecureImage();
+      secureImage.setId(id);
+        for(String Image:productStockVO.getSecureImage()) {
+            secureImage.setSecureImage(Image);
+        secureImageMapper.insert(secureImage);
+        }
         if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("插入新数据失败！");
         }
 
         //更新基础表
-        updateBasicTotal(productStock.getProductId(), productStock.getQuantity(), 0);
-        return ServerResponse.createBySuccess(productStock);
+        updateBasicTotal(productStockVO.getProductId(), productStockVO.getQuantity(), 0);
+        return ServerResponse.createBySuccess(productStockVO);
     }
 
     @Override

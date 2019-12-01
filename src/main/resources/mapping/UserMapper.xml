@@ -9,10 +9,13 @@
       <arg column="phonenum" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
       <arg column="image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="license_code" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="license_url" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, username, password, phonenum, type, image
+    user_id, username, password, phonenum, type, image,license_code,license_url,location
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -26,10 +29,11 @@
   </delete>
   <insert id="insert" parameterType="com.njs.agriculture.pojo.User" useGeneratedKeys="true" keyProperty="userId">
     insert into user (user_id, username, password, 
-      phonenum, type, image
+      phonenum, type, image, license_code , license_url, location
       )
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phonenum,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{image,jdbcType=VARCHAR}
+      #{phonenum,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{image,jdbcType=VARCHAR},#{licenseCode,jdbcType=VARCHAR},
+      #{licenseUrl,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.User">
@@ -53,6 +57,15 @@
       <if test="image != null">
         image,
       </if>
+      <if test="licenseCode != null">
+        licenseCode,
+      </if>
+      <if test="licenseUrl != null">
+        licenseUrl,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -72,6 +85,15 @@
       </if>
       <if test="image != null">
         #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseCode != null">
+        #{licenseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseUrl != null">
+        #{licenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
