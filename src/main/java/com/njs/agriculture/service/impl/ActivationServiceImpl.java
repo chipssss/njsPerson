@@ -11,6 +11,7 @@ import com.njs.agriculture.service.IActivationService;
 import com.njs.agriculture.service.IProcessRecordService;
 import com.njs.agriculture.service.IProductService;
 import com.njs.agriculture.service.IUserService;
+import com.njs.agriculture.utils.DateUtil;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,7 +127,7 @@ public class ActivationServiceImpl implements IActivationService {
         if (productionBatch == null) {
             return ServerResponse.createByErrorMessage("批次为空！");
         }
-        ServerResponse<List> listServerResponse = iProcessRecordService.trace(0, 0, null, null, productionBatch.getId());
+        ServerResponse<List> listServerResponse = iProcessRecordService.trace(0, 0, productionBatch.getFieldId(),productionBatch.getPlantTime(), productionBatch.getCollectTime());
         result.put("processRecord", listServerResponse.getData());
         return ServerResponse.createBySuccess(result);
     }

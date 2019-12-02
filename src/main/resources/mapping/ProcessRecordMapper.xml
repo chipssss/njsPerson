@@ -184,7 +184,7 @@
       <if test="sourceId != null and sourceId != 0">
         source_id = #{sourceId}
       </if>
-      <if test="source != null">
+      <if test="source != null and source != 0">
         AND source = #{source}
       </if>
       <if test="fieldId != null and fieldId != 0">
@@ -192,6 +192,23 @@
       </if>
       <if test="cropId != null and cropId != 0">
         AND crop_id = #{cropId}
+      </if>
+      <if test="startTime != null">
+        AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+      </if>
+      <if test="endTime != null">
+        AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByFieldId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from process_record
+    <where>
+      <if test="fieldId != null and fieldId != 0">
+        AND field_id = #{fieldId}
       </if>
       <if test="startTime != null">
         AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{startTime}, '%Y-%m-%d')

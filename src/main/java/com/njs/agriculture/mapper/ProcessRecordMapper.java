@@ -19,6 +19,9 @@ public interface ProcessRecordMapper {
 
     int updateByPrimaryKey(ProcessRecord record);
 
+    List<ProcessRecord> selectByFieldId(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
+                                        @Param("fieldId") int fieldId);
+
     List<ProcessRecord> selectByCondition(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
                                           @Param("fieldId") int fieldId, @Param("cropId") int cropId,
                                           @Param("sourceId") int sourceId, @Param("source") int source);

@@ -122,6 +122,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return ServerResponse.createBySuccess(simpleVOS);
     }
 
+    /**
+     * 暂时废弃，通过fieldId查询流程，简化业务逻辑
+     * @return
+     */
+    @Deprecated
     @Override
     public ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId) {
         //1.先查List<int> 生产记录的id
@@ -131,6 +136,16 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         }
         List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(startTime, endTime, recordIds);
 
+
+        return ServerResponse.createBySuccess(records2recordVO(processRecordList, 0));
+    }
+
+    @Override
+    public ServerResponse trace(int pageNum, int pageSize, int fieldId, Date startTime, Date endTime) {
+        if(pageNum != 0 && pageSize != 0){
+            PageHelper.startPage(pageNum, pageSize);
+        }
+        List<ProcessRecord> processRecordList = processRecordMapper.selectByFieldId(startTime, endTime, fieldId);
         return ServerResponse.createBySuccess(records2recordVO(processRecordList, 0));
     }
 

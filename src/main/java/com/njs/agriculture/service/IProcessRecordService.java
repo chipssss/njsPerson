@@ -41,6 +41,13 @@ public interface IProcessRecordService {
     ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId);
 
     /**
+     * 溯源，通过二维码查询对应的记录
+     * @param fieldId
+     * @return
+     */
+    ServerResponse trace(int pageNum, int pageSize,  int fieldId, Date startTime, Date endTime);
+
+    /**
      * 生产溯源二维码的id
      * @param recordIds
      * @return
