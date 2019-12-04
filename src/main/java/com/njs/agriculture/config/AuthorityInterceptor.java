@@ -66,6 +66,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if(url.indexOf("portal/processRecord/openProcessRecord") >= 0)
             return true;
 
+        if (url.indexOf("/backend/user/app.do") >= 0) {  // 获取版本信息拦截去除
+            return true;
+        }
+
 
 
         //判断是否已登录

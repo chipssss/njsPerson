@@ -51,7 +51,7 @@ public class AdminController {
         }
         return iUserSerivce.userDel(userId);
     }
-    @GetMapping("getLatestApk.do")
+    @RequestMapping("getLatestApk.do")
     public ServerResponse getApk(@RequestBody JSONObject jsonObject){
         Integer versionCode=jsonObject.getInteger("versionCode");
         return iAppService.getLatestApk(versionCode);
