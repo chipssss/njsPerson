@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.mapper.InputThirdCateMapper;
 import com.njs.agriculture.pojo.InputConsume;
+import com.njs.agriculture.pojo.InputThirdCate;
 import com.njs.agriculture.pojo.User;
 import com.njs.agriculture.service.IInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/portal/input/")
 public class InputController {
+
 
     @Autowired
     IInputService iInputService;
@@ -58,6 +61,22 @@ public class InputController {
         return iInputService.secondCateGet();
     }
 
+    @PostMapping("thirdCateSet.do")
+    public ServerResponse thirdCateSet(HttpSession session,@RequestBody JSONObject jsonObject){
+       User user=(User) session.getAttribute(Const.CURRENT_USER);
+        InputThirdCate inputThirdCate=new InputThirdCate();
+        inputThirdCate.setSecondcateId((Integer) jsonObject.getInteger("secondCateId"));
+        inputThirdCate.setName((String)jsonObject.getString("name"));
+        inputThirdCate.setUserId(user.getUserId());
+        return iInputService.thirdCateSet(inputThirdCate);
+
+    }
+    @RequestMapping("thirdCateGet.do")
+    public ServerResponse thirdCateId(@RequestBody JSONObject jsonObject){
+        Integer firstCateId=(Integer)jsonObject.getInteger("firstCateId");
+        Integer secondeCateId=(Integer)jsonObject.getInteger("secondCateId");
+            return iInputService.thirdCateGet(firstCateId,secondeCateId);
+    }
 
     @PostMapping("infoGet.do")
     public ServerResponse infoGet(@RequestBody JSONObject jsonObject){

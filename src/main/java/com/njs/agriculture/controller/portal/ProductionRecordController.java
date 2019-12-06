@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -121,6 +122,10 @@ public class ProductionRecordController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             return ServerResponse.createByErrorMessage("sorry,请登录！");
+        }
+
+        for(ProcessRecordInfoVO.Input x:processRecordInfoVO.getInputList()){
+            x.setQuantity((double)Math.round(x.getQuantity()*10)/10);
         }
         return iProcessRecordService.addProcess(processRecordInfoVO, user);
     }

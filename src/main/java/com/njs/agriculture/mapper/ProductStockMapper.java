@@ -35,4 +35,6 @@ public interface ProductStockMapper {
     List<ProductStock> selectByProductIdAndSource(@Param("productId") int productId, @Param("source") int source, @Param("sourceId") int sourceId);
 
     ProductStock selectByQuantityAndBatchId(@Param("quantity")int quantity,@Param("batchId")String batchId );
+
+
 }

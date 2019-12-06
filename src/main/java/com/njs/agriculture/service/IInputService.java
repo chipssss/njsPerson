@@ -5,6 +5,7 @@ import com.njs.agriculture.VO.InputVO;
 import com.njs.agriculture.VO.ProcessRecordInfoVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.InputConsume;
+import com.njs.agriculture.pojo.InputThirdCate;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public interface IInputService {
      */
     ServerResponse categoryInfoForAndroid();
 
+    ServerResponse thirdCateSet(InputThirdCate inputThirdCate);
 
     ServerResponse firstCateGet();
 
@@ -107,4 +109,6 @@ public interface IInputService {
     ServerResponse inputStreamAdd(int fieldId, int cropId, List<ProcessRecordInfoVO.Input> inputList, int userId, int recordId);
 
     ServerResponse inputStreamGet(int userId);
+
+    ServerResponse thirdCateGet(Integer firstCateId,Integer secondCateId);
 }

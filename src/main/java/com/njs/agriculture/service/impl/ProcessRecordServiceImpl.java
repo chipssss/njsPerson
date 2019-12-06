@@ -204,56 +204,34 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         processRecord.setSourceId(field.getSourceId());
         String operations = Joiner.on(",").join(processRecordInfoVO.getOperationList());
         processRecord.setOperation(operations);
-        //1.先上传记录
-        int resultRow = processRecordMapper.insert(processRecord);
-        if(resultRow == 0){
-            return ServerResponse.createByErrorMessage("上传记录失败！");
-        }
-        StringBuilder s = new StringBuilder();
-        if(processRecordInfoVO.getInputList() != null){
-            for (ProcessRecordInfoVO.Input input : processRecordInfoVO.getInputList()) {
-                if(input.getSource() == 0){
-                    //先进行记录，删减，然后进行拼接
-                    InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
-                    if(inputUser == null){
-                        return ServerResponse.createByErrorMessage("找不到投入品");
-                    }
-                    double result = MathUtil.sub(inputUser.getQuantity().toString(), String.valueOf(input.getQuantity()));
-                    if(result < 0){
-                        return ServerResponse.createByErrorMessage("数量超过存在额!");
-                    }
-                    inputUser.setQuantity((float)result);
-                    inputUserMapper.updateByPrimaryKeySelective(inputUser);
-                    InputUsed inputUsed = new InputUsed(0, inputUser.getId(), input.getQuantity());
-                    inputUsedMapper.insert(inputUsed);
-                    s.append(inputUser.getName() + ",");
-                }else {
-                    InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
-                    if(inputEnterprise == null){
-                        return ServerResponse.createByErrorMessage("找不到投入品");
-                    }
-                    double result = MathUtil.sub(inputEnterprise.getQuantity().toString(), String.valueOf(input.getQuantity()));
-                    if(result < 0){
-                        return ServerResponse.createByErrorMessage("数量超过存在额!");
-                    }
-                    inputEnterprise.setQuantity((float)result);
-                    inputEnterpriseMapper.updateByPrimaryKeySelective(inputEnterprise);
-                    InputUsed inputUsed = new InputUsed(1, inputEnterprise.getId(), input.getQuantity());
-                    inputUsedMapper.insert(inputUsed);
-                    s.append(inputEnterprise.getName() + ",");
+        List<ProcessRecordInfoVO.Input> list=processRecordInfoVO.getInputList();
+        if(processRecordInfoVO.getInputList() != null) {
+            for (ProcessRecordInfoVO.Input x : list) {
+                if(x.getQuantity()!=0){
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(x.getName());
+                stringBuilder.append(x.getQuantity());
+                stringBuilder.append("kg");
+                processRecord.setInputRecord(stringBuilder.toString());
+                }
+                else {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(x.getName());
+                    processRecord.setInputRecord(stringBuilder.toString());
+                }
+                //1.先上传记录
+                int resultRow = processRecordMapper.insert(processRecord);
+                if (resultRow == 0) {
+                    return ServerResponse.createByErrorMessage("上传记录失败！");
                 }
             }
-            //3.插入流水表
-            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(),user.getUserId(), processRecord.getId());
-            if(!response.isSuccess()){
+
+            //2.插入流水表
+            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(), user.getUserId(), processRecord.getId());
+            if (!response.isSuccess()) {
                 throw new RuntimeException("插入流水表失败！");
             }
-        }
-        //更新记录
-        if (StringUtils.isNotBlank(s.toString())) {
-            String inputRecord = s.toString();
-            inputRecord = inputRecord.substring(0, inputRecord.length()-1);
-            processRecordMapper.updateByPrimaryKeySelective(new ProcessRecord(processRecord.getId(), inputRecord));
+
         }
         //2.批量插入图片
         for (String image : processRecordInfoVO.getImages()) {

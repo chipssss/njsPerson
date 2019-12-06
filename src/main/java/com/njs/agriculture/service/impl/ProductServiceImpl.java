@@ -21,10 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -289,8 +286,17 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse productStockGet(int userId) {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<ProductStock> productStockList;
+        List<ProductStockVO> productStockVOList=Lists.newLinkedList();
         productStockList = productStockMapper.selectBySource((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
-        return ServerResponse.createBySuccess(productStockList);
+        for(ProductStock productStocktemp:productStockList){
+            ProductStockVO productStockVO=new ProductStockVO();
+            BeanUtils.copyProperties(productStocktemp,productStockVO);
+
+
+            productStockVO.setSecureImage( secureImageMapper.selectById(productStocktemp.getId()));
+            productStockVOList.add(productStockVO);
+        }
+        return ServerResponse.createBySuccess(productStockVOList);
     }
 
     @Override

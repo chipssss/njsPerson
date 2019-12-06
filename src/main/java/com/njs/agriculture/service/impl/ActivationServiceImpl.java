@@ -99,6 +99,7 @@ public class ActivationServiceImpl implements IActivationService {
     @Override
     public ServerResponse scanGetRecords(String code) {
         ProductActivation productActivation = productActivationMapper.getByCode(code);
+
         if (code == null) {
             return ServerResponse.createByErrorMessage("没有该条二维码记录!");
         }
@@ -107,17 +108,27 @@ public class ActivationServiceImpl implements IActivationService {
             return ServerResponse.createByErrorMessage("库存表没有该记录！");
         }
         ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
+
         Map result = Maps.newHashMap();
+
         result.put("productBasic",productBasic);
+
         if (productStock.getSource() == 0) {
             User user = userMapper.selectByPrimaryKey(productStock.getSourceId());
             if (user != null) {
                 result.put("companyTitle", user.getUsername());
+                result.put("username",user.getUsername());
+                if(user.getLocation()==null){
+                    result.put("location"," ");
+                }
+               else  result.put("location",user.getLocation());
+
             }
         } else {
             Enterprise enterprise = enterpriseMapper.selectByPrimaryKey(productStock.getSourceId());
             if (enterprise != null) {
                 result.put("companyTitle", enterprise.getName());
+                result.put("location",enterprise.getAddress());
             }
         }
         List<Machining> machiningList = machiningMapper.selectByStockId(productStock.getId());

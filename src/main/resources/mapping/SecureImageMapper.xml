@@ -30,4 +30,7 @@
       </if>
     </trim>
   </insert>
+  <select id="selectById" parameterType="integer" resultType="string">
+    select  secure_image from stock_image where id=#{id}
+  </select>
 </mapper>

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,9 @@ public class InputServiceImpl<T> implements IInputService {
 
     @Autowired
     InputSecondCateMapper inputSecondCateMapper;
+
+    @Autowired
+    InputThirdCateMapper inputThirdCateMapper;
 
     @Autowired
     InputUserMapper inputUserMapper;
@@ -217,6 +221,39 @@ public class InputServiceImpl<T> implements IInputService {
 
     }
 
+    @Override
+    public  ServerResponse thirdCateSet(InputThirdCate inputThirdCate){
+       inputThirdCateMapper.insert(inputThirdCate);
+      if(inputThirdCate.getId()!=0){
+          Map data=new HashMap();
+          data.put("id",inputThirdCate.getId());
+          data.put("secondCateId",inputThirdCate.getSecondcateId());
+          data.put("name",inputThirdCate.getName());
+          return ServerResponse.createBySuccess(data);
+      }
+
+        return ServerResponse.createByErrorMessage("添加失败");
+    }
+    @Override
+    public ServerResponse thirdCateGet(Integer firstCateId,Integer secondCateId){
+        List<InputThirdCate> inputThirdCateList;
+        if(firstCateId==0||firstCateId==null||secondCateId==0||secondCateId==null){
+            inputThirdCateList=inputThirdCateMapper.selectAll();
+        }
+        else{
+            inputThirdCateList=inputThirdCateMapper.selectBySecondCateId(secondCateId);
+        }
+        Map data =new HashMap();
+        if(inputThirdCateList==null||inputThirdCateList.size()==0){
+            data.put("firstCateId",firstCateId);
+            data.put("secondCateId",secondCateId);
+            return  ServerResponse.createByError("没有相关的第三级类别",data);
+        }
+        else {
+
+            return ServerResponse.createBySuccess(inputThirdCateList);
+        }
+    }
     @Override
     public ServerResponse sumGet(int source, int sourceId) {
         int totalEntries;
@@ -578,14 +615,19 @@ public class InputServiceImpl<T> implements IInputService {
         inputStream.setSourceId((int)map.get("sourceId"));
         inputStream.setRecordId(recordId);
         for (ProcessRecordInfoVO.Input input : inputList) {
-            if(input.getSource() == 0){
-                InputUser inputUser = inputUserMapper.selectByPrimaryKey(input.getInputId());
-                inputStream.setInputName(inputUser.getName());
+
+            if(input.getQuantity() == 0){
+                StringBuilder inputName=new StringBuilder();
+               inputName.append(input.getName());
+                inputStream.setInputName(inputName.toString());
             }else{
-                InputEnterprise inputEnterprise = inputEnterpriseMapper.selectByPrimaryKey(input.getInputId());
-                inputStream.setInputName(inputEnterprise.getName());
+                StringBuilder inputName=new StringBuilder();
+                inputName.append(input.getName());
+                inputName.append(input.getQuantity());
+                inputName.append("kg");
+                inputStream.setInputName(inputName.toString());
             }
-            inputStream.setQuantity(Float.valueOf(input.getQuantity()).intValue());
+            inputStream.setQuantity(Double.valueOf(input.getQuantity()).intValue());
             int resultRow = inputStreamMapper.insert(inputStream);
             if(resultRow == 0){
                 return ServerResponse.createByError();

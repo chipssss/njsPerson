@@ -51,36 +51,36 @@ public class ProcessRecordInfoVO {
     }
 
     public static class Input{
-        private int inputId;
-        private float quantity;
-        private int source;
+        String name; // 使用投入品的id
+        double quantity; // 使用数量
+        int id;//来源 个人还是企业
 
         public Input(){
         }
 
-        public Input(int inputId, float quantity) {
-            this.inputId = inputId;
+        public Input(String name, double quantity) {
+            this.name = name;
             this.quantity = quantity;
         }
 
-        public int getInputId() {
-            return inputId;
+        public String  getName() {
+            return name;
         }
 
-        public void setInputId(int inputId) {
-            this.inputId = inputId;
+        public void setName(String name) {
+            this.name= name;
         }
 
-        public float getQuantity() {
+        public double getQuantity() {
             return quantity;
         }
 
-        public void setQuantity(float quantity) {
+        public void setQuantity(double quantity) {
             this.quantity = quantity;
         }
 
-        public int getSource() {
-            return source;
+        public int getId () {
+            return id;
         }
     }
 

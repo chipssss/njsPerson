@@ -75,4 +75,6 @@ public interface IProductService {
      * @return
      */
     ServerResponse getAllBatchInfo(int userId);
+
+
 }
