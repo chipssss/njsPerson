@@ -91,14 +91,14 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     InputStreamMapper inputStreamMapper;
 
     @Override
-    public ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize){
+    public ServerResponse processRecord(int userId, String startTime, String endTime, int fieldId, int cropId, int pageNum, int pageSize) {
         Date sTime = DateUtil.strToDate(startTime, DateUtil.SHORT_FORMAT);
         Date eTime = DateUtil.strToDate(endTime, DateUtil.SHORT_FORMAT);
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<ProcessRecord> processRecordList;
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
-        processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, (int)serverResponse.getData().get("sourceId"), (int)serverResponse.getData().get("source"));
+        processRecordList = processRecordMapper.selectByCondition(sTime, eTime, fieldId, cropId, (int) serverResponse.getData().get("sourceId"), (int) serverResponse.getData().get("source"));
         PageInfo pageInfo = new PageInfo(processRecordList);
         pageInfo.setList(records2recordVO(processRecordList, 0));
         return ServerResponse.createBySuccess(pageInfo);
@@ -108,12 +108,12 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse getRecordCrop(int userId) {
         ServerResponse<Map> serverResponse = iUserService.isManager(userId);
         List<Integer> cropIdList = processRecordMapper
-                .selectCropIdBySource((int)serverResponse.getData().get("source"), (int)serverResponse.getData().get("sourceId"));
+                .selectCropIdBySource((int) serverResponse.getData().get("source"), (int) serverResponse.getData().get("sourceId"));
 
         List<SimpleVO> simpleVOS = Lists.newLinkedList();
         for (Integer integer : cropIdList) {
-            CropInfo cropInfo =  cropInfoMapper.selectByPrimaryKey(integer);
-            if(cropInfo == null){
+            CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(integer);
+            if (cropInfo == null) {
                 continue;
             }
             SimpleVO simpleVO = new SimpleVO(integer, cropInfo.getName());
@@ -124,6 +124,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     /**
      * 暂时废弃，通过fieldId查询流程，简化业务逻辑
+     *
      * @return
      */
     @Deprecated
@@ -131,7 +132,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     public ServerResponse trace(int pageNum, int pageSize, Date startTime, Date endTime, int batchId) {
         //1.先查List<int> 生产记录的id
         List<Integer> recordIds = processQrcodeMapper.selectByBatchId(batchId);
-        if(pageNum != 0 && pageSize != 0){
+        if (pageNum != 0 && pageSize != 0) {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<ProcessRecord> processRecordList = processRecordMapper.selectByRecordIds(startTime, endTime, recordIds);
@@ -142,7 +143,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
     @Override
     public ServerResponse trace(int pageNum, int pageSize, int fieldId, Date startTime, Date endTime) {
-        if(pageNum != 0 && pageSize != 0){
+        if (pageNum != 0 && pageSize != 0) {
             PageHelper.startPage(pageNum, pageSize);
         }
         List<ProcessRecord> processRecordList = processRecordMapper.selectByFieldId(startTime, endTime, fieldId);
@@ -152,7 +153,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Override
     @Transactional
     public ServerResponse generateTrace(int batchId, List<Integer> recordIds, int quantity) {
-        if(quantity == 0){
+        if (quantity == 0) {
             return ServerResponse.createByErrorMessage("采收数量为0");
         }
         //更新数量
@@ -173,11 +174,11 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         //有依赖，如果可以建议重写接口
         Field field = fieldMapper.selectByPrimaryKey(processRecordInfoVO.getFieldId());
         CropInfo crop = cropInfoMapper.selectByPrimaryKey(field.getCropId());
-        if(field == null || crop == null){
+        if (field == null || crop == null) {
             return ServerResponse.createByErrorMessage("找不到田块或者农作物");
         }
         for (String s : processRecordInfoVO.getOperationList()) {
-            if(s.contains(Const.RECOVERY)){
+            if (s.contains(Const.RECOVERY)) {
                 //插入到记录表
                 RecoveryRecord recoveryRecord = new RecoveryRecord();
                 recoveryRecord.setCrop(crop.getName());
@@ -187,7 +188,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
                 recoveryRecord.setUserName(user.getUsername());
                 recoveryRecord.setStatus(0);
                 ServerResponse serverResponse = insertRecoveryRecord(recoveryRecord);
-                if(!serverResponse.isSuccess()){
+                if (!serverResponse.isSuccess()) {
                     return serverResponse;
                 }
             }
@@ -204,35 +205,22 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         processRecord.setSourceId(field.getSourceId());
         String operations = Joiner.on(",").join(processRecordInfoVO.getOperationList());
         processRecord.setOperation(operations);
-        List<ProcessRecordInfoVO.Input> list=processRecordInfoVO.getInputList();
-        if(processRecordInfoVO.getInputList() != null) {
-            for (ProcessRecordInfoVO.Input x : list) {
-                if(x.getQuantity()!=0){
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(x.getName());
-                stringBuilder.append(x.getQuantity());
-                stringBuilder.append("kg");
-                processRecord.setInputRecord(stringBuilder.toString());
-                }
-                else {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append(x.getName());
-                    processRecord.setInputRecord(stringBuilder.toString());
-                }
-                //1.先上传记录
-                int resultRow = processRecordMapper.insert(processRecord);
-                if (resultRow == 0) {
-                    return ServerResponse.createByErrorMessage("上传记录失败！");
-                }
-            }
 
-            //2.插入流水表
-            ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(), user.getUserId(), processRecord.getId());
-            if (!response.isSuccess()) {
-                throw new RuntimeException("插入流水表失败！");
-            }
-
+        // 格式化设置投入品
+        processRecord.setInputRecord(processRecordInfoVO.getInputList());
+        //1.先上传记录
+        int resultRow = processRecordMapper.insert(processRecord);
+        if (resultRow == 0) {
+            return ServerResponse.createByErrorMessage("上传记录失败！");
         }
+
+        //2.插入流水表
+        ServerResponse response = iInputService.inputStreamAdd(field.getId(), field.getCropId(), processRecordInfoVO.getInputList(), user.getUserId(), processRecord.getId());
+        if (!response.isSuccess()) {
+            throw new RuntimeException("插入流水表失败！");
+        }
+
+
         //2.批量插入图片
         for (String image : processRecordInfoVO.getImages()) {
             processImageMapper.insert(new ProcessImage(processRecord.getId(), image));
@@ -247,9 +235,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         List<String> images = Lists.newLinkedList();
         for (MultipartFile file : files) {
             String fileName = iFileService.upload(file, path);
-            if(fileName == null){
+            if (fileName == null) {
                 log.error("上传{}失败，事务回滚", file.getOriginalFilename());
-                throw new RuntimeException("上传"+file.getOriginalFilename()+"失败,事务回滚！");
+                throw new RuntimeException("上传" + file.getOriginalFilename() + "失败,事务回滚！");
             }
             images.add(Const.PROCESSIMGPREFIX + fileName);
         }
@@ -259,7 +247,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     @Override
     public ServerResponse getOperation() {
         List<Operation> operations = operationMapper.selectAll();
-        if(operations.isEmpty()){
+        if (operations.isEmpty()) {
             return ServerResponse.createByErrorMessage("未知错误！");
         }
         return ServerResponse.createBySuccess(operations);
@@ -314,9 +302,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         List<RecoveryRecord> created = Lists.newLinkedList();
         List<RecoveryRecord> uncreated = Lists.newLinkedList();
         for (RecoveryRecordVO recoveryRecordVO : recoveryRecordVOList) {
-            if(recoveryRecordVO.getStatus() == 0){
+            if (recoveryRecordVO.getStatus() == 0) {
                 uncreated.add(recoveryRecordVO);
-            }else {
+            } else {
                 created.add(recoveryRecordVO);
             }
         }
@@ -342,7 +330,7 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         Map map = iUserService.isManager(userId).getData();
         PageHelper.startPage(pageNum, pageSize);
         List<ProcessRecord> processRecordList = processRecordMapper.selectByStatusAndSourceByField(fieldId,
-                (int)map.get("source"), (int)map.get("sourceId"), 0);
+                (int) map.get("source"), (int) map.get("sourceId"), 0);
         PageInfo pageInfo = new PageInfo(processRecordList);
         pageInfo.setList(records2recordVO(processRecordList, 0));
         return ServerResponse.createBySuccess(pageInfo);
@@ -350,9 +338,10 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
 
 
     private static final int FLAG_OPEN = 0x0011;
+
     @Override
     public ServerResponse openProcessRecord(String authCode, List<Integer> companyId, Date start, Date end, int pageNum, int pageSize) {
-        if(!authCode.equals(Const.AUTH_CODE)) return ServerResponse.createByErrorMessage("授权码错误！");
+        if (!authCode.equals(Const.AUTH_CODE)) return ServerResponse.createByErrorMessage("授权码错误！");
         List<ProcessRecord> processRecordList;
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("source_id, create_time desc");
@@ -366,25 +355,26 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
     /**
      * 生产记录转为可传输的对象
      * flag为0时候投入品记录只为string
+     *
      * @param processRecordList
      * @param flag
      * @return
      */
-    public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList, int flag){
+    public List<ProcessRecordVO> records2recordVO(List<ProcessRecord> processRecordList, int flag) {
         List<ProcessRecordVO> processRecords = Lists.newArrayList();
-        if(!processRecordList.isEmpty()){
+        if (!processRecordList.isEmpty()) {
             for (ProcessRecord processRecord : processRecordList) {
                 ProcessRecordVO processRecordVO = new ProcessRecordVO();
                 List<String> images = processImageMapper.selectByRecordId(processRecord.getId());
-                if(!images.isEmpty()){
+                if (!images.isEmpty()) {
                     processRecordVO.setImages(images);
                 }
                 Field field = fieldMapper.selectByPrimaryKey(processRecord.getFieldId());
-                if(field != null){
+                if (field != null) {
                     processRecordVO.setFieldName(field.getName());
                 }
                 CropInfo cropInfo = cropInfoMapper.selectByPrimaryKey(processRecord.getCropId());
-                if(cropInfo != null){
+                if (cropInfo != null) {
                     processRecordVO.setCropName(cropInfo.getName());
                 }
                 if (flag == FLAG_OPEN) { // 规范请求，隐藏一些不必要的字段，拼接图片链接
@@ -400,9 +390,9 @@ public class ProcessRecordServiceImpl implements IProcessRecordService {
         return processRecords;
     }
 
-    public ServerResponse insertRecoveryRecord(RecoveryRecord recoveryRecord){
+    public ServerResponse insertRecoveryRecord(RecoveryRecord recoveryRecord) {
         int resultRow = recoveryRecordMapper.insert(recoveryRecord);
-        if(resultRow == 0){
+        if (resultRow == 0) {
             return ServerResponse.createByErrorMessage("插入失败！");
         }
         return ServerResponse.createBySuccess(recoveryRecord);

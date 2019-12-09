@@ -1,6 +1,10 @@
 package com.njs.agriculture.pojo;
 
+import com.njs.agriculture.VO.ProcessRecordInfoVO;
+
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class ProcessRecord {
     private Integer id;
@@ -158,5 +162,24 @@ public class ProcessRecord {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+
+    /**
+     * 格式化投入品记录
+     * @param inputList
+     */
+    public void setInputRecord(List<ProcessRecordInfoVO.Input> inputList) {
+        if (inputList == null || inputList.size() == 0) {
+            return;
+        }
+        StringBuilder builder = new StringBuilder();
+        inputList.forEach(input -> builder.append(format(input)).append(","));
+        builder.setLength(builder.length()-1);
+        inputRecord = builder.toString();
+    }
+
+    private String format(ProcessRecordInfoVO.Input input) {
+        return input.getQuantity() == 0? input.getName(): String.format("%s %.2f",input.getName(), input.getQuantity());
     }
 }

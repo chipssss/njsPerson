@@ -25,10 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther: SaikeiLEe
@@ -243,6 +240,7 @@ public class InputServiceImpl<T> implements IInputService {
         else{
             inputThirdCateList=inputThirdCateMapper.selectBySecondCateId(secondCateId);
         }
+
         Map data =new HashMap();
         if(inputThirdCateList==null||inputThirdCateList.size()==0){
             data.put("firstCateId",firstCateId);
@@ -254,6 +252,7 @@ public class InputServiceImpl<T> implements IInputService {
             return ServerResponse.createBySuccess(inputThirdCateList);
         }
     }
+
     @Override
     public ServerResponse sumGet(int source, int sourceId) {
         int totalEntries;

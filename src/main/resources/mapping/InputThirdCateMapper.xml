@@ -86,8 +86,10 @@
     from input_thirdcate
     where secondcate_id=#{secondCateId}
   </select>
+  <!-- 农家肥排前 -->
   <select id="selectAll" resultType="com.njs.agriculture.pojo.InputThirdCate">
     select <include refid="Base_Column_List" />
     from input_thirdcate
+    order by secondcate_id asc
   </select>
 </mapper>
