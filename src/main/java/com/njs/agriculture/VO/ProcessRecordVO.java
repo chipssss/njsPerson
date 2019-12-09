@@ -44,6 +44,8 @@ public class ProcessRecordVO {
 
     private List<String> images;
 
+    private String companyName;
+
     /**
      * 拼接成完整路径
      */
@@ -55,4 +57,6 @@ public class ProcessRecordVO {
             images.set(i, Const.SERVER_URL + images.get(i));
         }
     }
+
+
 }

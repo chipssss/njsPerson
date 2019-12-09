@@ -31,6 +31,8 @@ public class ProcessRecord {
 
     private Integer status;
 
+    private String companyName;
+
     public ProcessRecord(Integer id, String inputRecord) {
         this.id = id;
         this.inputRecord = inputRecord;
@@ -49,6 +51,22 @@ public class ProcessRecord {
         this.source = source;
         this.sourceId = sourceId;
         this.status = status;
+    }
+
+    public ProcessRecord(Integer id, Integer fieldId, String location, Integer cropId, String operation, String inputRecord, Date createTime, String remark, String weather, Integer source, Integer sourceId, Integer status, String companyName) {
+        this.id = id;
+        this.fieldId = fieldId;
+        this.location = location;
+        this.cropId = cropId;
+        this.operation = operation;
+        this.inputRecord = inputRecord;
+        this.createTime = createTime;
+        this.remark = remark;
+        this.weather = weather;
+        this.source = source;
+        this.sourceId = sourceId;
+        this.status = status;
+        this.companyName = companyName;
     }
 
     public ProcessRecord() {
@@ -164,6 +182,9 @@ public class ProcessRecord {
         this.status = status;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
 
     /**
      * 格式化投入品记录
@@ -181,5 +202,24 @@ public class ProcessRecord {
 
     private String format(ProcessRecordInfoVO.Input input) {
         return input.getQuantity() == 0? input.getName(): String.format("%s %.2f",input.getName(), input.getQuantity());
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessRecord{" +
+                "id=" + id +
+                ", fieldId=" + fieldId +
+                ", location='" + location + '\'' +
+                ", cropId=" + cropId +
+                ", operation='" + operation + '\'' +
+                ", inputRecord='" + inputRecord + '\'' +
+                ", createTime=" + createTime +
+                ", remark='" + remark + '\'' +
+                ", weather='" + weather + '\'' +
+                ", source=" + source +
+                ", sourceId=" + sourceId +
+                ", status=" + status +
+                ", companyName='" + companyName + '\'' +
+                '}';
     }
 }

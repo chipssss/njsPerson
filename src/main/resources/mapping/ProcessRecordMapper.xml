@@ -17,8 +17,25 @@
       <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
+  <resultMap id="OpenResultMap" type="com.njs.agriculture.pojo.ProcessRecord">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="crop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="operation" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="input_record" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="weather" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="companyName" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
   <sql id="Base_Column_List">
-    id, field_id, location, crop_id, operation, input_record, create_time, remark, weather, 
+    process_record.id, field_id, process_record.location, crop_id, operation, input_record, create_time, remark, weather,
     source, source_id, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -277,10 +294,10 @@
       #{item}
     </foreach>
   </update>
-  <select id="selectByConditionOpen" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectByConditionOpen" resultMap="OpenResultMap" parameterType="map">
     select
-    <include refid="Base_Column_List"/>
-    from process_record
+    <include refid="Base_Column_List"/>, `user`.username as companyName
+    from process_record, `user`
     <where>
       <if test="companyId != null and companyId.size() > 0">
         source_id in
@@ -288,6 +305,7 @@
           #{item}
         </foreach>
       </if>
+      AND process_record.source_id = `user`.user_id
       <if test="startTime != null">
         AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{startTime}, '%Y-%m-%d')
       </if>
