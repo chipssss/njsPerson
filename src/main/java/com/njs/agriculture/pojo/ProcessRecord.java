@@ -201,7 +201,7 @@ public class ProcessRecord {
     }
 
     private String format(ProcessRecordInfoVO.Input input) {
-        return input.getQuantity() == 0? input.getName(): String.format("%s %.2f",input.getName(), input.getQuantity());
+        return input.getQuantity() == 0? input.getName(): String.format("%s %.1fkg",input.getName(), input.getQuantity());
     }
 
     @Override
