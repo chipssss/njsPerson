@@ -38,6 +38,7 @@
     process_record.id, field_id, process_record.location, crop_id, operation, input_record, create_time, remark, weather,
     source, source_id, status
   </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -294,13 +295,19 @@
       #{item}
     </foreach>
   </update>
+
+  <!--对外开放接口的企业id列表-->
+  <sql id="Company_Id_List">
+    (5,8,9,10,11,12,13,14,15,16,17,18,19,77)
+  </sql>
   <select id="selectByConditionOpen" resultMap="OpenResultMap" parameterType="map">
     select
     <include refid="Base_Column_List"/>, `user`.username as companyName
     from process_record, `user`
     <where>
+      source_id in <include refid="Company_Id_List"/>
       <if test="companyId != null and companyId.size() > 0">
-        source_id in
+        AND source_id in
         <foreach collection="companyId" open="(" close=")" item="item" separator=",">
           #{item}
         </foreach>
