@@ -14,11 +14,13 @@
       <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
     id, stock_id, quantity, output, level, record, inspector, image_list, create_time, 
-    source, source_id
+    source, source_id, type_status, field_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -34,11 +36,13 @@
     insert into machining (id, stock_id, quantity, 
       output, level, record, 
       inspector, image_list, create_time, 
-      source, source_id)
+      source, source_id, type_status, 
+      field_id)
     values (#{id,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, 
       #{output,jdbcType=INTEGER}, #{level,jdbcType=VARCHAR}, #{record,jdbcType=VARCHAR}, 
       #{inspector,jdbcType=VARCHAR}, #{imageList,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER})
+      #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{typeStatus,jdbcType=INTEGER}, 
+      #{fieldId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.Machining">
     insert into machining
@@ -76,6 +80,12 @@
       <if test="sourceId != null">
         source_id,
       </if>
+      <if test="typeStatus != null">
+        type_status,
+      </if>
+      <if test="fieldId != null">
+        field_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -110,6 +120,12 @@
       </if>
       <if test="sourceId != null">
         #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="typeStatus != null">
+        #{typeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="fieldId != null">
+        #{fieldId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -146,6 +162,12 @@
       <if test="sourceId != null">
         source_id = #{sourceId,jdbcType=INTEGER},
       </if>
+      <if test="typeStatus != null">
+        type_status = #{typeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="fieldId != null">
+        field_id = #{fieldId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -160,19 +182,21 @@
       image_list = #{imageList,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       source = #{source,jdbcType=INTEGER},
-      source_id = #{sourceId,jdbcType=INTEGER}
+      source_id = #{sourceId,jdbcType=INTEGER},
+      type_status = #{typeStatus,jdbcType=INTEGER},
+      field_id = #{fieldId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from machining
     where source = #{source}
     and source_id = #{sourceId}
   </select>
   <select id="selectByStockId" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from machining
     where stock_id = #{stockId}
   </select>

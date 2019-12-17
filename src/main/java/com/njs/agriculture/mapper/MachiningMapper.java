@@ -1,7 +1,6 @@
 package com.njs.agriculture.mapper;
 
 import com.njs.agriculture.pojo.Machining;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface MachiningMapper {
 
     int updateByPrimaryKey(Machining record);
 
-    List<Machining> selectBySource(@Param("source")int source, @Param("sourceId")int sourceId);
+    List<Machining> selectByStockId(Integer id);
 
-    List<Machining> selectByStockId(int stockId);
+    List<Machining> selectBySource(int source, int sourceId);
 }

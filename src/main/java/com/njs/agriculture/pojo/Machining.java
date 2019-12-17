@@ -28,7 +28,11 @@ public class Machining {
 
     private Integer sourceId;
 
-    public Machining(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId) {
+    private Integer typeStatus;
+
+    private Integer fieldId;
+
+    public Machining(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId, Integer typeStatus, Integer fieldId) {
         this.id = id;
         this.stockId = stockId;
         this.quantity = quantity;
@@ -40,6 +44,8 @@ public class Machining {
         this.createTime = createTime;
         this.source = source;
         this.sourceId = sourceId;
+        this.typeStatus = typeStatus;
+        this.fieldId = fieldId;
     }
 
     public Machining() {
@@ -132,5 +138,21 @@ public class Machining {
 
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Integer getTypeStatus() {
+        return typeStatus;
+    }
+
+    public void setTypeStatus(Integer typeStatus) {
+        this.typeStatus = typeStatus;
+    }
+
+    public Integer getFieldId() {
+        return fieldId;
+    }
+
+    public void setFieldId(Integer fieldId) {
+        this.fieldId = fieldId;
     }
 }

@@ -2,6 +2,7 @@ package com.njs.agriculture.VO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Converter;
+import com.njs.agriculture.bo.MachineBO;
 import com.njs.agriculture.pojo.Machining;
 
 import com.njs.agriculture.utils.ConvertUtil;
@@ -15,18 +16,9 @@ import java.util.List;
  * @Description:
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MachineVO extends Machining {
-    private String batchId;
+public class MachineVO extends MachineBO {
 
     private List<String> images;
-
-    public String getBatchId() {
-        return batchId;
-    }
-
-    public void setBatchId(String batchId) {
-        this.batchId = batchId;
-    }
 
     public List<String> getImages() {
         return images;
