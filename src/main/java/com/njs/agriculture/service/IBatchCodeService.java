@@ -2,6 +2,8 @@ package com.njs.agriculture.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author: chips
  * @date: 2019-12-17
@@ -16,4 +18,6 @@ public interface IBatchCodeService {
      * @return
      */
     String generateCode(int fieldId, int userId);
+
+    List<String> getBatchNum(Integer fieldId);
 }

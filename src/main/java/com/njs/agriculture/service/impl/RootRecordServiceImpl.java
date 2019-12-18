@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: chips
  * @date: 2019-12-17
  * @description: 溯源记录信息，n条种植记录+1/0条加工记录+1条包装记录
  **/
-@Service("iRootService")
+@Service
 public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeService {
     private static final String BATCH_PREFIX = "PC";
     @Autowired
@@ -65,6 +66,11 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
         builder.append(fieldId).append(userId).append(DateUtil.dateToStr(new Date(),"yyyyMMdd"))
             .append((int)(Math.random()*100));
         return builder.toString();
+    }
+
+    @Override
+    public List<String> getBatchNum(Integer fieldId) {
+        return fieldId == null? rootRecordDOMapper.selectPackedBatchIdList(): rootRecordDOMapper.selectUnPackBatchIdListByFieldId(fieldId);
     }
 
     /**

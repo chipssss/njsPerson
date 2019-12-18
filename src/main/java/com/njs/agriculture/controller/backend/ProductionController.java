@@ -6,6 +6,7 @@ import com.njs.agriculture.VO.ProductStockVO;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
+import com.njs.agriculture.service.IBatchCodeService;
 import com.njs.agriculture.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class ProductionController {
 
     @Autowired
     private IProductService iProductService;
+
+    @Autowired
+    IBatchCodeService iBatchCodeService;
 
     @PostMapping("categoryGet.do")
     public ServerResponse categoryGet(@RequestBody JSONObject jsonObject){
@@ -158,5 +162,9 @@ public class ProductionController {
         return iProductService.getTeaStock(user.getUserId());
     }
 
+    @GetMapping("getBatchNumList.do")
+    public ServerResponse getBatchNumList(Integer fieldId) {
+        return ServerResponse.createBySuccess(iBatchCodeService.getBatchNum(fieldId));
+    }
 
 }

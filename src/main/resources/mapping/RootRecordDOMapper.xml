@@ -95,7 +95,7 @@
         plant_start = #{plantStart,jdbcType=TIMESTAMP},
       </if>
       <if test="plantEnd != null">
-        plant_end = #{plantEnd,jdbcType=TIMESTAMP},
+        plant_end = #{plantEnd,jdbcType=TIMESTAMP},a
       </if>
       <if test="machineId != null">
         machine_id = #{machineId,jdbcType=INTEGER},
@@ -133,6 +133,20 @@
     where batch_num = #{batchId,jdbcType=VARCHAR}
   </select>
 
+
+  <select id="selectUnPackBatchIdListByFieldId" parameterType="java.lang.Integer" resultType="java.lang.String">
+    select
+    batch_num
+    from root_record
+    where pack_id is null and field_id = #{fieldId, jdbcType=INTEGER}
+  </select>
+
+  <select id="selectPackedBatchIdList" resultType="java.lang.String">
+    select
+    batch_num
+    from root_record
+    where pack_id is not null
+  </select>
 
 
 </mapper>
