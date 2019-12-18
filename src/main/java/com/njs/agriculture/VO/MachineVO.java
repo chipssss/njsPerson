@@ -8,6 +8,7 @@ import com.njs.agriculture.pojo.Machining;
 import com.njs.agriculture.utils.ConvertUtil;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,13 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MachineVO extends MachineBO {
+
+    public MachineVO() {
+    }
+
+    public MachineVO(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId, Integer typeStatus, Integer fieldId, String batchId) {
+        super(id, stockId, quantity, output, level, record, inspector, imageList, createTime, source, sourceId, typeStatus, fieldId, batchId);
+    }
 
     private List<String> images;
 

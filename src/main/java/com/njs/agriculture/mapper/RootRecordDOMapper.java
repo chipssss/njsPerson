@@ -15,7 +15,7 @@ public interface RootRecordDOMapper {
 
     int updateByPrimaryKey(RootRecordDO record);
 
-    RootRecordDO selectNewByFieldId(Integer id);
+    RootRecordDO selectNewByFieldId(int id);
 
     RootRecordDO selectNewByBatchId(String batchId);
 }

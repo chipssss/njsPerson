@@ -5,8 +5,8 @@
 <generatorConfiguration>
 
     <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包-->
-    <classPathEntry  location="E:\Java工作区\mysql-connector-java-8.0.15\mysql-connector-java-8.0.15.jar"/>
-    <!--<classPathEntry  location="/Users/chips/IdeaProjects/apmsystem/target/apm/WEB-INF/lib/mysql-connector-java-8.0.15.jar"/>-->
+    <!--<classPathEntry  location="E:\Java工作区\mysql-connector-java-8.0.15\mysql-connector-java-8.0.15.jar"/>-->
+    <classPathEntry  location="/Users/chips/IdeaProjects/apmsystem/target/apm/WEB-INF/lib/mysql-connector-java-8.0.15.jar"/>
 
     <context id="default"  targetRuntime="MyBatis3">
         <commentGenerator>
@@ -88,8 +88,8 @@
         <!--<table tableName="machine_operation" domainObjectName="MachineOperation" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="product_activation" domainObjectName="ProductActivation" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="stock_secureImage" domainObjectName="SecureImage" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="input_thirdcate" domainObjectName="InputThirdCate" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <!--<table tableName="root_record" domainObjectName="RootRecordDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="input_thirdcate" domainObjectName="InputThirdCate" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="root_record" domainObjectName="RootRecordDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
     </context>
 
 </generatorConfiguration>

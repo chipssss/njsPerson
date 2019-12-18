@@ -13,18 +13,18 @@ public class RootRecordDO {
 
     private Date plantEnd;
 
-    private Date machineStart;
+    private Integer machineId;
 
-    private Date machineEnd;
+    private Integer packId;
 
-    public RootRecordDO(Integer id, Integer fieldId, String batchNum, Date plantStart, Date plantEnd, Date machineStart, Date machineEnd) {
+    public RootRecordDO(Integer id, Integer fieldId, String batchNum, Date plantStart, Date plantEnd, Integer machineId, Integer packId) {
         this.id = id;
         this.fieldId = fieldId;
         this.batchNum = batchNum;
         this.plantStart = plantStart;
         this.plantEnd = plantEnd;
-        this.machineStart = machineStart;
-        this.machineEnd = machineEnd;
+        this.machineId = machineId;
+        this.packId = packId;
     }
 
     public RootRecordDO() {
@@ -71,19 +71,19 @@ public class RootRecordDO {
         this.plantEnd = plantEnd;
     }
 
-    public Date getMachineStart() {
-        return machineStart;
+    public Integer getMachineId() {
+        return machineId;
     }
 
-    public void setMachineStart(Date machineStart) {
-        this.machineStart = machineStart;
+    public void setMachineId(Integer machineId) {
+        this.machineId = machineId;
     }
 
-    public Date getMachineEnd() {
-        return machineEnd;
+    public Integer getPackId() {
+        return packId;
     }
 
-    public void setMachineEnd(Date machineEnd) {
-        this.machineEnd = machineEnd;
+    public void setPackId(Integer packId) {
+        this.packId = packId;
     }
 }

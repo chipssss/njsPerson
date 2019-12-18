@@ -11,6 +11,7 @@ import com.njs.agriculture.dto.ProductionDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
+import com.njs.agriculture.service.IRootRecordService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     MachineOperationMapper machineOperationMapper;
+
+    @Autowired
+    IRootRecordService iRootRecordService;
 
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
@@ -364,23 +368,15 @@ public class ProductServiceImpl implements IProductService {
         machineVO.setSource((int) map.get("source"));
         machineVO.setSourceId((int) map.get("sourceId"));
         Machining machining = machineVO.converTOMachining();
-        ProductStock productStock = productStockMapper.selectByPrimaryKey(machineVO.getStockId());
-        if(productStock == null){
-            throw new RuntimeException("库存信息为空!");
-        }
         if(machineVO.getQuantity() < 0){
             return ServerResponse.createByErrorMessage("数量不能为负数！");
         }
-        int result = productStock.getQuantity() - machineVO.getQuantity();
-        if(result < 0){
-            return ServerResponse.createByErrorMessage("库存不够！");
-        }else if(result == 0){
-            productStockMapper.deleteByPrimaryKey(productStock.getId());
-        }else{
-            productStock.setQuantity(result);
-            productStockMapper.updateByPrimaryKey(productStock);
-        }
         int resultRow = machiningMapper.insert(machining);
+        if (resultRow > 0) {
+            // 登记溯源信息
+            machineVO.setId(machining.getId()); // 记录插入后生成的id
+            iRootRecordService.recordRoot(machineVO);
+        }
         return ServerResponse.createByResultRow(resultRow);
     }
 

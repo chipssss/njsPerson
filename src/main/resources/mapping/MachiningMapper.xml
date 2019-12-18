@@ -32,7 +32,7 @@
     delete from machining
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.Machining">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.Machining" useGeneratedKeys="true" keyProperty="id">
     insert into machining (id, stock_id, quantity, 
       output, level, record, 
       inspector, image_list, create_time, 

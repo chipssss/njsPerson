@@ -17,7 +17,7 @@ import java.util.Date;
 /**
  * @author: chips
  * @date: 2019-12-17
- * @description:
+ * @description: 溯源记录信息，n条种植记录+1/0条加工记录+1条包装记录
  **/
 @Service("iRootService")
 public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeService {
@@ -36,8 +36,8 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
     }
 
     /**
-     * 包装记录分两种情况：1. 带批次码（说明root_record上已有记录），此时插入加工结束时间结点即可；
-     *                  2. 不带批次码，插入新的root_record，此时加工起始时间和结束时间相差1分钟（目的：加工记录只有一条包装记录）
+     * 包装记录分两种情况：1. 带批次码（说明root_record上已有记录），此时插入包装记录id即可；
+     *                  2. 不带批次码，插入新的root_record，包装记录存id
      * @param machineBO
      * @return
      */
@@ -45,22 +45,18 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
         RootRecordDO rootRecordDO;
         if (machineBO.isBatchIdNull()) {
             rootRecordDO = doMachiningRecord(machineBO);
-
-            // 分钟 -1
-            Calendar.getInstance().setTime(machineBO.getCreateTime());
-            Calendar.getInstance().add(Calendar.MINUTE, -1);
-            rootRecordDO.setMachineStart(Calendar.getInstance().getTime());
+            rootRecordDO.setMachineId(null);
         } else {
             rootRecordDO = rootRecordDOMapper.selectNewByBatchId(machineBO.getBatchId());
         }
-        rootRecordDO.setMachineEnd(machineBO.getCreateTime());
+        rootRecordDO.setPackId(machineBO.getId());
         return rootRecordDO;
     }
 
     private RootRecordDO doMachiningRecord(Machining machining) {
         int fieldId = machining.getFieldId();
         return new RootRecordDO(null, fieldId, generateCode(fieldId, machining.getSourceId()),
-                getNextPlantStart(fieldId), machining.getCreateTime(), machining.getCreateTime(), null);
+                getNextPlantStart(fieldId), machining.getCreateTime(), machining.getId(), null);
     }
 
     @Override
