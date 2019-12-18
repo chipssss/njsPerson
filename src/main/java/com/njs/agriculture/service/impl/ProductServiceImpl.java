@@ -69,6 +69,9 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     IRootRecordService iRootRecordService;
 
+    @Autowired
+    FieldMapper fieldMapper;
+
     @Override
     public ServerResponse categoryGet(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -394,18 +397,15 @@ public class ProductServiceImpl implements IProductService {
         for (Machining machining : machiningList) {
             machineVOList.add(MachineVO.convertFor(machining));
         }
-        Iterator it = machineVOList.iterator();
-        int index = 0;
-        while (it.hasNext()) {
-            Object obj = it.next();
-            ProductStock productStock = productStockMapper.selectByPrimaryKey(((MachineVO) obj).getStockId());
-            if (productStock == null) {
-                it.remove();
-            } else {
-                ((MachineVO) obj).setBatchId(productStock.getBatchId());
+        // 获取田块名称
+        machineVOList.stream().forEach(machineVO -> {
+            if (machineVO.getFieldId() != null) {
+                Field field = fieldMapper.selectByPrimaryKey(machineVO.getFieldId());
+                if (field != null) {
+                    machineVO.setFieldName(field.getName());
+                }
             }
-            index++;
-        }
+        });
         return machineVOList;
     }
 

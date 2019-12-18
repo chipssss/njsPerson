@@ -27,6 +27,16 @@ public class MachineVO extends MachineBO {
     }
 
     private List<String> images;
+    private String fieldName;
+    private String status;
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 
     public List<String> getImages() {
         return images;
@@ -48,6 +58,10 @@ public class MachineVO extends MachineBO {
         return convet;
     }
 
+    public void setFieldName(String name) {
+        fieldName = name;
+    }
+
     private static class MachineVOConvert extends Converter<MachineVO, Machining> {
         @Override
         protected Machining doForward(MachineVO machineVO) {
@@ -63,8 +77,13 @@ public class MachineVO extends MachineBO {
         protected MachineVO doBackward(Machining machining) {
             MachineVO machineVO = new MachineVO();
             BeanUtils.copyProperties(machining,machineVO);
+            machineVO.setStatus();
             machineVO.images = ConvertUtil.string2List(machining.getImageList());
             return machineVO;
         }
+    }
+
+    private void setStatus() {
+        this.status = getTypeStatus()==0? "加工":"包装";
     }
 }
