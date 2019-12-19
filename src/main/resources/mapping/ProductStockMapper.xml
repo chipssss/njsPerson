@@ -182,6 +182,7 @@
     from product_stock
     where source = #{source,jdbcType=INTEGER}
     and source_id = #{sourceId,jdbcType=INTEGER}
+    order by create_time desc
   </select>
   <select id="selectByBatchId" parameterType="string" resultMap="BaseResultMap">
     select

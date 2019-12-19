@@ -17,11 +17,11 @@ public interface RootRecordDOMapper {
 
     int updateByPrimaryKey(RootRecordDO record);
 
-    RootRecordDO selectNewByFieldId(int id);
-
     RootRecordDO selectNewByBatchId(String batchId);
 
-    List<String> selectPackedBatchIdList();
+    List<String> selectPackedBatchIdList(Integer source, Integer sourceId);
 
-    List<String> selectUnPackBatchIdListByFieldId(int fieldId);
+    List<String> selectUnPackBatchIdListByFieldId(Integer fieldId, Integer source, Integer sourceId);
+
+    RootRecordDO selectNewByFieldId(int id);
 }

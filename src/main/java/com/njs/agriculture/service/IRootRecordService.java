@@ -12,5 +12,5 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public interface IRootRecordService {
-    void recordRoot(MachineBO machining);
+    void insertRecordRoot(MachineBO machining);
 }

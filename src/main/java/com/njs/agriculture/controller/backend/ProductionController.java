@@ -163,8 +163,9 @@ public class ProductionController {
     }
 
     @GetMapping("getBatchNumList.do")
-    public ServerResponse getBatchNumList(Integer fieldId) {
-        return ServerResponse.createBySuccess(iBatchCodeService.getBatchNum(fieldId));
+    public ServerResponse getBatchNumList(Integer fieldId, HttpSession httpSession) {
+        User user = (User)httpSession.getAttribute(Const.CURRENT_USER);
+        return ServerResponse.createBySuccess(iBatchCodeService.getBatchNum(fieldId, user.getUserId()));
     }
 
 }

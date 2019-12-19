@@ -15,15 +15,12 @@ import com.njs.agriculture.service.IRootRecordService;
 import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * @Auther: SaikeiLEe
@@ -378,7 +375,7 @@ public class ProductServiceImpl implements IProductService {
         if (resultRow > 0) {
             // 登记溯源信息
             machineVO.setId(machining.getId()); // 记录插入后生成的id
-            iRootRecordService.recordRoot(machineVO);
+            iRootRecordService.insertRecordRoot(machineVO);
         }
         return ServerResponse.createByResultRow(resultRow);
     }

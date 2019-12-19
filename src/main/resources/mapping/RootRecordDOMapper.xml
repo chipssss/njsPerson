@@ -10,10 +10,12 @@
       <arg column="plant_end" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="machine_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="pack_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    id, field_id, batch_num, plant_start, plant_end, machine_id, pack_id
+    id, field_id, batch_num, plant_start, plant_end, machine_id, pack_id, source, source_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -28,10 +30,12 @@
   <insert id="insert" parameterType="com.njs.agriculture.pojo.RootRecordDO">
     insert into root_record (id, field_id, batch_num, 
       plant_start, plant_end, machine_id, 
-      pack_id)
+      pack_id, source, source_id
+      )
     values (#{id,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, #{batchNum,jdbcType=VARCHAR}, 
       #{plantStart,jdbcType=TIMESTAMP}, #{plantEnd,jdbcType=TIMESTAMP}, #{machineId,jdbcType=INTEGER}, 
-      #{packId,jdbcType=INTEGER})
+      #{packId,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.RootRecordDO">
     insert into root_record
@@ -57,6 +61,12 @@
       <if test="packId != null">
         pack_id,
       </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="sourceId != null">
+        source_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -80,6 +90,12 @@
       <if test="packId != null">
         #{packId,jdbcType=INTEGER},
       </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.RootRecordDO">
@@ -95,13 +111,19 @@
         plant_start = #{plantStart,jdbcType=TIMESTAMP},
       </if>
       <if test="plantEnd != null">
-        plant_end = #{plantEnd,jdbcType=TIMESTAMP},a
+        plant_end = #{plantEnd,jdbcType=TIMESTAMP},
       </if>
       <if test="machineId != null">
         machine_id = #{machineId,jdbcType=INTEGER},
       </if>
       <if test="packId != null">
         pack_id = #{packId,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -113,7 +135,9 @@
       plant_start = #{plantStart,jdbcType=TIMESTAMP},
       plant_end = #{plantEnd,jdbcType=TIMESTAMP},
       machine_id = #{machineId,jdbcType=INTEGER},
-      pack_id = #{packId,jdbcType=INTEGER}
+      pack_id = #{packId,jdbcType=INTEGER},
+      source = #{source,jdbcType=INTEGER},
+      source_id = #{sourceId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -138,14 +162,16 @@
     select
     batch_num
     from root_record
-    where pack_id is null and field_id = #{fieldId, jdbcType=INTEGER}
+    where pack_id is null and field_id = #{fieldId, jdbcType=INTEGER} and source = #{source, jdbcType=INTEGER}
+      and source_id = #{sourceId, jdbcType=INTEGER}
   </select>
 
   <select id="selectPackedBatchIdList" resultType="java.lang.String">
     select
     batch_num
     from root_record
-    where pack_id is not null
+    where pack_id is not null and source = #{source, jdbcType=INTEGER}
+      and source_id = #{sourceId, jdbcType=INTEGER}
   </select>
 
 

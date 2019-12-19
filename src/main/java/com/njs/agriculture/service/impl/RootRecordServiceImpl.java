@@ -1,12 +1,13 @@
 package com.njs.agriculture.service.impl;
 
-import com.njs.agriculture.VO.MachineVO;
 import com.njs.agriculture.bo.MachineBO;
+import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.RootRecordDOMapper;
 import com.njs.agriculture.pojo.Machining;
 import com.njs.agriculture.pojo.RootRecordDO;
 import com.njs.agriculture.service.IBatchCodeService;
 import com.njs.agriculture.service.IRootRecordService;
+import com.njs.agriculture.service.IUserService;
 import com.njs.agriculture.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: chips
@@ -25,9 +27,11 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
     private static final String BATCH_PREFIX = "PC";
     @Autowired
     RootRecordDOMapper rootRecordDOMapper;
+    @Autowired
+    IUserService iUserService;
 
     @Override
-    public void recordRoot(MachineBO machineBO) {
+    public void insertRecordRoot(MachineBO machineBO) {
         RootRecordDO recordDO = machineBO.isMachining()? doMachiningRecord(machineBO): doPackRecord(machineBO);
         if (machineBO.isBatchIdNull()) {
             rootRecordDOMapper.insert(recordDO);
@@ -57,7 +61,8 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
     private RootRecordDO doMachiningRecord(Machining machining) {
         int fieldId = machining.getFieldId();
         return new RootRecordDO(null, fieldId, generateCode(fieldId, machining.getSourceId()),
-                getNextPlantStart(fieldId), machining.getCreateTime(), machining.getId(), null);
+                getNextPlantStart(fieldId), machining.getCreateTime(), machining.getId(), null,
+                machining.getSource(), machining.getSourceId());
     }
 
     @Override
@@ -69,8 +74,10 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
     }
 
     @Override
-    public List<String> getBatchNum(Integer fieldId) {
-        return fieldId == null? rootRecordDOMapper.selectPackedBatchIdList(): rootRecordDOMapper.selectUnPackBatchIdListByFieldId(fieldId);
+    public List<String> getBatchNum(Integer fieldId, Integer userId) {
+        Map sourceMap = iUserService.isManager(userId).getData();
+        return fieldId == null? rootRecordDOMapper.selectPackedBatchIdList((int)sourceMap.get("source"), (int)sourceMap.get("sourceId")):
+                rootRecordDOMapper.selectUnPackBatchIdListByFieldId(fieldId, (int)sourceMap.get("source"), (int)sourceMap.get("sourceId"));
     }
 
     /**

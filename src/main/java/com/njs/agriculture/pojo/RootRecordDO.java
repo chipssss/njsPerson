@@ -17,7 +17,11 @@ public class RootRecordDO {
 
     private Integer packId;
 
-    public RootRecordDO(Integer id, Integer fieldId, String batchNum, Date plantStart, Date plantEnd, Integer machineId, Integer packId) {
+    private Integer source;
+
+    private Integer sourceId;
+
+    public RootRecordDO(Integer id, Integer fieldId, String batchNum, Date plantStart, Date plantEnd, Integer machineId, Integer packId, Integer source, Integer sourceId) {
         this.id = id;
         this.fieldId = fieldId;
         this.batchNum = batchNum;
@@ -25,6 +29,8 @@ public class RootRecordDO {
         this.plantEnd = plantEnd;
         this.machineId = machineId;
         this.packId = packId;
+        this.source = source;
+        this.sourceId = sourceId;
     }
 
     public RootRecordDO() {
@@ -85,5 +91,21 @@ public class RootRecordDO {
 
     public void setPackId(Integer packId) {
         this.packId = packId;
+    }
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 }

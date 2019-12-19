@@ -23,13 +23,13 @@ public class IRootRecordServiceTest {
     @Test
     public void testDoRecord() {
         // 测试加工
-        iRootRecordService.recordRoot(new MachineBO(null, null, null, null, null,
+        iRootRecordService.insertRecordRoot(new MachineBO(null, null, null, null, null,
                 null, null, null, new Date(), null, 1, 0, 1, null));
         // 测试包装，无批次
-        iRootRecordService.recordRoot(new MachineBO(null, null, null, null, null,
+        iRootRecordService.insertRecordRoot(new MachineBO(null, null, null, null, null,
                 null, null, null, new Date(), null, 1, 1, 1, null));
         // 测试包装，有批次
-        iRootRecordService.recordRoot(new MachineBO(null, null, null, null, null,
+        iRootRecordService.insertRecordRoot(new MachineBO(null, null, null, null, null,
                 null, null, null, new Date(), null, 1, 1, 1, "PC1111"));
     }
 }

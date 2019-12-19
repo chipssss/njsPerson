@@ -19,5 +19,5 @@ public interface IBatchCodeService {
      */
     String generateCode(int fieldId, int userId);
 
-    List<String> getBatchNum(Integer fieldId);
+    List<String> getBatchNum(Integer fieldId, Integer userId);
 }
