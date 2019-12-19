@@ -24,4 +24,6 @@ public interface RootRecordDOMapper {
     List<String> selectUnPackBatchIdListByFieldId(Integer fieldId, Integer source, Integer sourceId);
 
     RootRecordDO selectNewByFieldId(int id);
+
+    RootRecordDO selectByBatchId(String batchId);
 }
