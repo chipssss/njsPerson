@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.njs.agriculture.mapper.AppErrorDOMapper">
+  <resultMap id="BaseResultMap" type="com.njs.agriculture.pojo.AppErrorDO">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="app_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="os_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="other_phone_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.njs.agriculture.pojo.AppErrorDO">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="app_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="os_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="other_phone_version" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="error_msg" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, app_version, os_version, other_phone_version, create_time
+  </sql>
+  <sql id="Blob_Column_List">
+    error_msg
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_online_error
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from app_online_error
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.AppErrorDO">
+    insert into app_online_error (id, app_version, os_version, 
+      other_phone_version, create_time, error_msg
+      )
+    values (#{id,jdbcType=INTEGER}, #{appVersion,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, 
+      #{otherPhoneVersion,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{errorMsg,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.AppErrorDO">
+    insert into app_online_error
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appVersion != null">
+        app_version,
+      </if>
+      <if test="osVersion != null">
+        os_version,
+      </if>
+      <if test="otherPhoneVersion != null">
+        other_phone_version,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="errorMsg != null">
+        error_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="appVersion != null">
+        #{appVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="otherPhoneVersion != null">
+        #{otherPhoneVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="errorMsg != null">
+        #{errorMsg,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.njs.agriculture.pojo.AppErrorDO">
+    update app_online_error
+    <set>
+      <if test="appVersion != null">
+        app_version = #{appVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        os_version = #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="otherPhoneVersion != null">
+        other_phone_version = #{otherPhoneVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="errorMsg != null">
+        error_msg = #{errorMsg,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.njs.agriculture.pojo.AppErrorDO">
+    update app_online_error
+    set app_version = #{appVersion,jdbcType=VARCHAR},
+      os_version = #{osVersion,jdbcType=VARCHAR},
+      other_phone_version = #{otherPhoneVersion,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      error_msg = #{errorMsg,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.njs.agriculture.pojo.AppErrorDO">
+    update app_online_error
+    set app_version = #{appVersion,jdbcType=VARCHAR},
+      os_version = #{osVersion,jdbcType=VARCHAR},
+      other_phone_version = #{otherPhoneVersion,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
