@@ -1,21 +1,18 @@
 package com.njs.agriculture.service.impl;
 
-import com.njs.agriculture.VO.ApkVO;
 import com.njs.agriculture.common.Const;
-import com.njs.agriculture.common.ResponseCode;
 import com.njs.agriculture.common.ServerResponse;
+import com.njs.agriculture.mapper.AppErrorDOMapper;
 import com.njs.agriculture.mapper.AppMapper;
 import com.njs.agriculture.pojo.App;
+import com.njs.agriculture.pojo.AppErrorDO;
 import com.njs.agriculture.service.IAppService;
 import com.njs.agriculture.service.IFileService;
-import com.njs.agriculture.utils.DateUtil;
 import com.njs.agriculture.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.crypto.Data;
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +29,8 @@ public class AppServiceImpl implements IAppService {
     IFileService iFileService;
     @Autowired
     AppMapper appMapper;
+    @Autowired
+    AppErrorDOMapper appErrorDOMapper;
 
     @Override
     public int deleteByPrimaryKey(Integer appId) {
@@ -96,6 +95,14 @@ public App selectByversionCode(Integer versionCode){
     if(flag==false)  return ServerResponse.createByErrorMessage("版本号已存在");
     else  return ServerResponse.createBySuccess("成功");
 }
+
+    @Override
+    public ServerResponse saveError(AppErrorDO errorDO) {
+        errorDO.setCreateTime(new Date());
+        int row = appErrorDOMapper.insert(errorDO);
+        return row > 0? ServerResponse.createBySuccess("成功"): ServerResponse.createByErrorMessage("存储失败，数据库异常");
+    }
+
     @Override
     public ServerResponse getLatestApk(Integer versionCode){
         App latestApk=null;

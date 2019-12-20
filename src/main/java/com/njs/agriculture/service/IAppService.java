@@ -1,8 +1,8 @@
 package com.njs.agriculture.service;
 
-import com.njs.agriculture.VO.ApkVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.App;
+import com.njs.agriculture.pojo.AppErrorDO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IAppService {
@@ -23,4 +23,7 @@ public interface IAppService {
    App selectByversionCode(Integer versionCode);
 
     ServerResponse updateApk(Integer versionCode,String declare,MultipartFile file);
+
+    ServerResponse saveError(AppErrorDO errorDO);
+
 }
