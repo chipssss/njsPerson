@@ -7,10 +7,7 @@ import com.njs.agriculture.pojo.Field;
 import com.njs.agriculture.service.IFieldService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auther: SaikeiLEe
@@ -25,23 +22,28 @@ public class FieldController {
     private IFieldService iFieldService;
 
     @PostMapping("fieldAdd.do")
-    public ServerResponse addField(@RequestBody FieldVO fieldVO){
+    public ServerResponse addField(@RequestBody FieldVO fieldVO) {
         return iFieldService.addField(fieldVO);
     }
 
     @PostMapping("fieldDel.do")
-    public ServerResponse delField(@RequestBody JSONObject jsonObject){
+    public ServerResponse delField(@RequestBody JSONObject jsonObject) {
         int fieldId = jsonObject.getIntValue("fieldId");
         return iFieldService.delField(fieldId);
     }
 
     @PostMapping("fieldModify.do")
-    public ServerResponse modifyField(@RequestBody FieldVO fieldVO){
+    public ServerResponse modifyField(@RequestBody FieldVO fieldVO) {
         return iFieldService.modifyField(fieldVO);
     }
 
     @PostMapping("fieldInfo.do")
-    public ServerResponse fieldInfo(@RequestBody JSONObject jsonObject){
+    public ServerResponse fieldInfo(@RequestBody JSONObject jsonObject) {
         return iFieldService.fieldInfo(jsonObject.getIntValue("userId"));
+    }
+
+    @GetMapping("getFiled.do")
+    public ServerResponse getFiled(int fieldId) {
+        return ServerResponse.createBySuccess(iFieldService.selectFieldInfoByFieldId(fieldId));
     }
 }
