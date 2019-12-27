@@ -174,10 +174,10 @@
       and source_id = #{sourceId, jdbcType=INTEGER}
   </select>
 
-  <select id="selectByBatchId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByBatchId" parameterType="string" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from root_record
-    where batch_num = #{batchId,jdbcType=INTEGER}
+    where batch_num = #{batchId}
   </select>
 </mapper>

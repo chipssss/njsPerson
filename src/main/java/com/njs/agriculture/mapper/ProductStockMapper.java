@@ -36,5 +36,4 @@ public interface ProductStockMapper {
 
     ProductStock selectByQuantityAndBatchId(@Param("quantity")int quantity,@Param("batchId")String batchId );
 
-
 }

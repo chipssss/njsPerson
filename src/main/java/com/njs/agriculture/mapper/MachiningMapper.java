@@ -20,4 +20,6 @@ public interface MachiningMapper {
     List<Machining> selectByStockId(Integer id);
 
     List<Machining> selectBySource(int source, int sourceId);
+
+    List<Machining> selectByKey(Integer machineId, Integer packId);
 }

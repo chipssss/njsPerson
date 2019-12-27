@@ -3,6 +3,8 @@ package com.njs.agriculture.service;
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.common.ServerResponse;
 
+import java.util.Map;
+
 /**
  * @Auther: SaikeiLEe
  * @Date: 2019/10/8
@@ -39,4 +41,13 @@ public interface IActivationService {
      * @return
      */
     ServerResponse scanGetRecords(String code);
+
+    /**
+     * 扫描二维码获取记录，包括企业信息，田块信息，种植记录
+     * @param fieldId
+     * @return
+     */
+    ServerResponse scanGetFieldRecords(int fieldId);
+
+    void addUserInfo(Map map, int sourceId, int source);
 }

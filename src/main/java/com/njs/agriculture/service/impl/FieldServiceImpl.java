@@ -88,21 +88,33 @@ public class FieldServiceImpl implements IFieldService {
         return ServerResponse.createBySuccess(fieldList2FieldInfoVOList(fields));
     }
 
+    @Override
+    public FieldInfoVO selectFieldInfoByFieldId(int filedId) {
+        Field field = fieldMapper.selectByPrimaryKey(filedId);
+        if (field == null) return null;
+
+        return field2FieldVO(field);
+    }
+
+    private FieldInfoVO field2FieldVO(Field field) {
+        FieldInfoVO fieldInfoVO = new FieldInfoVO();
+        BeanUtils.copyProperties(field, fieldInfoVO);
+        if(field.getSource() == 1){
+            Enterprise enterprise  = enterpriseMapper.selectByPrimaryKey(field.getSourceId());
+            if(enterprise != null){
+                fieldInfoVO.setSourceName(enterprise.getName());
+            }
+        }else {
+            fieldInfoVO.setSourceName("个人");
+        }
+        return fieldInfoVO;
+    }
+
 
     private List<FieldInfoVO> fieldList2FieldInfoVOList(List<Field> fieldList){
         List<FieldInfoVO> fieldInfoVOList = Lists.newLinkedList();
         for (Field field : fieldList) {
-            FieldInfoVO fieldInfoVO = new FieldInfoVO();
-            BeanUtils.copyProperties(field, fieldInfoVO);
-            if(field.getSource() == 1){
-                Enterprise enterprise  = enterpriseMapper.selectByPrimaryKey(field.getSourceId());
-                if(enterprise != null){
-                    fieldInfoVO.setSourceName(enterprise.getName());
-                }
-            }else {
-                fieldInfoVO.setSourceName("个人");
-            }
-            fieldInfoVOList.add(fieldInfoVO);
+            fieldInfoVOList.add(field2FieldVO(field));
         }
         return fieldInfoVOList;
     }

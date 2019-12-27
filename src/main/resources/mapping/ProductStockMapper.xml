@@ -219,4 +219,11 @@ select
     where quantity=#{quantity,jdbcType=INTEGER}
     and batch_id = #{batchId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByBarCode" parameterType="string" resultType="com.njs.agriculture.pojo.ProductStock">
+    select
+    <include refid="Base_Column_List"/>
+    from product_stock
+    where barcode=#{barcode,jdbcType=VARCHAR}
+  </select>
 </mapper>

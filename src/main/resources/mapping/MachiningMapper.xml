@@ -200,4 +200,11 @@
     from machining
     where stock_id = #{stockId}
   </select>
+
+  <select id="selectByKey" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from machining
+    where id = #{machineId} or id = #{packId}
+  </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.njs.agriculture.service;
 
+import com.njs.agriculture.VO.FieldInfoVO;
 import com.njs.agriculture.VO.FieldVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.Field;
@@ -22,4 +23,6 @@ public interface IFieldService {
      * @return 普通用户返回个人田块，企业负责人返回企业所有田块
      */
     ServerResponse fieldInfo(int userId);
+
+    FieldInfoVO selectFieldInfoByFieldId(int filedId);
 }

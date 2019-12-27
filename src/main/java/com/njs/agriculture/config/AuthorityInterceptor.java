@@ -26,6 +26,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         String url = request.getRequestURI();
 
         // TODO 可以改用其他动态数据结构进行比对
+        if (url.indexOf("/scanGetFieldInfo") >= 0)
+            return true;
+
         if (url.indexOf("/app") >= 0)
             return true;
 

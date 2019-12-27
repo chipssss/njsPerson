@@ -236,6 +236,11 @@ public class ProductionRecordController {
         return iActivationService.scanGetRecords(id);
     }
 
+    @GetMapping("scanGetFieldInfo.do")
+    public ServerResponse scanGetFieldInfo(int fieldId) {
+        return iActivationService.scanGetFieldRecords(fieldId);
+    }
+
     @PostMapping("openProcessRecord.do")
     public ServerResponse openProcessRecord(@RequestBody JSONObject jsonObject){
         String authCode = jsonObject.getString("authCode");

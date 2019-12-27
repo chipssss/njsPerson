@@ -41,4 +41,5 @@ public interface ProductionBatchMapper {
     int updateQuantityById(@Param("quantity")int quantity, @Param("id")int id);
 
     int updateGeneratedStatusById(int id);
+
 }
