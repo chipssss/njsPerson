@@ -235,6 +235,7 @@
         AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{endTime}, '%Y-%m-%d')
       </if>
     </where>
+    order by create_time asc
   </select>
 
   <select id="selectByRecordIds" parameterType="list" resultMap="BaseResultMap">
