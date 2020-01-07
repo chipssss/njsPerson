@@ -9,13 +9,13 @@
       <arg column="phonenum" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
       <arg column="image" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="license_code" javaType="java.lang.String" jdbcType="VARCHAR"/>
-      <arg column="license_url" javaType="java.lang.String" jdbcType="VARCHAR"/>
-      <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR"/>
+      <arg column="license_url" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="license_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, username, password, phonenum, type, image,license_code,license_url,location
+    user_id, username, password, phonenum, type, image, license_url, license_code, location
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,13 +27,14 @@
     delete from user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.User" useGeneratedKeys="true" keyProperty="userId">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.User">
     insert into user (user_id, username, password, 
-      phonenum, type, image, license_code , license_url, location
+      phonenum, type, image, 
+      license_url, license_code, location
       )
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phonenum,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{image,jdbcType=VARCHAR},#{licenseCode,jdbcType=VARCHAR},
-      #{licenseUrl,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}
+      #{phonenum,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{image,jdbcType=VARCHAR}, 
+      #{licenseUrl,jdbcType=VARCHAR}, #{licenseCode,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.User">
@@ -57,11 +58,11 @@
       <if test="image != null">
         image,
       </if>
-      <if test="licenseCode != null">
-        licenseCode,
-      </if>
       <if test="licenseUrl != null">
-        licenseUrl,
+        license_url,
+      </if>
+      <if test="licenseCode != null">
+        license_code,
       </if>
       <if test="location != null">
         location,
@@ -86,11 +87,11 @@
       <if test="image != null">
         #{image,jdbcType=VARCHAR},
       </if>
-      <if test="licenseCode != null">
-        #{licenseCode,jdbcType=VARCHAR},
-      </if>
       <if test="licenseUrl != null">
         #{licenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseCode != null">
+        #{licenseCode,jdbcType=VARCHAR},
       </if>
       <if test="location != null">
         #{location,jdbcType=VARCHAR},
@@ -115,6 +116,15 @@
       <if test="image != null">
         image = #{image,jdbcType=VARCHAR},
       </if>
+      <if test="licenseUrl != null">
+        license_url = #{licenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseCode != null">
+        license_code = #{licenseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -124,7 +134,10 @@
       password = #{password,jdbcType=VARCHAR},
       phonenum = #{phonenum,jdbcType=VARCHAR},
       type = #{type,jdbcType=TINYINT},
-      image = #{image,jdbcType=VARCHAR}
+      image = #{image,jdbcType=VARCHAR},
+      license_url = #{licenseUrl,jdbcType=VARCHAR},
+      license_code = #{licenseCode,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
   <select id="checkPhonenum" parameterType="string" resultType="java.lang.Integer">
@@ -137,14 +150,14 @@
   </select>
   <select id="selectLogin" parameterType="map" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from user
     where phonenum = #{phonenum}
     and password = #{password}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from user
   </select>
   <update id="updatePasswordByPhoneNum" parameterType="string">

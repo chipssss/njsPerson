@@ -158,6 +158,7 @@ public class ActivationServiceImpl implements IActivationService {
         if (source == 0) {
             User user = userMapper.selectByPrimaryKey(sourceId);
             if (user != null) {
+                map.put("licenseUrl", user.getLicenseUrl());
                 map.put("companyTitle", user.getUsername());
                 map.put("username", user.getUsername());
                 map.put("location", user.getLocation() == null ? " " : user.getLocation());
