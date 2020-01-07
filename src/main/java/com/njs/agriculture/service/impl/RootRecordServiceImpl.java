@@ -89,6 +89,9 @@ public class RootRecordServiceImpl implements IRootRecordService, IBatchCodeServ
         RootRecordDO rootRecordDO = rootRecordDOMapper.selectNewByFieldId(fieldId);
         if (rootRecordDO == null) return null;
 
+        if (rootRecordDO.getPlantEnd() == null) {
+            return null;
+        }
         // 分钟+1
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(rootRecordDO.getPlantEnd());
