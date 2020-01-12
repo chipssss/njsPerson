@@ -1,7 +1,5 @@
 package com.njs.agriculture.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Date;
 
 public class Machining {
@@ -19,7 +17,6 @@ public class Machining {
 
     private String inspector;
 
-    @JsonIgnore
     private String imageList;
 
     private Date createTime;
@@ -32,7 +29,9 @@ public class Machining {
 
     private Integer fieldId;
 
-    public Machining(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId, Integer typeStatus, Integer fieldId) {
+    private String standard;
+
+    public Machining(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId, Integer typeStatus, Integer fieldId, String standard) {
         this.id = id;
         this.stockId = stockId;
         this.quantity = quantity;
@@ -46,6 +45,7 @@ public class Machining {
         this.sourceId = sourceId;
         this.typeStatus = typeStatus;
         this.fieldId = fieldId;
+        this.standard = standard;
     }
 
     public Machining() {
@@ -154,5 +154,13 @@ public class Machining {
 
     public void setFieldId(Integer fieldId) {
         this.fieldId = fieldId;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard == null ? null : standard.trim();
     }
 }

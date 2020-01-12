@@ -37,11 +37,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void machineAdd() {
-        // 测试加工记录
-        iProductService.machineAdd(new MachineVO(null, null, 10, 10, "一等",
-                "record", "林", null, new Date(), 0, 1, 0, 1, null), 1);
-        // 测试包装记录
-        iProductService.machineAdd(new MachineVO(null, null, 10, 10, "一等",
-                "record", "林", null, new Date(), 0, 1, 1, 1, "PC112019121721"), 1);
+
     }
 }

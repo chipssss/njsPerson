@@ -22,8 +22,12 @@ public class MachineVO extends MachineBO {
     public MachineVO() {
     }
 
-    public MachineVO(Integer id, Integer stockId, Integer quantity, Integer output, String level, String record, String inspector, String imageList, Date createTime, Integer source, Integer sourceId, Integer typeStatus, Integer fieldId, String batchId) {
-        super(id, stockId, quantity, output, level, record, inspector, imageList, createTime, source, sourceId, typeStatus, fieldId, batchId);
+    public MachineVO(Integer id, Integer stockId, Integer quantity, Integer output,
+                     String level, String record, String inspector, String imageList,
+                     Date createTime, Integer source, Integer sourceId, Integer typeStatus,
+                     Integer fieldId, String batchId, String standard) {
+        super(id, stockId, quantity, output, level, record, inspector, imageList, createTime,
+                source, sourceId, typeStatus, fieldId, batchId, standard);
     }
 
     private List<String> images;

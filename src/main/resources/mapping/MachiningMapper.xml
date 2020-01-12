@@ -16,11 +16,12 @@
       <arg column="source_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="type_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="field_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="standard" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
     id, stock_id, quantity, output, level, record, inspector, image_list, create_time, 
-    source, source_id, type_status, field_id
+    source, source_id, type_status, field_id, standard
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -32,17 +33,17 @@
     delete from machining
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.njs.agriculture.pojo.Machining" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.njs.agriculture.pojo.Machining">
     insert into machining (id, stock_id, quantity, 
       output, level, record, 
       inspector, image_list, create_time, 
       source, source_id, type_status, 
-      field_id)
+      field_id, standard)
     values (#{id,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, 
       #{output,jdbcType=INTEGER}, #{level,jdbcType=VARCHAR}, #{record,jdbcType=VARCHAR}, 
       #{inspector,jdbcType=VARCHAR}, #{imageList,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{source,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{typeStatus,jdbcType=INTEGER}, 
-      #{fieldId,jdbcType=INTEGER})
+      #{fieldId,jdbcType=INTEGER}, #{standard,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.njs.agriculture.pojo.Machining">
     insert into machining
@@ -86,6 +87,9 @@
       <if test="fieldId != null">
         field_id,
       </if>
+      <if test="standard != null">
+        standard,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -126,6 +130,9 @@
       </if>
       <if test="fieldId != null">
         #{fieldId,jdbcType=INTEGER},
+      </if>
+      <if test="standard != null">
+        #{standard,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -168,6 +175,9 @@
       <if test="fieldId != null">
         field_id = #{fieldId,jdbcType=INTEGER},
       </if>
+      <if test="standard != null">
+        standard = #{standard,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -184,9 +194,12 @@
       source = #{source,jdbcType=INTEGER},
       source_id = #{sourceId,jdbcType=INTEGER},
       type_status = #{typeStatus,jdbcType=INTEGER},
-      field_id = #{fieldId,jdbcType=INTEGER}
+      field_id = #{fieldId,jdbcType=INTEGER},
+      standard = #{standard,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--自定义部分-->
   <select id="selectBySource" parameterType="map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
