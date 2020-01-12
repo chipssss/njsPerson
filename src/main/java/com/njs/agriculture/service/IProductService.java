@@ -1,6 +1,7 @@
 package com.njs.agriculture.service;
 
 import com.njs.agriculture.VO.MachineVO;
+import com.njs.agriculture.VO.ProductBasicVO;
 import com.njs.agriculture.VO.ProductSecondCateVO;
 import com.njs.agriculture.VO.ProductStockVO;
 import com.njs.agriculture.common.ServerResponse;
@@ -15,22 +16,6 @@ import java.util.List;
  * @Description:
  */
 public interface IProductService {
-
-    ServerResponse categoryGet(int pageNum, int pageSize);
-
-    ServerResponse categoryGetForAndroid();
-
-    ServerResponse firstCateGet();
-
-    ServerResponse secondCateGet();
-
-    ServerResponse thirdCateGet();
-
-    ServerResponse firstCateAdd(ProductionFirstCate firstCate);
-
-    ServerResponse secondCateAdd(ProductionSecondCate secondCate);
-
-    ServerResponse thirdCateAdd(ProductionThirdCate thirdCate);
 
     /**
      * 类别删除
@@ -77,4 +62,5 @@ public interface IProductService {
     ServerResponse getAllBatchInfo(int userId);
 
 
+    ProductBasicVO getById(int productId);
 }

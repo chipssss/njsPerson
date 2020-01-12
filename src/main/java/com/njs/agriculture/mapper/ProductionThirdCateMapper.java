@@ -20,4 +20,8 @@ public interface ProductionThirdCateMapper {
     List<ProductionThirdCate> selectBySecondCateId(int secondCateId);
 
     List<ProductionThirdCate> selectAll();
+
+    List<ProductionThirdCate> selectUserDiyCate(int userId);
+
+    int insertWithGenerateKey(ProductionThirdCate thirdCate);
 }

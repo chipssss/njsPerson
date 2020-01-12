@@ -163,13 +163,19 @@ public class CropServiceImpl implements ICropService {
     }
 
     @Override
-    public ServerResponse getIndustrialParkCrop() {
-        return getCropByThirdCate(30);
+    public ServerResponse getIndustrialParkCrop(int userId) {
+        return getCropByThirdCate(30, userId);
     }
 
+    /**
+     * @param thirdCateId
+     * @param userId > 0,拼接自定义的三级列表
+     * @return
+     */
     @Override
-    public ServerResponse getCropByThirdCate(int thirdCateId) {
-        List<CropInfo> cropInfoList = cropInfoMapper.selectByCateId(thirdCateId);
+    public ServerResponse getCropByThirdCate(int thirdCateId, int userId) {
+        List<CropInfo> cropInfoList = userId < 0? cropInfoMapper.selectByCateId(thirdCateId):
+                cropInfoMapper.selectByCateIdOrUserId(thirdCateId, userId);
         return ServerResponse.createBySuccess(cropInfoList);
     }
 

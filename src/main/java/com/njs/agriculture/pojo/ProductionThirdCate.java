@@ -9,11 +9,14 @@ public class ProductionThirdCate {
 
     private Integer secondcateId;
 
-    public ProductionThirdCate(Integer id, String name, Integer firstcateId, Integer secondcateId) {
+    private Integer sourceId;
+
+    public ProductionThirdCate(Integer id, String name, Integer firstcateId, Integer secondcateId, Integer sourceId) {
         this.id = id;
         this.name = name;
         this.firstcateId = firstcateId;
         this.secondcateId = secondcateId;
+        this.sourceId = sourceId;
     }
 
     public ProductionThirdCate() {
@@ -50,5 +53,13 @@ public class ProductionThirdCate {
 
     public void setSecondcateId(Integer secondcateId) {
         this.secondcateId = secondcateId;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 }

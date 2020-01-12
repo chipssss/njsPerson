@@ -1,10 +1,13 @@
 package com.njs.agriculture.controller.portal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.njs.agriculture.base.BaseController;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.service.ICropService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @Auther: SaikeiLEe
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/portal/crop")
-public class CropController {
+public class CropController  extends BaseController {
 
     @Autowired
     ICropService iCropService;
@@ -75,8 +78,8 @@ public class CropController {
     }
 
     @GetMapping("getIndustrialParkCrop.do")
-    public ServerResponse getIndustrialParkCrop(){
-        return iCropService.getIndustrialParkCrop();
+    public ServerResponse getIndustrialParkCrop(HttpSession session){
+        return iCropService.getIndustrialParkCrop(getUserIdBySession(session));
     }
 
 }

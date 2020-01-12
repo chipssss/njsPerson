@@ -40,7 +40,7 @@ public interface ICropService {
 
     ServerResponse getTea();
 
-    ServerResponse getIndustrialParkCrop();
+    ServerResponse getIndustrialParkCrop(int userId);
 
-    ServerResponse getCropByThirdCate(int thirdCateId);
+    ServerResponse getCropByThirdCate(int thirdCateId, int userId);
 }

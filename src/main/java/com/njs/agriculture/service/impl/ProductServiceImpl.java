@@ -1,13 +1,11 @@
 package com.njs.agriculture.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.*;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
-import com.njs.agriculture.dto.ProductionDTO;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IProductService;
@@ -31,19 +29,13 @@ import java.util.*;
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService {
 
+    private static final Integer CATE_OTHER_ID = 0;
     @Autowired
     private SecureImageMapper secureImageMapper;
     @Autowired
     private ProductBasicMapper productBasicMapper;
 
-    @Autowired
-    private ProductionFirstCateMapper productionFirstCateMapper;
 
-    @Autowired
-    private ProductionSecondCateMapper productionSecondCateMapper;
-
-    @Autowired
-    private ProductionThirdCateMapper productionThirdCateMapper;
 
     @Autowired
     private IUserService iUserService;
@@ -53,9 +45,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ProductOutMapper productOutMapper;
-
-    @Autowired
-    private ProductDTOMapper productDTOMapper;
 
     @Autowired
     MachiningMapper machiningMapper;
@@ -69,110 +58,16 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     FieldMapper fieldMapper;
 
-    @Override
-    public ServerResponse categoryGet(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        /*List<ProductCateVO> cateVOS = Lists.newLinkedList();
-        List<ProductionFirstCate> firstCates = productionFirstCateMapper.selectAll();
-        for (ProductionFirstCate firstCate : firstCates) {
-            ProductCateVO productCateVO = new ProductCateVO();
-            BeanUtils.copyProperties(firstCate, productCateVO);
 
-            List<ProductSecondCateVO> secondCateVOS = Lists.newLinkedList();
-            List<ProductionSecondCate> secondCates = productionSecondCateMapper.selectByFirstCateId(firstCate.getId());
-            for (ProductionSecondCate secondCate : secondCates) {
-                ProductSecondCateVO productSecondCateVO = new ProductSecondCateVO();
-                BeanUtils.copyProperties(secondCate, productSecondCateVO);
+    @Autowired
+    private ProductionFirstCateMapper productionFirstCateMapper;
 
-                List<ProductThirdCateVO> thirdCateVOS = Lists.newLinkedList();
-                List<ProductionThirdCate> thirdCates = productionThirdCateMapper.selectBySecondCateId(secondCate.getId());
-                for (ProductionThirdCate thirdCate : thirdCates) {
-                    ProductThirdCateVO productThirdCateVO = new ProductThirdCateVO();
-                    BeanUtils.copyProperties(thirdCate, productThirdCateVO);
-                    thirdCateVOS.add(productThirdCateVO);
-                }
-                productSecondCateVO.setThirdCateList(thirdCateVOS);
-                secondCateVOS.add(productSecondCateVO);
-            }
-            productCateVO.setSecondCateVOList(secondCateVOS);
-            cateVOS.add(productCateVO);
-        }*/
-        List<ProductionDTO> productionDTOList = productDTOMapper.selectAll();
-        PageInfo pageResult = new PageInfo(productionDTOList);
-        return ServerResponse.createBySuccess(pageResult);
-    }
+    @Autowired
+    private ProductionSecondCateMapper productionSecondCateMapper;
 
-    @Override
-    public ServerResponse categoryGetForAndroid() {
-        List<ProductCateVO> cateVOS = Lists.newLinkedList();
-        List<ProductionFirstCate> firstCates = productionFirstCateMapper.selectAll();
-        for (ProductionFirstCate firstCate : firstCates) {
-            ProductCateVO productCateVO = new ProductCateVO();
-            BeanUtils.copyProperties(firstCate, productCateVO);
+    @Autowired
+    private ProductionThirdCateMapper productionThirdCateMapper;
 
-            List<ProductSecondCateVO> secondCateVOS = Lists.newLinkedList();
-            List<ProductionSecondCate> secondCates = productionSecondCateMapper.selectByFirstCateId(firstCate.getId());
-            for (ProductionSecondCate secondCate : secondCates) {
-                ProductSecondCateVO productSecondCateVO = new ProductSecondCateVO();
-                BeanUtils.copyProperties(secondCate, productSecondCateVO);
-
-                List<ProductThirdCateVO> thirdCateVOS = Lists.newLinkedList();
-                List<ProductionThirdCate> thirdCates = productionThirdCateMapper.selectBySecondCateId(secondCate.getId());
-                for (ProductionThirdCate thirdCate : thirdCates) {
-                    ProductThirdCateVO productThirdCateVO = new ProductThirdCateVO();
-                    BeanUtils.copyProperties(thirdCate, productThirdCateVO);
-                    thirdCateVOS.add(productThirdCateVO);
-                }
-                productSecondCateVO.setThirdCateList(thirdCateVOS);
-                secondCateVOS.add(productSecondCateVO);
-            }
-            productCateVO.setSecondCateVOList(secondCateVOS);
-            cateVOS.add(productCateVO);
-        }
-        return ServerResponse.createBySuccess(cateVOS);
-    }
-
-    @Override
-    public ServerResponse firstCateGet() {
-        return ServerResponse.createBySuccess(productionFirstCateMapper.selectAll());
-    }
-
-    @Override
-    public ServerResponse secondCateGet() {
-        return ServerResponse.createBySuccess(productionSecondCateMapper.selectAll());
-    }
-
-    @Override
-    public ServerResponse thirdCateGet() {
-        return ServerResponse.createBySuccess(productionThirdCateMapper.selectAll());
-    }
-
-    @Override
-    public ServerResponse firstCateAdd(ProductionFirstCate firstCate) {
-        int resultRow = productionFirstCateMapper.insert(firstCate);
-        if (resultRow == 0) {
-            return ServerResponse.createByErrorMessage("插入失败！");
-        }
-        return ServerResponse.createBySuccess(firstCate);
-    }
-
-    @Override
-    public ServerResponse secondCateAdd(ProductionSecondCate secondCate) {
-        int resultRow = productionSecondCateMapper.insert(secondCate);
-        if (resultRow == 0) {
-            return ServerResponse.createByErrorMessage("插入失败！");
-        }
-        return ServerResponse.createBySuccess(secondCate);
-    }
-
-    @Override
-    public ServerResponse thirdCateAdd(ProductionThirdCate thirdCate) {
-        int resultRow = productionThirdCateMapper.insert(thirdCate);
-        if (resultRow == 0) {
-            return ServerResponse.createByErrorMessage("插入失败！");
-        }
-        return ServerResponse.createBySuccess(thirdCate);
-    }
 
     @Override
     public ServerResponse productionDel(int id, int flag) {
@@ -230,24 +125,37 @@ public class ProductServiceImpl implements IProductService {
             return productBasicVOList;
         }
         for (ProductBasic productBasic : productBasicList) {
-            ProductBasicVO productBasicVO = new ProductBasicVO();
-            BeanUtils.copyProperties(productBasic, productBasicVO);
-            ProductionThirdCate productionThirdCate = productionThirdCateMapper.selectByPrimaryKey(productBasic.getTypeId());
-            if(productionThirdCate == null){
-                continue;
-            }
-            ProductionSecondCate productionSecondCate = productionSecondCateMapper.selectByPrimaryKey(productionThirdCate.getSecondcateId());
-            if(productionSecondCate == null){
-                continue;
-            }
-            ProductionFirstCate productionFirstCate = productionFirstCateMapper.selectByPrimaryKey(productionSecondCate.getFirstcateId());
-            if(productionFirstCate == null){
-                continue;
-            }
-            productBasicVO.setCateInfo(productionFirstCate.getName() + "|" + productionSecondCate.getName() + "|" + productionThirdCate.getName());
-            productBasicVOList.add(productBasicVO);
+            productBasicVOList.add(productBasic2VO(productBasic));
         }
         return productBasicVOList;
+    }
+
+    /* 单个产品类别的VO转化 */
+    private ProductBasicVO productBasic2VO(ProductBasic productBasic) {
+        ProductBasicVO productBasicVO = new ProductBasicVO();
+        BeanUtils.copyProperties(productBasic, productBasicVO);
+        ProductionThirdCate productionThirdCate = productionThirdCateMapper.selectByPrimaryKey(productBasic.getTypeId());
+
+        if(productionThirdCate == null){
+            return productBasicVO;
+        }
+
+        // 当类别为其他时，不继续检索二级类别
+        if (productionThirdCate.getSecondcateId().equals(CATE_OTHER_ID)) {
+            productBasicVO.setCateInfo(productionThirdCate.getName());
+            return productBasicVO;
+        }
+
+        ProductionSecondCate productionSecondCate = productionSecondCateMapper.selectByPrimaryKey(productionThirdCate.getSecondcateId());
+        if(productionSecondCate == null){
+            return productBasicVO;
+        }
+        ProductionFirstCate productionFirstCate = productionFirstCateMapper.selectByPrimaryKey(productionSecondCate.getFirstcateId());
+        if(productionFirstCate == null){
+            return productBasicVO;
+        }
+        productBasicVO.setCateInfo(productionFirstCate.getName() + "|" + productionSecondCate.getName() + "|" + productionThirdCate.getName());
+        return productBasicVO;
     }
 
     @Override
@@ -489,6 +397,15 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse getAllBatchInfo(int userId) {
         List<ProductBasic> productBasicList = productBasicMapper.selectAll();
         return getStock(productBasicList, userId);
+    }
+
+    @Override
+    public ProductBasicVO getById(int productId) {
+        ProductBasic basic = productBasicMapper.selectByPrimaryKey(productId);
+        if (basic == null) {
+            return null;
+        }
+        return productBasic2VO(basic);
     }
 
     private ServerResponse getStock(List<ProductBasic> productBasicList, int userId){

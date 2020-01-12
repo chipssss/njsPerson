@@ -3,10 +3,12 @@ package com.njs.agriculture.controller.backend;
 import com.alibaba.fastjson.JSONObject;
 import com.njs.agriculture.VO.MachineVO;
 import com.njs.agriculture.VO.ProductStockVO;
+import com.njs.agriculture.base.BaseController;
 import com.njs.agriculture.common.Const;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.pojo.*;
 import com.njs.agriculture.service.IBatchCodeService;
+import com.njs.agriculture.service.IProductCateService;
 import com.njs.agriculture.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("/backend/production/")
-public class ProductionController {
+public class ProductionController extends BaseController {
 
     @Autowired
     private IProductService iProductService;
@@ -28,46 +30,55 @@ public class ProductionController {
     @Autowired
     IBatchCodeService iBatchCodeService;
 
+    @Autowired
+    private IProductCateService productCateService;
+
+    /* 产品类别相关接口 */
     @PostMapping("categoryGet.do")
     public ServerResponse categoryGet(@RequestBody JSONObject jsonObject){
         int pageNum = jsonObject.getIntValue("pageNum");
         int pageSize = jsonObject.getIntValue("pageSize");
-        return iProductService.categoryGet(pageNum, pageSize);
+        return productCateService.categoryGet(pageNum, pageSize);
+    }
+
+    @PostMapping("categoryAdd.do")
+    public ServerResponse categoryAdd(HttpSession session, @RequestBody JSONObject jsonObject){
+        return productCateService.add(jsonObject.getString("name"), getUserIdBySession(session));
     }
 
     @GetMapping("categoryGet.do")
-    public ServerResponse categoryGet(){
-        return iProductService.categoryGetForAndroid();
+    public ServerResponse categoryGet(HttpSession session){
+        return productCateService.getForAndroid(getUserIdBySession(session));
     }
 
     @GetMapping("firstCateGet.do")
     public ServerResponse firstCateGet(){
-        return iProductService.firstCateGet();
+        return productCateService.firstCateGet();
     }
 
     @GetMapping("secondCateGet.do")
     public ServerResponse secondCateGet(){
-        return iProductService.secondCateGet();
+        return productCateService.secondCateGet();
     }
 
     @GetMapping("thirdCateGet.do")
     public ServerResponse thirdCateGet(){
-        return iProductService.thirdCateGet();
+        return productCateService.thirdCateGet();
     }
 
     @RequestMapping("firstCateAdd.do")
     public ServerResponse firstCateAdd(@RequestBody ProductionFirstCate firstCate){
-        return iProductService.firstCateAdd(firstCate);
+        return productCateService.firstCateAdd(firstCate);
     }
 
     @RequestMapping("secondCateAdd.do")
     public ServerResponse secondCateAdd(@RequestBody ProductionSecondCate secondCate){
-        return iProductService.secondCateAdd(secondCate);
+        return productCateService.secondCateAdd(secondCate);
     }
 
     @RequestMapping("thirdCateAdd.do")
     public ServerResponse thirdCateAdd(@RequestBody ProductionThirdCate thirdCate){
-        return iProductService.thirdCateAdd(thirdCate);
+        return productCateService.thirdCateAdd(thirdCate);
     }
 
     @RequestMapping("productionDel.do")

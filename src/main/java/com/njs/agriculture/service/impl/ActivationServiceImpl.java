@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.njs.agriculture.VO.FieldInfoVO;
 import com.njs.agriculture.VO.MachineVO;
+import com.njs.agriculture.VO.ProductBasicVO;
 import com.njs.agriculture.common.ServerResponse;
 import com.njs.agriculture.mapper.*;
 import com.njs.agriculture.pojo.*;
@@ -30,7 +31,7 @@ public class ActivationServiceImpl implements IActivationService {
     ProductStockMapper productStockMapper;
 
     @Autowired
-    ProductBasicMapper productBasicMapper;
+    IProductService productService;
 
     @Autowired
     private ProductActivationMapper productActivationMapper;
@@ -55,6 +56,8 @@ public class ActivationServiceImpl implements IActivationService {
 
     @Autowired
     IFieldService iFieldService;
+
+
 
     @Override
     public JSONObject checkActivation(String code) {
@@ -115,7 +118,7 @@ public class ActivationServiceImpl implements IActivationService {
         if (productStock == null) {
             return ServerResponse.createByErrorMessage("库存表没有该记录！");
         }
-        ProductBasic productBasic = productBasicMapper.selectByPrimaryKey(productStock.getProductId());
+        ProductBasicVO productBasic = productService.getById(productStock.getProductId());
 
         Map result = Maps.newHashMap();
 
